@@ -6,9 +6,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
-import { FileModule } from './file/file.module';
 import { AuthModule } from './auth/auth.module';
-import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { MoodModule } from './mood/mood.module';
 
 @Module({
   imports: [
@@ -20,9 +19,8 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
       playground: true,
       introspection: true,
     }),
-    FileModule,
     AuthModule,
-    CloudinaryModule,
+    MoodModule,
   ],
   controllers: [AppController],
   providers: [AppService],
