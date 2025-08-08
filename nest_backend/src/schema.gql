@@ -1,0 +1,55 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type MoodEntry {
+  _id: ID!
+  userId: String!
+  date: String!
+  mood: String!
+  journalText: String!
+  sentimentScore: Float
+}
+
+type MoodAnalyticsOutput {
+  averageMoodScore: Float!
+  moodCount: Int!
+  positiveDays: Int!
+  negativeDays: Int!
+  mostUsedWords: [String!]!
+  streak: Int!
+}
+
+type Query {
+  getTodayMood(userId: String!): MoodEntry
+  getMoodHistory(range: DateRangeInput!, userId: String!): [MoodEntry!]!
+  getMoodStats(userId: String!): MoodAnalyticsOutput!
+}
+
+input DateRangeInput {
+  startDate: String!
+  endDate: String!
+}
+
+type Mutation {
+  logMood(input: MoodLogInput!, userId: String!): MoodEntry!
+  updateMood(id: String!, input: MoodLogInput!, userId: String!): MoodEntry!
+  deleteMood(id: String!, userId: String!): Boolean!
+}
+
+input MoodLogInput {
+  date: String!
+  mood: MoodType!
+  journalText: String!
+  sentimentScore: Float
+}
+
+enum MoodType {
+  HAPPY
+  SAD
+  NEUTRAL
+  ANGRY
+  EXCITED
+  TIRED
+  STRESSED
+}

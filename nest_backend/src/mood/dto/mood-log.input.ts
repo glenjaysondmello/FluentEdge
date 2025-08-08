@@ -11,4 +11,7 @@ export class MoodLogInput {
 
   @Field()
   journalText: string;
+
+  @Field(() => Number, { nullable: true })
+  sentimentScore?: number;
 }
