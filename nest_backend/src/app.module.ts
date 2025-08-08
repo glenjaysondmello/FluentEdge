@@ -6,7 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
-import { AuthModule } from './auth/auth.module';
+// import { AuthModule } from './auth/auth.module';
 import { MoodModule } from './mood/mood.module';
 
 @Module({
@@ -19,7 +19,7 @@ import { MoodModule } from './mood/mood.module';
       playground: true,
       introspection: true,
     }),
-    AuthModule,
+    // AuthModule,
     MoodModule,
   ],
   controllers: [AppController],
