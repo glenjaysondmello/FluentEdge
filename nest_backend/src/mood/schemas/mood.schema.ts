@@ -2,23 +2,22 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { MoodType } from '../types/mood.enum';
 
-
-@Schema({timestamps: true})
+@Schema({ timestamps: true })
 export class MoodEntry {
-    @Prop({required: true})
-    userId: string
+  @Prop({ required: true })
+  userId: string;
 
-    @Prop({required: true})
-    data: string
+  @Prop({ required: true })
+  date: string;
 
-    @Prop({type: String, enum: MoodType, required: true})
-    mood: MoodType
+  @Prop({ type: String, enum: MoodType, required: true })
+  mood: MoodType;
 
-    @Prop({type: String, required: true})
-    journalText: string
+  @Prop({ type: String, required: true })
+  journalText: string;
 
-    @Prop({type: Number, default: 0})
-    sentimentScore: number
+  @Prop({ type: Number, default: 0 })
+  sentimentScore: number;
 }
 
 export type MoodEntryDocument = MoodEntry & Document;
