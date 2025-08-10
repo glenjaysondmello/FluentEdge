@@ -5,22 +5,30 @@ import { Model } from 'mongoose';
 import { MoodLogInput } from './dto/mood-log.input';
 import { DateRangeInput } from './dto/date-range.input';
 import { MoodAnalyticsOutput } from './dto/mood-analytics.output';
+import { SentimentService } from 'src/sentiment/sentiment.service';
 
 @Injectable()
 export class MoodService {
   constructor(
+    private readonly semanticService: SentimentService,
     @InjectModel(MoodEntry.name) private moodModel: Model<MoodEntryDocument>,
   ) {}
 
   async create(input: MoodLogInput, userId: string) {
-    const entry = new this.moodModel({ ...input, userId });
+    const sentimentScore = await this.semanticService.analyzeMoodScore(
+      input.journalText,
+    );
+    const entry = new this.moodModel({ ...input, userId, sentimentScore });
     return await entry.save();
   }
 
   async update(id: string, input: MoodLogInput, userId: string) {
+    const sentimentScore = await this.semanticService.analyzeMoodScore(
+      input.journalText,
+    );
     const updatedEntry = await this.moodModel.findOneAndUpdate(
       { _id: id, userId },
-      input,
+      { ...input, sentimentScore },
       {
         new: true,
       },
