@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/client/graphql_client.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'firebase_options.dart';
 import './screens/auth_screen.dart';
 import './screens/splash_screen.dart';
@@ -12,6 +14,8 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  await initHiveForFlutter();
+
   runApp(const MyApp());
 }
 
@@ -20,21 +24,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Todo App",
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+    return GraphQLProvider(
+      client: getGraphQLClient(),
+      child: MultiProvider(
+        providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "Mood App",
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          initialRoute: '/',
+          routes: {
+            '/': (ctx) => const SplashScreen(),
+            '/auth': (ctx) => const AuthScreen(),
+            '/home': (ctx) => const HomePage(),
+          },
         ),
-        initialRoute: '/',
-        routes: {
-          '/': (ctx) => const SplashScreen(),
-          '/auth': (ctx) => const AuthScreen(),
-          '/home': (ctx) => const HomePage(),
-        },
       ),
     );
   }
