@@ -15,12 +15,9 @@ const streamToBuffer = (stream: Readable): Promise<Buffer> => {
   });
 };
 
-export const transcribeAudio = async (
-  audioFile: FileUpload,
-): Promise<string> => {
+export const transcribeAudio = async (audioFile: FileUpload): Promise<string> => {
   try {
     const audioStream = audioFile.createReadStream();
-
     const audioBuffer = await streamToBuffer(audioStream);
 
     const uploadableFile = await Groq.toFile(audioBuffer, audioFile.filename);
