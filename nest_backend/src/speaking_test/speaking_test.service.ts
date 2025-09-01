@@ -22,7 +22,7 @@ export class SpeakingTestService {
   async generateSpeakingText(): Promise<string> {
     try {
       const response = await this.client.chat.completions.create({
-        model: 'llama3-8b-8192',
+        model: 'llama3-70b-8192',
         messages: [
           {
             role: 'system',
@@ -90,12 +90,13 @@ export class SpeakingTestService {
       });
     } catch (err) {
       console.error('Error during speaking test submission:', err);
-      if (
-        err.message.includes('transcription failed') ||
-        err.message.includes('evaluation failed')
-      ) {
-        throw err;
-      }
+      // if (
+      //   err.message.includes('transcription failed') ||
+      //   err.message.includes('evaluation failed')
+      // ) {
+      //   throw err;
+      // }
+      console.error('Original error in submitSpeakingTest:', err);
       throw new Error(
         'An unexpected error occurred while processing your test.',
       );
