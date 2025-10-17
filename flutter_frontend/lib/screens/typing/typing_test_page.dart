@@ -207,24 +207,39 @@ class _TypingTestPageState extends State<TypingTestPage> {
   Widget _buildTestView(BuildContext context) {
     return Stack(
       children: [
-        // This TextField is invisible but captures all keyboard input
-        TextField(
-          controller: _controller,
-          focusNode: _focusNode,
-          autofocus: true,
-          showCursor: false,
-          style: const TextStyle(
-            color: Colors.transparent,
-          ), // Hide the text itself
-          decoration: const InputDecoration(border: InputBorder.none),
+        // Hidden textfield with zero size (so it never blocks taps)
+        SizedBox(
+          height: 0,
+          width: 0,
+          child: TextField(
+            controller: _controller,
+            focusNode: _focusNode,
+            autofocus: true,
+            showCursor: false,
+            enableSuggestions: false,
+            autocorrect: false,
+            style: const TextStyle(color: Colors.transparent),
+            decoration: const InputDecoration(border: InputBorder.none),
+          ),
         ),
+
+        // UI
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               _buildStatsBar(),
               const SizedBox(height: 24),
-              Expanded(child: _buildReferenceTextView()),
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent, // <-- important
+                  onTap: () {
+                    // Force open keyboard
+                    FocusScope.of(context).requestFocus(_focusNode);
+                  },
+                  child: _buildReferenceTextView(),
+                ),
+              ),
               const SizedBox(height: 24),
               _buildActionBar(),
             ],

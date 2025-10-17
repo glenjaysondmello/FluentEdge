@@ -30,7 +30,7 @@ class DashboardTyping extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Dashboard',
+          'Typing Dashboard',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.transparent,
@@ -258,10 +258,10 @@ class DashboardTyping extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.query_stats, size: 80, color: themeColors['textFaded']),
+          Icon(Icons.keyboard, size: 80, color: themeColors['textFaded']),
           const SizedBox(height: 16),
           Text(
-            "No Data Yet",
+            "No Typing Tests Yet",
             style: GoogleFonts.poppins(
               fontSize: 22,
               fontWeight: FontWeight.bold,
