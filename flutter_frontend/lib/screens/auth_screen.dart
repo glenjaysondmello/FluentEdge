@@ -114,14 +114,10 @@ class _AuthScreenState extends State<AuthScreen> {
                 children:
                     [
                           // 2. A beautiful header with branding and animations
-                          const Icon(
-                            Icons.keyboard_command_key,
-                            color: Colors.white,
-                            size: 60,
-                          ),
+                          Image.asset('assets/images/logo.png', height: 120),
                           const SizedBox(height: 16),
                           Text(
-                            'ClarityKeys',
+                            'FluentEdge',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                               fontSize: 36,

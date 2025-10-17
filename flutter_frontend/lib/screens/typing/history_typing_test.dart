@@ -26,7 +26,7 @@ class HistoryTypingPage extends StatelessWidget {
       // 1. A transparent AppBar to blend with the gradient
       appBar: AppBar(
         title: Text(
-          'Test History',
+          'Typing History',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.transparent,

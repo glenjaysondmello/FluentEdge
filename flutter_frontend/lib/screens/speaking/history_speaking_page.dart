@@ -73,16 +73,37 @@ class HistorySpeakingPage extends StatelessWidget {
               );
 
               if (tests.isEmpty) {
-                // You can add an empty state here if you like
+                // 3. An improved, more engaging empty state
                 return Center(
-                  child: Text(
-                    "No history yet!",
-                    style: GoogleFonts.poppins(
-                      color: themeColors['text'],
-                      fontSize: 18,
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.history_toggle_off,
+                        size: 80,
+                        color: themeColors['textFaded'],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        "No History Yet",
+                        style: GoogleFonts.poppins(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: themeColors['text'],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Complete a test to see your progress!",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: themeColors['textFaded'],
+                        ),
+                      ),
+                    ],
                   ),
-                );
+                ).animate().fadeIn(duration: 500.ms);
               }
 
               return ListView.builder(
