@@ -44,7 +44,7 @@ export const evaluateWithGroq = async (payload: {
   }
 
   const response = await groq.chat.completions.create({
-    model: 'gemma2-9b-it',
+    model: 'openai/gpt-oss-20b',
     messages: [
       {
         role: 'system',
