@@ -20,7 +20,7 @@ export class SpeakingTestService {
   async generateSpeakingText(): Promise<string> {
     try {
       const response = await this.client.chat.completions.create({
-        model: 'gemma2-9b-it',
+        model: 'openai/gpt-oss-20b',
         messages: [
           {
             role: 'system',
