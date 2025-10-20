@@ -16,7 +16,7 @@ class LeaderboardFirestoreService {
     final double avgSpeakingScore = stats['avgSpeakingScore'] ?? 0.0;
     final double avgWpm = stats['avgWpm'] ?? 0.0;
     final double avgAccuracy = stats['avgAccuracy'] ?? 0.0;
-    final double totalTests = stats['totalTests'] ?? 0.0;
+    final int totalTests = stats['totalTests'] ?? 0.0;
 
     final double avgTypingScore = (avgWpm * 0.7) + (avgAccuracy * 0.3);
     final double rankingScore = (avgSpeakingScore * 10) + avgTypingScore;
