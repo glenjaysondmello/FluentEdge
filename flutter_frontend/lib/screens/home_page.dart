@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../provider/auth_provider.dart';
 import './typing/typing_page.dart';
 import './speaking/speaking_page.dart';
+import '../screens/leaderboard_screen.dart';
 
 // Theme colors remain the same for consistency
 const themeColors = {
@@ -158,6 +159,22 @@ class AppDrawer extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (_) => const DashboardPage(),
+                          ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    _buildDrawerItem(
+                      icon: Icons.leaderboard,
+                      title: 'Leaderboaard',
+                      onTap: () {
+                        Navigator.pop(context); // Close the drawer
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const LeaderboardScreen(),
                           ),
                         );
                       },
