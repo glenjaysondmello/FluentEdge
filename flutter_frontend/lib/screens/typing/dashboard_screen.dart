@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_frontend/graphql/graphql_documents.dart';
+import 'package:flutter_frontend/screens/typing/history_typing_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-import 'dart:math';
-
-import '../../graphql/graphql_documents.dart';
-import './history_speaking_page.dart';
 
 // Using the same theme colors for consistency
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
   'backgroundEnd': Color(0xFF009FFD),
-  'card': Color(0x22FFFFFF),
+  'card': Color(
+    0x22FFFFFF,
+  ), // Semi-transparent white for a "frosted glass" effect
   'text': Colors.white,
   'textFaded': Color(0xAAFFFFFF),
   'accent': Color(0xFF00D2FF),
-  'lineColor': Color(0xFF39FF14), // Neon green for the chart
+  'wpmLine': Color(0xFF00D2FF),
+  'accuracyLine': Color(0xFF39FF14),
+  'scoreLine': Color(0xFFFFD700),
 };
 
-class DashboardSpeaking extends StatelessWidget {
-  const DashboardSpeaking({super.key});
+class DashboardTyping extends StatelessWidget {
+  const DashboardTyping({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Speaking Dashboard',
+          'Typing Dashboard',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.transparent,
@@ -40,7 +42,7 @@ class DashboardSpeaking extends StatelessWidget {
             tooltip: 'Test History',
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const HistorySpeakingPage()),
+              MaterialPageRoute(builder: (_) => const HistoryTypingScreen()),
             ),
           ),
         ],
@@ -60,10 +62,10 @@ class DashboardSpeaking extends StatelessWidget {
         child: SafeArea(
           child: Query(
             options: QueryOptions(
-              document: gql(getSpeakingTestQuery),
+              document: gql(getTypingTestQuery),
               fetchPolicy: FetchPolicy.networkOnly,
             ),
-            builder: (result, {refetch, fetchMore}) {
+            builder: (result, {fetchMore, refetch}) {
               if (result.isLoading) {
                 return const Center(
                   child: CircularProgressIndicator(color: Colors.white),
@@ -85,48 +87,29 @@ class DashboardSpeaking extends StatelessWidget {
                 );
               }
 
-              final testsRaw = result.data?['getSpeakingTests'] ?? [];
-              final tests = List.from(testsRaw);
-
+              final tests = result.data?['getTypingTests'] ?? [];
               if (tests.isEmpty) {
-                return RefreshIndicator(
-                  onRefresh: refetch!,
-                  child: ListView(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: _buildEmptyState(),
-                      ),
-                    ],
-                  ),
-                );
+                return _buildEmptyState();
               }
 
-              // Data Processing for chart
-              Map<String, double> averageScores = {
-                'fluency': 0,
-                'pronunciation': 0,
-                'grammar': 0,
-                'vocabulary': 0,
-              };
+              // Data Processing
+              tests.sort(
+                (a, b) => DateTime.parse(
+                  a['createdAt'],
+                ).compareTo(DateTime.parse(b['createdAt'])),
+              );
 
-              if (tests.isNotEmpty) {
-                for (var key in averageScores.keys) {
-                  double total = 0;
-                  int count = 0;
-                  for (var test in tests) {
-                    final val = test['scores']?[key];
-                    if (val is num) {
-                      total += val;
-                      count++;
-                    }
-                  }
-                  averageScores[key] = count > 0 ? total / count : 0;
-                }
-              }
-
-              String avgScore(String key) =>
-                  averageScores[key]?.toStringAsFixed(1) ?? "0.0";
+              final avgWpm =
+                  tests.map((t) => t['wpm'] as num).reduce((a, b) => a + b) /
+                  tests.length;
+              final avgAccuracy =
+                  tests
+                      .map((t) => t['accuracy'] as num)
+                      .reduce((a, b) => a + b) /
+                  tests.length;
+              final avgScore =
+                  tests.map((t) => t['score'] as num).reduce((a, b) => a + b) /
+                  tests.length;
 
               return RefreshIndicator(
                 onRefresh: refetch!,
@@ -134,7 +117,7 @@ class DashboardSpeaking extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   children: [
                     Text(
-                      "Test Analysis",
+                      "Performance Overview",
                       style: GoogleFonts.poppins(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -142,41 +125,77 @@ class DashboardSpeaking extends StatelessWidget {
                       ),
                     ).animate().fadeIn(duration: 400.ms).slideX(),
                     const SizedBox(height: 16),
+                    // Summary Stat Cards
                     GridView.count(
-                      crossAxisCount: 2,
+                      crossAxisCount: 3,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
-                      childAspectRatio: 2.5,
                       children: [
                         _SummaryStatCard(
-                          label: "Fluency",
-                          value: avgScore('fluency'),
+                          icon: Icons.speed,
+                          label: "Avg WPM",
+                          value: avgWpm.toStringAsFixed(1),
+                          color: themeColors['wpmLine']!,
                         ),
                         _SummaryStatCard(
-                          label: "Pronunciation",
-                          value: avgScore('pronunciation'),
+                          icon: Icons.ads_click,
+                          label: "Avg Accuracy",
+                          value: "${avgAccuracy.toStringAsFixed(1)}%",
+                          color: themeColors['accuracyLine']!,
                         ),
                         _SummaryStatCard(
-                          label: "Grammar",
-                          value: avgScore('grammar'),
-                        ),
-                        _SummaryStatCard(
-                          label: "Vocabulary",
-                          value: avgScore('vocabulary'),
+                          icon: Icons.star,
+                          label: "Avg Score",
+                          value: avgScore.toStringAsFixed(1),
+                          color: themeColors['scoreLine']!,
                         ),
                       ],
                     ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
+
                     const SizedBox(height: 24),
+
+                    // Main Chart for WPM
                     _ChartCard(
-                      title: "Overall Score Over Time",
+                      title: "WPM Over Time",
                       child: _buildLineChart(
                         tests,
-                        (test) => (test['scores']?['overall'] ?? 0) as num,
-                        themeColors['lineColor']!,
+                        (test) => test['wpm'],
+                        themeColors['wpmLine']!,
                       ),
                     ).animate().fadeIn(delay: 400.ms, duration: 400.ms),
+                    const SizedBox(height: 16),
+                    // Sparkline charts for other metrics
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _ChartCard(
+                            title: "Accuracy Trend",
+                            isMini: true,
+                            child: _buildLineChart(
+                              tests,
+                              (test) => test['accuracy'],
+                              themeColors['accuracyLine']!,
+                              isSparkline: true,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _ChartCard(
+                            title: "Score Trend",
+                            isMini: true,
+                            child: _buildLineChart(
+                              tests,
+                              (test) => test['score'],
+                              themeColors['scoreLine']!,
+                              isSparkline: true,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ).animate().fadeIn(delay: 600.ms, duration: 400.ms),
                   ],
                 ),
               );
@@ -239,10 +258,10 @@ class DashboardSpeaking extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.mic_none, size: 80, color: themeColors['textFaded']),
+          Icon(Icons.keyboard, size: 80, color: themeColors['textFaded']),
           const SizedBox(height: 16),
           Text(
-            "No Speaking Tests Yet",
+            "No Typing Tests Yet",
             style: GoogleFonts.poppins(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -263,32 +282,34 @@ class DashboardSpeaking extends StatelessWidget {
     ).animate().fadeIn(duration: 500.ms);
   }
 
+  /// Builds a beautifully styled LineChart.
   Widget _buildLineChart(
     List tests,
     num Function(dynamic) getValue,
-    Color lineColor,
-  ) {
-    // ... (rest of the code remains unchanged)
+    Color lineColor, {
+    bool isSparkline = false,
+  }) {
     final spots = tests.asMap().entries.map((entry) {
       final index = entry.key;
       final test = entry.value;
-      final value = getValue(test);
-      return FlSpot(index.toDouble(), value.toDouble());
+      return FlSpot(index.toDouble(), getValue(test).toDouble());
     }).toList();
 
     return LineChart(
       LineChartData(
+        // General Styling
         gridData: FlGridData(
-          show: true,
+          show: !isSparkline,
           drawVerticalLine: true,
           horizontalInterval: 20,
+          verticalInterval: (tests.length / 4).ceilToDouble(),
           getDrawingHorizontalLine: (value) =>
               FlLine(color: Colors.white.withAlpha(26), strokeWidth: 1),
           getDrawingVerticalLine: (value) =>
               FlLine(color: Colors.white.withAlpha(26), strokeWidth: 1),
         ),
         titlesData: FlTitlesData(
-          show: true,
+          show: !isSparkline,
           rightTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
@@ -299,12 +320,11 @@ class DashboardSpeaking extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 30,
-              interval: max(1, (tests.length / 4).ceil()).toDouble(),
+              interval: (tests.length / 4).ceilToDouble(),
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
                 if (index < 0 || index >= tests.length) return const Text('');
-                final date = DateTime.tryParse(tests[index]['createdAt'] ?? '');
-                if (date == null) return const Text('');
+                final date = DateTime.parse(tests[index]['createdAt']);
                 return SideTitleWidget(
                   axisSide: meta.axisSide,
                   child: Text(
@@ -323,21 +343,22 @@ class DashboardSpeaking extends StatelessWidget {
               showTitles: true,
               reservedSize: 40,
               getTitlesWidget: (value, meta) => Text(
-                value.toStringAsFixed(0),
+                value.toInt().toString(),
                 style: TextStyle(color: themeColors['textFaded'], fontSize: 10),
               ),
             ),
           ),
         ),
         borderData: FlBorderData(show: false),
+        // Line Styling
         lineBarsData: [
           LineChartBarData(
             spots: spots,
             isCurved: true,
             color: lineColor,
-            barWidth: 4,
+            barWidth: isSparkline ? 3 : 4,
             isStrokeCapRound: true,
-            dotData: const FlDotData(show: true),
+            dotData: FlDotData(show: !isSparkline),
             belowBarData: BarAreaData(
               show: true,
               gradient: LinearGradient(
@@ -348,17 +369,50 @@ class DashboardSpeaking extends StatelessWidget {
             ),
           ),
         ],
+        // Interaction
+        lineTouchData: LineTouchData(
+          enabled: !isSparkline,
+          touchTooltipData: LineTouchTooltipData(
+            getTooltipItems: (touchedSpots) => touchedSpots.map((spot) {
+              return LineTooltipItem(
+                '${spot.y.toStringAsFixed(1)}\n',
+                TextStyle(
+                  color: themeColors['text'],
+                  fontWeight: FontWeight.bold,
+                ),
+                children: [
+                  TextSpan(
+                    text: DateFormat('MMM d, yyyy').format(
+                      DateTime.parse(tests[spot.x.toInt()]['createdAt']),
+                    ),
+                    style: TextStyle(
+                      color: themeColors['textFaded'],
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
 }
 
-// Helper Widgets (unchanged)
+// Helper Widgets for a cleaner build method
+
 class _SummaryStatCard extends StatelessWidget {
-  // ...
+  final IconData icon;
   final String label;
   final String value;
-  const _SummaryStatCard({required this.label, required this.value});
+  final Color color;
+  const _SummaryStatCard({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -372,19 +426,21 @@ class _SummaryStatCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: themeColors['textFaded'],
-            ),
-          ),
+          Icon(icon, color: color, size: 28),
+          const SizedBox(height: 8),
           Text(
             value,
             style: GoogleFonts.poppins(
-              fontSize: 22,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: themeColors['text'],
+            ),
+          ),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: themeColors['textFaded'],
             ),
           ),
         ],
@@ -394,16 +450,22 @@ class _SummaryStatCard extends StatelessWidget {
 }
 
 class _ChartCard extends StatelessWidget {
-  // ...
   final String title;
   final Widget child;
-  const _ChartCard({required this.title, required this.child});
+  final bool isMini;
+  const _ChartCard({
+    required this.title,
+    required this.child,
+    this.isMini = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
-      height: 300,
+      padding: isMini
+          ? const EdgeInsets.fromLTRB(8, 16, 8, 8)
+          : const EdgeInsets.fromLTRB(16, 24, 16, 12),
+      height: isMini ? 150 : 300,
       decoration: BoxDecoration(
         color: themeColors['card'],
         borderRadius: BorderRadius.circular(16),
@@ -415,7 +477,7 @@ class _ChartCard extends StatelessWidget {
           Text(
             title,
             style: GoogleFonts.poppins(
-              fontSize: 18,
+              fontSize: isMini ? 14 : 18,
               fontWeight: FontWeight.w600,
               color: themeColors['text'],
             ),
@@ -427,36 +489,3 @@ class _ChartCard extends StatelessWidget {
     );
   }
 }
-
-
-
-// Data Processing for chart
-              // tests.sort((a, b) {
-              //   final dateA =
-              //       DateTime.tryParse(a['createdAt'] ?? '') ?? DateTime(1970);
-              //   final dateB =
-              //       DateTime.tryParse(b['createdAt'] ?? '') ?? DateTime(1970);
-              //   return dateA.compareTo(dateB);
-              // });
-
-              // final latestTest = tests.last;
-              // final latestDate = DateTime.tryParse(
-              //   latestTest['createdAt'] ?? '',
-              // );
-
-              // String safeScore(Map scores, String key) {
-              //   final val = scores?[key];
-              //   if (val is num) {
-              //     return val.toStringAsFixed(1);
-              //   }
-              //   return "0.0";
-              // }
-
-              // if (latestDate != null)
-                    //   Text(
-                    //     "Taken on ${DateFormat.yMMMd().format(latestDate)}",
-                    //     style: GoogleFonts.poppins(
-                    //       fontSize: 14,
-                    //       color: themeColors['textFaded'],
-                    //     ),
-                    //   ),

@@ -1,12 +1,12 @@
 import 'dart:ui'; // Needed for ImageFilter
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import './main_dashboard_page.dart';
+import 'main_dashboard_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../provider/auth_provider.dart';
-import './typing/typing_page.dart';
-import './speaking/speaking_page.dart';
+import 'typing/typing_screen.dart';
+import 'speaking/speaking_screen.dart';
 import '../screens/leaderboard_screen.dart';
 
 // Theme colors remain the same for consistency
@@ -19,8 +19,8 @@ const themeColors = {
   'accent': Color(0xFF00D2FF),
 };
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
                   subtitle: 'Test your speed and accuracy.',
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const TypingPage()),
+                    MaterialPageRoute(builder: (_) => const TypingScreen()),
                   ),
                 ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.3),
                 const SizedBox(height: 20),
@@ -101,7 +101,7 @@ class HomePage extends StatelessWidget {
                   subtitle: 'Test your fluency and pronunciation.',
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const SpeakingPage()),
+                    MaterialPageRoute(builder: (_) => const SpeakingScreen()),
                   ),
                 ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.3),
                 const Spacer(flex: 2),
@@ -158,7 +158,7 @@ class AppDrawer extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const DashboardPage(),
+                            builder: (_) => const DashboardScreen(),
                           ),
                         );
                       },
@@ -190,7 +190,9 @@ class AppDrawer extends StatelessWidget {
                         Navigator.pop(context); // Close the drawer
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const TypingPage()),
+                          MaterialPageRoute(
+                            builder: (_) => const TypingScreen(),
+                          ),
                         );
                       },
                     ),
@@ -202,7 +204,7 @@ class AppDrawer extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const SpeakingPage(),
+                            builder: (_) => const SpeakingScreen(),
                           ),
                         );
                       },

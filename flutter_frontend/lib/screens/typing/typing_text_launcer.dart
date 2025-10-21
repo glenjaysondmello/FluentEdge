@@ -3,10 +3,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../graphql/graphql_documents.dart';
-import 'typing_test_page.dart';
+import 'typing_test_screen.dart';
 
-class TypingTestLauncherPage extends StatelessWidget {
-  const TypingTestLauncherPage({super.key});
+class TypingTestLauncherScreen extends StatelessWidget {
+  const TypingTestLauncherScreen({super.key});
 
   // Your core logic for starting the test remains the same. It's already robust!
   Future<void> _startNewTest(BuildContext context) async {
@@ -44,7 +44,8 @@ class TypingTestLauncherPage extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TypingTestPage(referenceText: referenceText),
+            builder: (context) =>
+                TypingTestScreen(referenceText: referenceText),
           ),
         );
       }

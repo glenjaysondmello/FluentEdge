@@ -18,15 +18,15 @@ const themeColors = {
   'accent': Color(0xFF00D2FF),
 };
 
-class TypingTestPage extends StatefulWidget {
+class TypingTestScreen extends StatefulWidget {
   final String referenceText;
-  const TypingTestPage({super.key, required this.referenceText});
+  const TypingTestScreen({super.key, required this.referenceText});
 
   @override
-  State<TypingTestPage> createState() => _TypingTestPageState();
+  State<TypingTestScreen> createState() => _TypingTestScreenState();
 }
 
-class _TypingTestPageState extends State<TypingTestPage> {
+class _TypingTestScreenState extends State<TypingTestScreen> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();

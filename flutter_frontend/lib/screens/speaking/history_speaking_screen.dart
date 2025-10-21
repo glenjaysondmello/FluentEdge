@@ -15,8 +15,8 @@ const themeColors = {
   'accent': Color(0xFF39FF14), // Use a different accent for variety
 };
 
-class HistorySpeakingPage extends StatelessWidget {
-  const HistorySpeakingPage({super.key});
+class HistorySpeakingScreen extends StatelessWidget {
+  const HistorySpeakingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

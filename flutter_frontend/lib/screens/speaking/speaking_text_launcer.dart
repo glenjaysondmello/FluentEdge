@@ -3,10 +3,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../../graphql/graphql_documents.dart';
-import './speaking_test_page.dart';
+import 'speaking_test_screen.dart';
 
-class SpeakingTestLauncherPage extends StatelessWidget {
-  const SpeakingTestLauncherPage({super.key});
+class SpeakingTestLauncherScreen extends StatelessWidget {
+  const SpeakingTestLauncherScreen({super.key});
 
   // Your core logic for starting the test remains the same. It's already robust!
   Future<void> _startNewTest(BuildContext context) async {
@@ -45,7 +45,7 @@ class SpeakingTestLauncherPage extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                SpeakingTestPage(referenceText: referenceText),
+                SpeakingTestScreen(referenceText: referenceText),
           ),
         );
       }
