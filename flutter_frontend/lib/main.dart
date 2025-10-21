@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: "Mood App",
+          title: "FluentEdge",
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
