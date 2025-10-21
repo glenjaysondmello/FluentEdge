@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../provider/leaderboard_firestore_service.dart'; // Import the service
@@ -7,6 +8,7 @@ const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
   'backgroundEnd': Color(0xFF009FFD),
   'card': Color(0x22FFFFFF),
+  'highlightCard': Color(0x44FFFFFF),
   'text': Colors.white,
 };
 
@@ -19,6 +21,7 @@ class LeaderboardScreen extends StatefulWidget {
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
   final LeaderboardFirestoreService _service = LeaderboardFirestoreService();
+  final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +87,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                       itemBuilder: (context, index) {
                         final user =
                             users[index].data() as Map<String, dynamic>;
+                        final isCurrentUser = user['uid'] == currentUserId;
                         return _buildLeaderboardTile(
                           rank: index + 1,
                           name: user['displayName'] ?? 'Anonymous',
@@ -93,6 +97,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                           typingScore: (user['avgTypingScore'] as num)
                               .toDouble(),
                           rankingScore: (user['rankingScore'] as num).toInt(),
+                          isCurrentUser: isCurrentUser,
                         );
                       },
                       itemCount: users.length,
@@ -116,13 +121,19 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     required double speakingScore,
     required double typingScore,
     required int rankingScore,
+    required bool isCurrentUser,
   }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: themeColors['card'],
+        color: isCurrentUser
+            ? themeColors['highlightCard']
+            : themeColors['card'],
         borderRadius: BorderRadius.circular(16),
+        border: isCurrentUser
+            ? Border.all(color: Colors.white.withAlpha(150), width: 2)
+            : null,
       ),
 
       child: Row(

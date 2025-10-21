@@ -15,6 +15,7 @@ const themeColors = {
   'text': Colors.white,
   'textFaded': Color(0xAAFFFFFF),
   'accent': Color(0xFF00D2FF),
+  'accentC': Color(0xFF39FF14),
 };
 
 class HistoryTypingScreen extends StatelessWidget {
@@ -168,7 +169,7 @@ class HistoryCard extends StatelessWidget {
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: themeColors['text'],
+                      color: themeColors['accentC'],
                     ),
                   ),
                 ],
