@@ -507,10 +507,9 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
           child: Text(
             widget.referenceText,
             textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              fontSize: 22,
-              color: themeColors['text'],
-              height: 1.5,
+            style: GoogleFonts.sourceCodePro(
+              fontSize: 20,
+              color: themeColors['textFaded'],
             ),
           ),
         ),

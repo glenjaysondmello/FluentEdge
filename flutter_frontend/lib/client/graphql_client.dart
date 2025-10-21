@@ -21,7 +21,7 @@ class TimeoutClient extends http.BaseClient {
 }
 
 ValueNotifier<GraphQLClient> getGraphQLClient() {
-  final httpClient = TimeoutClient(timeout: Duration(seconds: 200));
+  final httpClient = TimeoutClient(timeout: Duration(seconds: 1000));
 
   final httpLink = HttpLink(
     "https://fluentedge.onrender.com/graphql",

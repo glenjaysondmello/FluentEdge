@@ -8,9 +8,12 @@ import './screens/splash_screen.dart';
 import './provider/auth_provider.dart';
 import 'screens/home_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  tz.initializeTimeZones();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
