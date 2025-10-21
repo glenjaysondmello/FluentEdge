@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import './typing_text_launcer.dart';
-import './dashboard_page.dart';
+import 'dashboard_screen.dart';
 
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
@@ -14,8 +14,8 @@ const themeColors = {
   'primaryAction': Color(0xFF39FF14),
 };
 
-class TypingPage extends StatelessWidget {
-  const TypingPage({super.key});
+class TypingScreen extends StatelessWidget {
+  const TypingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class TypingPage extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const TypingTestLauncherPage(),
+                      builder: (_) => const TypingTestLauncherScreen(),
                     ),
                   ),
                 ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.3),

@@ -1,13 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/client/graphql_client.dart';
-import 'package:flutter_frontend/screens/typing/typing_text_launcer.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'firebase_options.dart';
 import './screens/auth_screen.dart';
 import './screens/splash_screen.dart';
 import './provider/auth_provider.dart';
-import './screens/home_page.dart';
+import 'screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -25,25 +24,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-      client: getGraphQLClient(),
-      child: MultiProvider(
-        providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: "FluentEdge",
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          initialRoute: '/',
-          routes: {
-            '/': (ctx) => const SplashScreen(),
-            '/auth': (ctx) => const AuthScreen(),
-            '/home': (ctx) => const HomePage(),
-            '/text': (ctx) => const TypingTestLauncherPage(),
-          },
-        ),
+    return ChangeNotifierProvider(
+      create: (_) => AuthProvider(),
+      child: Consumer<AuthProvider>(
+        builder: (context, auth, _) {
+          final client = getGraphQLClient();
+
+          return GraphQLProvider(
+            client: client,
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: "FluentEdge",
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              ),
+              initialRoute: '/',
+              routes: {
+                '/': (ctx) => const SplashScreen(),
+                '/auth': (ctx) => const AuthScreen(),
+                '/home': (ctx) => const HomeScreen(),
+              },
+            ),
+          );
+        },
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import './speaking_text_launcer.dart';
-import './dashboard_page.dart';
+import 'dashboard_screen.dart';
 
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
@@ -14,8 +14,8 @@ const themeColors = {
   'primaryAction': Color(0xFF39FF14),
 };
 
-class SpeakingPage extends StatelessWidget {
-  const SpeakingPage({super.key});
+class SpeakingScreen extends StatelessWidget {
+  const SpeakingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class SpeakingPage extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const SpeakingTestLauncherPage(),
+                      builder: (_) => const SpeakingTestLauncherScreen(),
                     ),
                   ),
                 ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.3),

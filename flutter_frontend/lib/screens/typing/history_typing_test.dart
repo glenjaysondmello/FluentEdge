@@ -17,8 +17,8 @@ const themeColors = {
   'accent': Color(0xFF00D2FF),
 };
 
-class HistoryTypingPage extends StatelessWidget {
-  const HistoryTypingPage({super.key});
+class HistoryTypingScreen extends StatelessWidget {
+  const HistoryTypingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

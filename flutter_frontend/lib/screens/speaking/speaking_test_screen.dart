@@ -25,15 +25,15 @@ const themeColors = {
   'recording': Colors.redAccent,
 };
 
-class SpeakingTestPage extends StatefulWidget {
+class SpeakingTestScreen extends StatefulWidget {
   final String referenceText;
-  const SpeakingTestPage({super.key, required this.referenceText});
+  const SpeakingTestScreen({super.key, required this.referenceText});
 
   @override
-  State<SpeakingTestPage> createState() => _SpeakingTestPageState();
+  State<SpeakingTestScreen> createState() => _SpeakingTestScreenState();
 }
 
-class _SpeakingTestPageState extends State<SpeakingTestPage> {
+class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   int _seconds = 60;
   Timer? _timer;
   bool? _isRunning = false;

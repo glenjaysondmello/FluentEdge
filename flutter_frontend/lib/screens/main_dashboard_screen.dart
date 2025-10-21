@@ -20,14 +20,14 @@ const themeColors = {
   'typingAccent': Color(0xFFFFD700),
 };
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardScreenState extends State<DashboardScreen> {
   bool _isLoading = true;
   String? _error;
   Map<String, dynamic> _overallStats = {};
