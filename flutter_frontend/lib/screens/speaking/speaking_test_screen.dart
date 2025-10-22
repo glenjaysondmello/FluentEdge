@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_frontend/client/graphql_client.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -228,14 +229,16 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
       if (!mounted) return;
 
-      final client = GraphQLProvider.of(context).value;
+      // final client = GraphQLProvider.of(context).value;
+
+      final freshClient = getGraphQLClient().value;
       // If your mutation expects an 'Upload' variable named 'audioFile', adjust the key accordingly.
       final mutationVariables = {
         'referenceText': widget.referenceText,
         'audioFile': upload,
       };
 
-      final result = await client.mutate(
+      final result = await freshClient.mutate(
         MutationOptions(
           document: gql(submitSpeakingTestMutation),
           variables: mutationVariables,
