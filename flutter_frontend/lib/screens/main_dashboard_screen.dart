@@ -6,7 +6,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import '../provider/auth_provider.dart';
 import '../../graphql/graphql_documents.dart'; // Ensure your queries are here
-import '../provider/leaderboard_firestore_service.dart';
 
 // Consistent theme colors
 const themeColors = {
@@ -33,9 +32,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Map<String, dynamic> _overallStats = {};
   List<Map<String, dynamic>> _recentActivities = [];
   bool _didFetchData = false; // Flag to prevent multiple fetches
-
-  final LeaderboardFirestoreService _leaderboardService =
-      LeaderboardFirestoreService();
 
   @override
   void didChangeDependencies() {
@@ -91,15 +87,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           .map((e) => e as Map<String, dynamic>)
           .toList();
 
-      final calculatedStats = _calculateOverallStats(
-        speakingTests,
-        typingTests,
-      );
-
-      _leaderboardService.updateLeaderboardEntry(calculatedStats);
-
       setState(() {
-        _overallStats = calculatedStats;
+        _overallStats = _calculateOverallStats(speakingTests, typingTests);
+        ;
         _recentActivities = _getRecentActivities(speakingTests, typingTests);
         _isLoading = false;
       });
