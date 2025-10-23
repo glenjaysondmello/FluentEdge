@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/client/graphql_client.dart';
+import 'package:flutter_frontend/provider/leaderboard_firestore_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'firebase_options.dart';
 import './screens/auth_screen.dart';
@@ -27,8 +28,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => LeaderboardFirestoreService()),
+      ],
       child: Consumer<AuthProvider>(
         builder: (context, auth, _) {
           final client = getGraphQLClient();
