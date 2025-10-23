@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_frontend/provider/leaderboard_firestore_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
 import '../../graphql/graphql_documents.dart';
 
 // A map to hold our theme colors for easy access
@@ -175,6 +177,19 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
       setState(() {
         _result = result.data?['submitTypingTest'];
       });
+
+      try {
+        final leaderboardService = Provider.of<LeaderboardFirestoreService>(
+          context,
+          listen: false,
+        );
+
+        await leaderboardService.fetchAndUploadStats(client);
+
+        print('Leaserboard updated after speaking test');
+      } catch (e) {
+        print("Failed to update the leaderboard: $e");
+      }
     }
   }
 

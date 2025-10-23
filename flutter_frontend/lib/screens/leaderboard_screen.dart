@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../provider/leaderboard_firestore_service.dart'; // Import the service
 
 // Re-using the theme from your dashboard for consistency
@@ -20,8 +21,15 @@ class LeaderboardScreen extends StatefulWidget {
 }
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
-  final LeaderboardFirestoreService _service = LeaderboardFirestoreService();
+  late LeaderboardFirestoreService _service;
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _service = Provider.of<LeaderboardFirestoreService>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
