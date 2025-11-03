@@ -1,4 +1,3 @@
-// lib/pages/speaking_test_page.dart
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -65,7 +64,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   Future<void> _closeRecorderSafely() async {
     try {
       if (_recorder != null) {
-        // check if recorder is open; closeRecorder is safe to call but we null afterward
         await _recorder!.closeRecorder();
       }
     } catch (e) {
@@ -223,7 +221,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
     try {
       final bytes = await file.readAsBytes();
       final upload = MultipartFile.fromBytes(
-        'file', // field name; keep in sync with backend expectation for multipart
+        'file',
         bytes,
         filename: _audioPath!.split('/').last,
         contentType: MediaType('audio', 'm4a'),
@@ -234,7 +232,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
       // final client = GraphQLProvider.of(context).value;
 
       final freshClient = getGraphQLClient().value;
-      // If your mutation expects an 'Upload' variable named 'audioFile', adjust the key accordingly.
       final mutationVariables = {
         'referenceText': widget.referenceText,
         'audioFile': upload,

@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import './speaking_text_launcer.dart';
 import 'dashboard_screen.dart';
+import '../../widgets/action_card_starter.dart';
 
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
@@ -47,7 +48,7 @@ class SpeakingScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _ActionCard(
+                ActionCardStarter(
                   icon: Icons.mic_none_outlined,
                   title: 'Start New Test',
                   subtitle: 'Test your pronunciation and fluency.',
@@ -61,7 +62,7 @@ class SpeakingScreen extends StatelessWidget {
                   ),
                 ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.3),
                 const SizedBox(height: 20),
-                _ActionCard(
+                ActionCardStarter(
                   icon: Icons.dashboard_outlined,
                   title: 'Speaking Dashboard',
                   subtitle: 'Review your scores and suggestions.',
@@ -82,85 +83,84 @@ class SpeakingScreen extends StatelessWidget {
   }
 }
 
-/// Reusable action card (can be moved to a shared widgets folder)
-class _ActionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final String buttonText;
-  final VoidCallback onPressed;
-  final bool isPrimary;
+// class _ActionCard extends StatelessWidget {
+//   final IconData icon;
+//   final String title;
+//   final String subtitle;
+//   final String buttonText;
+//   final VoidCallback onPressed;
+//   final bool isPrimary;
 
-  const _ActionCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.buttonText,
-    required this.onPressed,
-    this.isPrimary = false,
-  });
+//   const _ActionCard({
+//     required this.icon,
+//     required this.title,
+//     required this.subtitle,
+//     required this.buttonText,
+//     required this.onPressed,
+//     this.isPrimary = false,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: themeColors['card'],
-        borderRadius: BorderRadius.circular(20.0),
-        border: Border.all(color: Colors.white.withAlpha(30)),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 40, color: themeColors['accent']),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: themeColors['text'],
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: themeColors['textFaded'],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 16),
-          isPrimary
-              ? ElevatedButton(
-                  onPressed: onPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: themeColors['primaryAction'],
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(buttonText),
-                )
-              : OutlinedButton(
-                  onPressed: onPressed,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: themeColors['text'],
-                    side: BorderSide(color: themeColors['textFaded']!),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(buttonText),
-                ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(20.0),
+//       decoration: BoxDecoration(
+//         color: themeColors['card'],
+//         borderRadius: BorderRadius.circular(20.0),
+//         border: Border.all(color: Colors.white.withAlpha(30)),
+//       ),
+//       child: Row(
+//         children: [
+//           Icon(icon, size: 40, color: themeColors['accent']),
+//           const SizedBox(width: 16),
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   title,
+//                   style: GoogleFonts.poppins(
+//                     fontSize: 18,
+//                     fontWeight: FontWeight.bold,
+//                     color: themeColors['text'],
+//                   ),
+//                 ),
+//                 Text(
+//                   subtitle,
+//                   style: GoogleFonts.poppins(
+//                     fontSize: 14,
+//                     color: themeColors['textFaded'],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           const SizedBox(width: 16),
+//           isPrimary
+//               ? ElevatedButton(
+//                   onPressed: onPressed,
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: themeColors['primaryAction'],
+//                     foregroundColor: Colors.black,
+//                     shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(12),
+//                     ),
+//                   ),
+//                   child: Text(buttonText),
+//                 )
+//               : OutlinedButton(
+//                   onPressed: onPressed,
+//                   style: OutlinedButton.styleFrom(
+//                     foregroundColor: themeColors['text'],
+//                     side: BorderSide(color: themeColors['textFaded']!),
+//                     shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(12),
+//                     ),
+//                   ),
+//                   child: Text(buttonText),
+//                 ),
+//         ],
+//       ),
+//     );
+//   }
+// }
