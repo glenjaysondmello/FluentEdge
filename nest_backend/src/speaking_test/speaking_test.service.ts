@@ -4,8 +4,6 @@ import { evaluateWithGroq } from 'src/utils/ai-evaluatar-speaking';
 import { transcribeAudio } from '../utils/whisper';
 import { FileUpload } from 'graphql-upload/processRequest.mjs';
 import Groq from 'groq-sdk';
-import * as fs from 'fs';
-import * as path from 'path';
 
 @Injectable()
 export class SpeakingTestService {
