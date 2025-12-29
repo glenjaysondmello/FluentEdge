@@ -5,7 +5,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../graphql/graphql_documents.dart';
 
-// Using the same theme colors for consistency
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
   'backgroundEnd': Color(0xFF009FFD),
@@ -185,6 +184,16 @@ class HistoryCard extends StatelessWidget {
             ],
           ),
           const Divider(color: Colors.white24, height: 24),
+          Text(
+            '"${test['referenceText']}"',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.poppins(
+              color: themeColors['text'],
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          const SizedBox(height: 12),
           // Row for detailed stats
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

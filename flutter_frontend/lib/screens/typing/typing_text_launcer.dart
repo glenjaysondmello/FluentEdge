@@ -8,7 +8,6 @@ import 'typing_test_screen.dart';
 class TypingTestLauncherScreen extends StatelessWidget {
   const TypingTestLauncherScreen({super.key});
 
-  // Your core logic for starting the test remains the same. It's already robust!
   Future<void> _startNewTest(BuildContext context) async {
     // Show a loading dialog while fetching data
     showDialog(

@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import '../provider/auth_provider.dart';
 import '../../graphql/graphql_documents.dart'; // Ensure your queries are here
 
-// Consistent theme colors
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
   'backgroundEnd': Color(0xFF009FFD),

@@ -2,9 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../provider/leaderboard_firestore_service.dart'; // Import the service
+import '../provider/leaderboard_firestore_service.dart';
 
-// Re-using the theme from your dashboard for consistency
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
   'backgroundEnd': Color(0xFF009FFD),

@@ -9,7 +9,6 @@ import 'typing/typing_screen.dart';
 import 'speaking/speaking_screen.dart';
 import '../screens/leaderboard_screen.dart';
 
-// Theme colors remain the same for consistency
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
   'backgroundEnd': Color(0xFF009FFD),
@@ -47,7 +46,6 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      // The drawer is now the new, beautiful AppDrawer
       drawer: const AppDrawer(),
       extendBodyBehindAppBar: true,
       body: Container(
@@ -114,7 +112,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-/// A completely redesigned, modern sidebar with a glassmorphism effect.
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
@@ -239,7 +236,6 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  // Enhanced drawer item with better styling
   Widget _buildDrawerItem({
     required IconData icon,
     required String title,
@@ -258,7 +254,6 @@ class AppDrawer extends StatelessWidget {
   }
 }
 
-/// A custom widget for the new drawer header for a cleaner look.
 class _DrawerHeader extends StatelessWidget {
   final String name;
   final String email;
@@ -301,7 +296,6 @@ class _DrawerHeader extends StatelessWidget {
   }
 }
 
-/// Reusable button for the home page (no changes needed here)
 class _HomePageButton extends StatelessWidget {
   final IconData icon;
   final String title;

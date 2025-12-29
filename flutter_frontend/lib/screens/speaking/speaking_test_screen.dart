@@ -64,6 +64,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   Future<void> _closeRecorderSafely() async {
     try {
       if (_recorder != null) {
+        // check if recorder is open; closeRecorder is safe to call but we null afterward
         await _recorder!.closeRecorder();
       }
     } catch (e) {
