@@ -90,6 +90,7 @@ mutation SubmitTypingTest($referenceText: String!, $userText: String!, $duration
 const String getTypingTestQuery = r'''
   query GetTypingTests {
     getTypingTests {
+      referenceText
       wpm
       cpm
       accuracy

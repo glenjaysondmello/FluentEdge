@@ -7,7 +7,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 
-// Using the same theme colors for consistency
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
   'backgroundEnd': Color(0xFF009FFD),

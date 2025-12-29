@@ -5,14 +5,13 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../graphql/graphql_documents.dart';
 
-// Using the same theme colors for consistency
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
   'backgroundEnd': Color(0xFF009FFD),
   'card': Color(0x22FFFFFF),
   'text': Colors.white,
   'textFaded': Color(0xAAFFFFFF),
-  'accent': Color(0xFF39FF14), // Use a different accent for variety
+  'accent': Color(0xFF39FF14),
 };
 
 class HistorySpeakingScreen extends StatelessWidget {

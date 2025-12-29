@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_frontend/provider/leaderboard_firestore_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:provider/provider.dart';
 
-// Using the same theme colors for consistency
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
   'backgroundEnd': Color(0xFF009FFD),
@@ -21,8 +17,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final LeaderboardFirestoreService leaderboardService =
-      LeaderboardFirestoreService();
   @override
   void initState() {
     super.initState();
@@ -34,20 +28,6 @@ class _SplashScreenState extends State<SplashScreen> {
       FirebaseAuth.instance.authStateChanges().listen((user) async {
         if (mounted) {
           if (user != null) {
-            try {
-              final leaderboardService =
-                  Provider.of<LeaderboardFirestoreService>(
-                    context,
-                    listen: false,
-                  );
-
-              final client = GraphQLProvider.of(context).value;
-
-              await leaderboardService.fetchAndUploadStats(client);
-              print("Leaderboard stats updated successfully.");
-            } catch (e) {
-              print("Error updating leaderboard on splash: $e");
-            }
             Navigator.of(context).pushReplacementNamed('/home');
           } else {
             Navigator.of(context).pushReplacementNamed('/auth');
@@ -123,3 +103,28 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
+// FirebaseAuth.instance.authStateChanges().listen((user) async {
+//         if (mounted) {
+//           if (user != null) {
+//             try {
+//               final leaderboardService =
+//                   Provider.of<LeaderboardFirestoreService>(
+//                     context,
+//                     listen: false,
+//                   );
+
+//               final client = GraphQLProvider.of(context).value;
+
+//               await leaderboardService.fetchAndUploadStats(client);
+//               print("Leaderboard stats updated successfully.");
+//             } catch (e) {
+//               print("Error updating leaderboard on splash: $e");
+//             }
+//             Navigator.of(context).pushReplacementNamed('/home');
+//           } else {
+//             Navigator.of(context).pushReplacementNamed('/auth');
+//           }
+//         }
+//       });
+//     });
