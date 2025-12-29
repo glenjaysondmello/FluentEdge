@@ -23,6 +23,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLogin = true;
@@ -30,6 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -47,6 +49,7 @@ class _AuthScreenState extends State<AuthScreen> {
         );
       } else {
         await authProvider.signUp(
+          _nameController.text.trim(),
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
@@ -156,6 +159,17 @@ class _AuthScreenState extends State<AuthScreen> {
                           const SizedBox(height: 24),
 
                           // 4. Beautifully styled TextFormFields
+                          if (!_isLogin)
+                            _buildTextFormField(
+                              controller: _nameController,
+                              hintText: "Full Name",
+                              prefixIcon: Icons.person_outline,
+                              validator: (v) => (v == null || v.isEmpty)
+                                  ? "Enter your name"
+                                  : null,
+                            ),
+                          if (!_isLogin) const SizedBox(height: 16),
+
                           _buildTextFormField(
                             controller: _emailController,
                             hintText: "Email Address",
