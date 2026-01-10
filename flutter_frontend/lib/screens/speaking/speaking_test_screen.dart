@@ -230,15 +230,14 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
       if (!mounted) return;
 
-      // final client = GraphQLProvider.of(context).value;
+      final client = GraphQLProvider.of(context).value;
 
-      final freshClient = getGraphQLClient().value;
       final mutationVariables = {
         'referenceText': widget.referenceText,
         'audioFile': upload,
       };
 
-      final result = await freshClient.mutate(
+      final result = await client.mutate(
         MutationOptions(
           document: gql(submitSpeakingTestMutation),
           variables: mutationVariables,
@@ -272,7 +271,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
           listen: false,
         );
 
-        await leaderboardService.fetchAndUploadStats(freshClient);
+        await leaderboardService.fetchAndUploadStats(client);
 
         print('Leaserboard updated after speaking test');
       } catch (e) {
