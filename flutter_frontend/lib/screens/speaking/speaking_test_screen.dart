@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_frontend/client/graphql_client.dart';
 import 'package:flutter_frontend/provider/leaderboard_firestore_service.dart';
+// import 'package:flutter_frontend/widgets/custom_snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -14,6 +14,7 @@ import 'package:http/http.dart' show MultipartFile;
 import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import '../../graphql/graphql_documents.dart';
+// import '../../widgets/custom_snackbar.dart';
 
 const themeColors = {
   'backgroundStart': Color(0xFF2A2A72),
@@ -251,6 +252,12 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Submit failed: ${result.exception}')),
           );
+
+          // CustomSnackbar(
+          //   context,
+          //   "Submit failed: ${result.exception}",
+          //   isError: true,
+          // );
         }
         setState(() {
           _isSubmitting = false;
