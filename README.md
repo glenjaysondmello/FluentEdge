@@ -1,6 +1,6 @@
 # ✨ FluentEdge: AI-Powered English Learning ✨
 
-FluentEdge is a **cross-platform, AI-powered English learning app** that helps users improve their **typing and speaking skills** with real-time evaluations, progress tracking, and personalized AI feedback. Built with **Flutter** for a fluid, responsive frontend and **NestJS** for a scalable backend, FluentEdge delivers a seamless learning experience on web, mobile, and desktop.
+FluentEdge is a **cross-platform, AI-powered English learning app** that helps users improve their **typing and speaking skills** with real-time evaluations, progress tracking, and personalized AI feedback. Built with **Flutter** for a fluid, responsive frontend and **NestJS** for a scalable backend, FluentEdge uses a **GraphQL API** to deliver a flexible, efficient, and strongly typed data layer across web, mobile, and desktop platforms.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -14,34 +14,40 @@ FluentEdge is a **cross-platform, AI-powered English learning app** that helps u
 
 ## ✨ Key Features
 
-* 🔑 **Authentication:** Secure email-password login & Google Sign-In via Firebase.
-* 📊 **Dashboard:** Performance overview – typing speed (WPM), accuracy, speaking scores, test history.
+* 🔑 **Authentication:** Secure email-password login and Google Sign-In via Firebase.
+* 📊 **Dashboard:** Unified performance overview including typing speed WPM, accuracy, speaking scores, and test history.
 * ⌨️ **Typing Practice:**
 
   * Timed typing tests with real-time evaluation.
-  * Results include WPM, CPM, accuracy, mistakes, score, and AI suggestions.
-  * Charts to track progress over time.
+  * Metrics include WPM, CPM, accuracy, mistakes, score, and AI generated suggestions.
+  * Interactive charts to track progress over time.
 * 🎤 **Speaking Practice:**
 
-  * Timed prompts with voice recording.
+  * Timed speaking prompts with voice recording.
   * AI evaluation of fluency, grammar, pronunciation, and vocabulary.
-  * Dashboard with progress charts and detailed transcripts.
+  * Detailed transcripts and historical progress analytics.
 * 🤖 **AI-Powered Feedback:**
 
-  * **Groq Cloud API** for typing evaluations.
-  * **Whisper Large v3** for speech-to-text transcription and pronunciation scoring.
-* 🛡️ **Secure & Scalable:** Built with NestJS, Prisma ORM, and NeonDB for reliability.
+  * Groq Cloud API for advanced typing and text evaluation.
+  * Whisper Large v3 for speech to text transcription and pronunciation analysis.
+* 🧠 **GraphQL API Layer:**
+
+  * Strongly typed schema with queries and mutations.
+  * Efficient data fetching tailored for Flutter clients.
+  * Simplified frontend state management and reduced overfetching.
+* 🛡️ **Secure and Scalable:** Built with NestJS, Prisma ORM, and NeonDB for high availability and reliability.
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Frontend:** Flutter (Dart), Firebase SDK *(multi-platform)*
-* **Backend:** NestJS (TypeScript)
-* **Database:** PostgreSQL (NeonDB) with Prisma ORM
-* **Authentication:** Firebase (Email & Google Sign-In)
-* **AI Models:** Groq Cloud API (text evaluation), Whisper Large v3 (speech transcription)
-* **Hosting/Deployment:** Flexible for mobile/web/desktop builds
+* **Frontend:** Flutter Dart, Firebase SDK, GraphQL Client
+* **Backend:** NestJS TypeScript with GraphQL
+* **API Layer:** GraphQL Apollo Server
+* **Database:** PostgreSQL NeonDB with Prisma ORM
+* **Authentication:** Firebase Email and Google Sign-In
+* **AI Models:** Groq Cloud API text evaluation, Whisper Large v3 speech transcription
+* **Hosting and Deployment:** Flexible for mobile, web, and desktop builds
 
 ---
 
@@ -50,10 +56,10 @@ FluentEdge is a **cross-platform, AI-powered English learning app** that helps u
 ### Prerequisites
 
 * Git
-* Node.js & npm/yarn *(for backend)*
-* Flutter SDK & Dart *(for frontend)*
-* PostgreSQL/NeonDB instance
-* Firebase project (for auth & config)
+* Node.js and npm or yarn
+* Flutter SDK and Dart
+* PostgreSQL or NeonDB instance
+* Firebase project for authentication
 
 ### 1. Clone Repository
 
@@ -62,7 +68,7 @@ git clone https://github.com/glenjaysondmello/FluentEdge.git
 cd FluentEdge
 ```
 
-### 2. Backend Setup (NestJS)
+### 2. Backend Setup NestJS with GraphQL
 
 ```bash
 cd nest_backend
@@ -70,19 +76,21 @@ npm install
 npm run start:dev
 ```
 
-Backend will run at: `http://localhost:3000`
+Backend will run at [http://localhost:3000](http://localhost:3000)
 
-#### Backend `.env` Example
+GraphQL Playground will be available at [http://localhost:3000/graphql](http://localhost:3000/graphql)
+
+#### Backend .env Example
 
 ```env
 PORT=3000
 DATABASE_URL=postgresql://user:password@localhost:5432/fluentedge
-MONGO_URI=""
-GROQ_API_KEY=""
+GROQ_API_KEY=
 ```
 
-📌 Place `serviceAccountKey.json` in the backend root for Firebase Admin SDK authentication.
-Used in `firebase.service.ts`:
+📌 Place serviceAccountKey.json in the backend root directory for Firebase Admin SDK authentication.
+
+Used in firebase.service.ts
 
 ```ts
 import * as admin from 'firebase-admin';
@@ -99,7 +107,9 @@ admin.initializeApp({
 export default admin;
 ```
 
-### 3. Frontend Setup (Flutter)
+---
+
+### 3. Frontend Setup Flutter
 
 ```bash
 cd ../flutter_frontend
@@ -107,9 +117,9 @@ flutter pub get
 flutter run
 ```
 
-#### Firebase Config
+#### Firebase Configuration
 
-Firebase integration will generate `firebase_options.dart` during setup. This file must be included in the Flutter project for Firebase services to work.
+Firebase integration generates firebase_options.dart during setup. Ensure this file is included in the Flutter project for Firebase services to function correctly.
 
 ---
 
@@ -117,70 +127,74 @@ Firebase integration will generate `firebase_options.dart` during setup. This fi
 
 ### Typing Tests
 
-* Start a new timed test.
-* View results: WPM, accuracy, mistakes, and AI feedback.
-* Track typing progress with history charts.
+* Start a new timed typing test.
+* View WPM, accuracy, mistakes, and AI generated feedback.
+* Track historical performance using visual analytics.
 
 ### Speaking Tests
 
-* Record answers to prompts.
-* Receive AI-driven evaluation of fluency, grammar, and pronunciation.
-* Track speaking progress over time.
+* Record responses to guided prompts.
+* Receive AI driven evaluation of fluency, grammar, and pronunciation.
+* Review transcripts and progress trends.
 
 ### Dashboard
 
-* See overall performance.
-* Access recent tests and progress trends.
+* Monitor overall learning progress.
+* Access recent test results and long term trends.
 
 ---
 
 ## 🗺️ Roadmap
 
-* ⭐ **Phase 1.0 (Current):**
+* ⭐ **Phase 1.0 Current**
 
-  * Secure auth (Firebase)
-  * Typing & speaking practice with AI feedback
-  * Dashboard & progress tracking
+  * Firebase authentication
+  * Typing and speaking practice with AI feedback
+  * GraphQL powered backend and analytics dashboard
 
-* 🚀 **Phase 1.1 (Upcoming):**
+* 🚀 **Phase 1.1 Upcoming**
 
-  * Role-based access & advanced user profiles
-  * Third-party integrations (payments, external APIs)
-  * Enhanced performance for large datasets
-  * Comprehensive test coverage
+  * Role based access control
+  * Advanced user profiles and personalization
+  * Third party integrations including payments
+  * Performance optimization for large datasets
+  * Expanded unit and integration test coverage
 
-* 💡 **Future Vision:**
+* 💡 **Future Vision**
 
-  * Desktop builds for Windows, macOS, Linux
-  * Real-time collaboration & AI tutors
-  * AI/ML personalization for lessons
-  * Community-driven plugin ecosystem
+  * Desktop builds for Windows macOS and Linux
+  * Real time collaboration and AI tutors
+  * AI driven lesson personalization
+  * Community driven plugin ecosystem
 
 ---
 
 ## 🤝 Contribution Guidelines
 
-1. Fork repo & create a feature branch:
+1. Fork the repository and create a feature branch
 
-   ```bash
-   git checkout -b feature/my-feature
-   ```
-2. Follow coding standards:
+```bash
+git checkout -b feature/my-feature
+```
 
-   * **Frontend:** Dart style guide (`flutter format .`)
-   * **Backend:** ESLint + Prettier (`npm run format`)
-3. Use **conventional commits** (e.g., `feat: add speaking dashboard`).
-4. Write unit/integration tests:
+2. Follow coding standards
 
-   * Backend → `npm test`
-   * Frontend → `flutter test`
-5. Submit PR with clear description & references.
+* Frontend Dart style guide using flutter format .
+* Backend ESLint and Prettier using npm run format
+
+3. Use conventional commits such as feat add speaking dashboard
+4. Write unit and integration tests
+
+* Backend npm test
+* Frontend flutter test
+
+5. Submit a pull request with a clear description and references
 
 ---
 
 ## 📜 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the MIT License.
 
 ---
 
@@ -191,4 +205,4 @@ This project is licensed under the **MIT License**.
 
 ---
 
-> 🚀 FluentEdge – Empowering learners with AI to improve typing, fluency, and pronunciation in English.
+> 🚀 FluentEdge – Empowering learners with AI and GraphQL to improve typing speed fluency and pronunciation in English.
