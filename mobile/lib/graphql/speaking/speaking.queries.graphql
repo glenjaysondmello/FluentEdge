@@ -1,0 +1,16 @@
+#import "lib/graphql/fragments/speaking/speaking_score.fragment.graphql"
+
+query GetSpeakingTests {
+  getSpeakingTests {
+    id
+    transcript
+    createdAt
+    scores {
+      ...SpeakingScoreFields
+    }
+  }
+}
+
+query GetSpeakingTestText {
+  getSpeakingTestText
+}

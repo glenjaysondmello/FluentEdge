@@ -1,0 +1,5 @@
+fragment TypingMistakeFields on TypingMistake {
+  error
+  correction
+  type
+}

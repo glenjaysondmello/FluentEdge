@@ -1,0 +1,7 @@
+fragment SpeakingScoreFields on SpeakingScore {
+  fluency
+  pronunciation
+  grammar
+  vocabulary
+  overall
+}
