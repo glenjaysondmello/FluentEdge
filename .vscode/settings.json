@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "/home/mellodglen/code_folder/vaultdrop/mobile/windows/flutter"
+    "cmake.sourceDirectory": "/home/mellodglen/code_folder/vaultdrop/mobile/windows/flutter",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
