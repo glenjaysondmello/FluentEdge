@@ -1,0 +1,71 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TypingMistake {
+  error: String!
+  correction: String!
+  type: String!
+}
+
+type TypingTest {
+  id: ID!
+  uid: String!
+  referenceText: String!
+  userText: String!
+  durationSec: Float!
+  wpm: Float!
+  cpm: Float!
+  accuracy: Float!
+  mistakes: [TypingMistake!]!
+  score: Float!
+  suggestions: [String!]!
+  encouragement: String!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type SpeakingScore {
+  fluency: Float!
+  pronunciation: Float!
+  grammar: Float!
+  vocabulary: Float!
+  overall: Float!
+}
+
+type SpeakingMistake {
+  error: String!
+  correction: String!
+  type: String!
+}
+
+type SpeakingTest {
+  id: ID!
+  uid: String!
+  referenceText: String!
+  transcript: String!
+  scores: SpeakingScore!
+  mistakes: [SpeakingMistake!]!
+  suggestions: [String!]!
+  encouragement: String!
+  createdAt: DateTime!
+}
+
+type Query {
+  getTypingTestText: String!
+  getTypingTests: [TypingTest!]!
+  getSpeakingTestText: String!
+  getSpeakingTests: [SpeakingTest!]!
+}
+
+type Mutation {
+  submitTypingTest(referenceText: String!, userText: String!, durationSec: Float!): TypingTest!
+  submitSpeakingTest(referenceText: String!, audioFile: Upload!): SpeakingTest!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
