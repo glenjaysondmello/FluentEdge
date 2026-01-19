@@ -1,9 +1,0 @@
-fragment TypingResultFields on TypingTest {
-  id
-  referenceText
-  wpm
-  cpm
-  accuracy
-  score
-  createdAt
-}

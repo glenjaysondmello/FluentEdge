@@ -1,5 +1,0 @@
-fragment SpeakingMistakeFields on SpeakingMistake {
-  error
-  correction
-  type
-}
