@@ -30,16 +30,16 @@ class Fragment_SpeakingMistakeFields {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final _resultData = <String, dynamic>{};
+    final resultData = <String, dynamic>{};
     final l$error = error;
-    _resultData['error'] = l$error;
+    resultData['error'] = l$error;
     final l$correction = correction;
-    _resultData['correction'] = l$correction;
+    resultData['correction'] = l$correction;
     final l$type = type;
-    _resultData['type'] = l$type;
+    resultData['type'] = l$type;
     final l$$__typename = $__typename;
-    _resultData['__typename'] = l$$__typename;
-    return _resultData;
+    resultData['__typename'] = l$$__typename;
+    return resultData;
   }
 
   @override
@@ -48,12 +48,7 @@ class Fragment_SpeakingMistakeFields {
     final l$correction = correction;
     final l$type = type;
     final l$$__typename = $__typename;
-    return Object.hashAll([
-      l$error,
-      l$correction,
-      l$type,
-      l$$__typename,
-    ]);
+    return Object.hashAll([l$error, l$correction, l$type, l$$__typename]);
   }
 
   @override
@@ -61,7 +56,7 @@ class Fragment_SpeakingMistakeFields {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is Fragment_SpeakingMistakeFields) ||
+    if (other is! Fragment_SpeakingMistakeFields ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -92,10 +87,7 @@ class Fragment_SpeakingMistakeFields {
 extension UtilityExtension_Fragment_SpeakingMistakeFields
     on Fragment_SpeakingMistakeFields {
   CopyWith_Fragment_SpeakingMistakeFields<Fragment_SpeakingMistakeFields>
-      get copyWith => CopyWith_Fragment_SpeakingMistakeFields(
-            this,
-            (i) => i,
-          );
+  get copyWith => CopyWith_Fragment_SpeakingMistakeFields(this, (i) => i);
 }
 
 abstract class CopyWith_Fragment_SpeakingMistakeFields<TRes> {
@@ -117,10 +109,7 @@ abstract class CopyWith_Fragment_SpeakingMistakeFields<TRes> {
 
 class _CopyWithImpl_Fragment_SpeakingMistakeFields<TRes>
     implements CopyWith_Fragment_SpeakingMistakeFields<TRes> {
-  _CopyWithImpl_Fragment_SpeakingMistakeFields(
-    this._instance,
-    this._then,
-  );
+  _CopyWithImpl_Fragment_SpeakingMistakeFields(this._instance, this._then);
 
   final Fragment_SpeakingMistakeFields _instance;
 
@@ -128,82 +117,87 @@ class _CopyWithImpl_Fragment_SpeakingMistakeFields<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
+  @override
   TRes call({
     Object? error = _undefined,
     Object? correction = _undefined,
     Object? type = _undefined,
     Object? $__typename = _undefined,
-  }) =>
-      _then(Fragment_SpeakingMistakeFields(
-        error: error == _undefined || error == null
-            ? _instance.error
-            : (error as String),
-        correction: correction == _undefined || correction == null
-            ? _instance.correction
-            : (correction as String),
-        type: type == _undefined || type == null
-            ? _instance.type
-            : (type as String),
-        $__typename: $__typename == _undefined || $__typename == null
-            ? _instance.$__typename
-            : ($__typename as String),
-      ));
+  }) => _then(
+    Fragment_SpeakingMistakeFields(
+      error: error == _undefined || error == null
+          ? _instance.error
+          : (error as String),
+      correction: correction == _undefined || correction == null
+          ? _instance.correction
+          : (correction as String),
+      type: type == _undefined || type == null
+          ? _instance.type
+          : (type as String),
+      $__typename: $__typename == _undefined || $__typename == null
+          ? _instance.$__typename
+          : ($__typename as String),
+    ),
+  );
 }
 
 class _CopyWithStubImpl_Fragment_SpeakingMistakeFields<TRes>
     implements CopyWith_Fragment_SpeakingMistakeFields<TRes> {
   _CopyWithStubImpl_Fragment_SpeakingMistakeFields(this._res);
 
-  TRes _res;
+  final TRes _res;
 
+  @override
   call({
     String? error,
     String? correction,
     String? type,
     String? $__typename,
-  }) =>
-      _res;
+  }) => _res;
 }
 
 const fragmentDefinitionSpeakingMistakeFields = FragmentDefinitionNode(
   name: NameNode(value: 'SpeakingMistakeFields'),
   typeCondition: TypeConditionNode(
-      on: NamedTypeNode(
-    name: NameNode(value: 'SpeakingMistake'),
-    isNonNull: false,
-  )),
+    on: NamedTypeNode(
+      name: NameNode(value: 'SpeakingMistake'),
+      isNonNull: false,
+    ),
+  ),
   directives: [],
-  selectionSet: SelectionSetNode(selections: [
-    FieldNode(
-      name: NameNode(value: 'error'),
-      alias: null,
-      arguments: [],
-      directives: [],
-      selectionSet: null,
-    ),
-    FieldNode(
-      name: NameNode(value: 'correction'),
-      alias: null,
-      arguments: [],
-      directives: [],
-      selectionSet: null,
-    ),
-    FieldNode(
-      name: NameNode(value: 'type'),
-      alias: null,
-      arguments: [],
-      directives: [],
-      selectionSet: null,
-    ),
-    FieldNode(
-      name: NameNode(value: '__typename'),
-      alias: null,
-      arguments: [],
-      directives: [],
-      selectionSet: null,
-    ),
-  ]),
+  selectionSet: SelectionSetNode(
+    selections: [
+      FieldNode(
+        name: NameNode(value: 'error'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'correction'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'type'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: '__typename'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+    ],
+  ),
 );
-const documentNodeFragmentSpeakingMistakeFields = DocumentNode(definitions: [
-  fragmentDefinitionSpeakingMistakeFields,
-]);
+const documentNodeFragmentSpeakingMistakeFields = DocumentNode(
+  definitions: [fragmentDefinitionSpeakingMistakeFields],
+);

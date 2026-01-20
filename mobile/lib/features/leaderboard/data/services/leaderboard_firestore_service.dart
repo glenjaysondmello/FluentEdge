@@ -9,7 +9,7 @@ class LeaderboardFirestoreService with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  late CollectionReference _leaderboardCollection = _firestore.collection(
+  late final CollectionReference _leaderboardCollection = _firestore.collection(
     'leaderboard',
   );
 

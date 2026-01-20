@@ -11,6 +11,7 @@ class ActionCardStarter extends StatelessWidget {
   final bool isPrimary;
 
   const ActionCardStarter({
+    super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
