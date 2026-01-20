@@ -173,6 +173,8 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
       ),
     );
 
+    if (!mounted) return;
+
     if (result.hasException) {
       debugPrint(result.exception.toString());
       // Optionally show an error message
@@ -189,9 +191,9 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
 
         await leaderboardService.fetchAndUploadStats(client);
 
-        print('Leaserboard updated after speaking test');
+        debugPrint('Leaserboard updated after speaking test');
       } catch (e) {
-        print("Failed to update the leaderboard: $e");
+        debugPrint("Failed to update the leaderboard: $e");
       }
     }
   }

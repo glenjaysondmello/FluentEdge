@@ -58,7 +58,7 @@ class LeaderboardFirestoreService with ChangeNotifier {
 
       await updateLeaderboardEntry(calculatedStats);
     } catch (e) {
-      print("Failed to fetch and upload stats: $e");
+      debugPrint("Failed to fetch and upload stats: $e");
       rethrow;
     }
   }

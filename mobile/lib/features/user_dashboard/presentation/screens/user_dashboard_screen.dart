@@ -71,10 +71,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
       final speakingResult = results[0];
       final typingResult = results[1];
 
-      print("Speaking Data Raw: ${speakingResult.data}");
-      print("Speaking Errors: ${speakingResult.exception}");
-      print("Typing Data Raw: ${typingResult.data}");
-
       if (speakingResult.hasException || typingResult.hasException) {
         throw Exception("Error fetching data. Please try again.");
       }
@@ -85,9 +81,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
       final typingDataParsed = typingResult.data != null
           ? Query_GetTypingTests.fromJson(typingResult.data!)
           : null;
-
-      print("Speaking parsed data: $speakingDataParsed");
-      print("Typing parsed data: $typingDataParsed");
 
       final List<Map<String, dynamic>> speakingTests =
           speakingDataParsed?.getSpeakingTests

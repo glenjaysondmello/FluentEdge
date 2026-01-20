@@ -39,7 +39,7 @@ class SpeakingTestScreen extends StatefulWidget {
 class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   int _seconds = 60;
   Timer? _timer;
-  bool? _isRunning = false;
+  bool _isRunning = false;
 
   FlutterSoundRecorder? _recorder;
   bool _isRecording = false;
@@ -246,6 +246,8 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
         ),
       );
 
+      if (!mounted) return;
+
       if (result.hasException) {
         debugPrint('GraphQL exception: ${result.exception}');
         if (mounted) {
@@ -285,9 +287,9 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
         await leaderboardService.fetchAndUploadStats(client);
 
-        print('Leaserboard updated after speaking test');
+        debugPrint('Leaserboard updated after speaking test');
       } catch (e) {
-        print("Failed to update the leaderboard: $e");
+        debugPrint("Failed to update the leaderboard: $e");
       }
 
       // cleanup temp file after successful submit
