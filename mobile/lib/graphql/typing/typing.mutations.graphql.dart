@@ -7,17 +7,17 @@ class Variables_Mutation_SubmitTypingTest {
     required String referenceText,
     required String userText,
     required double durationSec,
-  }) => Variables_Mutation_SubmitTypingTest._({
-    r'referenceText': referenceText,
-    r'userText': userText,
-    r'durationSec': durationSec,
-  });
+  }) =>
+      Variables_Mutation_SubmitTypingTest._({
+        r'referenceText': referenceText,
+        r'userText': userText,
+        r'durationSec': durationSec,
+      });
 
   Variables_Mutation_SubmitTypingTest._(this._$data);
 
   factory Variables_Mutation_SubmitTypingTest.fromJson(
-    Map<String, dynamic> data,
-  ) {
+      Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
     final l$referenceText = data['referenceText'];
     result$data['referenceText'] = (l$referenceText as String);
@@ -48,16 +48,18 @@ class Variables_Mutation_SubmitTypingTest {
   }
 
   CopyWith_Variables_Mutation_SubmitTypingTest<
-    Variables_Mutation_SubmitTypingTest
-  >
-  get copyWith => CopyWith_Variables_Mutation_SubmitTypingTest(this, (i) => i);
+          Variables_Mutation_SubmitTypingTest>
+      get copyWith => CopyWith_Variables_Mutation_SubmitTypingTest(
+            this,
+            (i) => i,
+          );
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Variables_Mutation_SubmitTypingTest ||
+    if (!(other is Variables_Mutation_SubmitTypingTest) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -84,7 +86,11 @@ class Variables_Mutation_SubmitTypingTest {
     final l$referenceText = referenceText;
     final l$userText = userText;
     final l$durationSec = durationSec;
-    return Object.hashAll([l$referenceText, l$userText, l$durationSec]);
+    return Object.hashAll([
+      l$referenceText,
+      l$userText,
+      l$durationSec,
+    ]);
   }
 }
 
@@ -97,12 +103,19 @@ abstract class CopyWith_Variables_Mutation_SubmitTypingTest<TRes> {
   factory CopyWith_Variables_Mutation_SubmitTypingTest.stub(TRes res) =
       _CopyWithStubImpl_Variables_Mutation_SubmitTypingTest;
 
-  TRes call({String? referenceText, String? userText, double? durationSec});
+  TRes call({
+    String? referenceText,
+    String? userText,
+    double? durationSec,
+  });
 }
 
 class _CopyWithImpl_Variables_Mutation_SubmitTypingTest<TRes>
     implements CopyWith_Variables_Mutation_SubmitTypingTest<TRes> {
-  _CopyWithImpl_Variables_Mutation_SubmitTypingTest(this._instance, this._then);
+  _CopyWithImpl_Variables_Mutation_SubmitTypingTest(
+    this._instance,
+    this._then,
+  );
 
   final Variables_Mutation_SubmitTypingTest _instance;
 
@@ -110,32 +123,34 @@ class _CopyWithImpl_Variables_Mutation_SubmitTypingTest<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? referenceText = _undefined,
     Object? userText = _undefined,
     Object? durationSec = _undefined,
-  }) => _then(
-    Variables_Mutation_SubmitTypingTest._({
-      ..._instance._$data,
-      if (referenceText != _undefined && referenceText != null)
-        'referenceText': (referenceText as String),
-      if (userText != _undefined && userText != null)
-        'userText': (userText as String),
-      if (durationSec != _undefined && durationSec != null)
-        'durationSec': (durationSec as double),
-    }),
-  );
+  }) =>
+      _then(Variables_Mutation_SubmitTypingTest._({
+        ..._instance._$data,
+        if (referenceText != _undefined && referenceText != null)
+          'referenceText': (referenceText as String),
+        if (userText != _undefined && userText != null)
+          'userText': (userText as String),
+        if (durationSec != _undefined && durationSec != null)
+          'durationSec': (durationSec as double),
+      }));
 }
 
 class _CopyWithStubImpl_Variables_Mutation_SubmitTypingTest<TRes>
     implements CopyWith_Variables_Mutation_SubmitTypingTest<TRes> {
   _CopyWithStubImpl_Variables_Mutation_SubmitTypingTest(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
-  call({String? referenceText, String? userText, double? durationSec}) => _res;
+  call({
+    String? referenceText,
+    String? userText,
+    double? durationSec,
+  }) =>
+      _res;
 }
 
 class Mutation_SubmitTypingTest {
@@ -149,8 +164,7 @@ class Mutation_SubmitTypingTest {
     final l$$__typename = json['__typename'];
     return Mutation_SubmitTypingTest(
       submitTypingTest: Mutation_SubmitTypingTest_submitTypingTest.fromJson(
-        (l$submitTypingTest as Map<String, dynamic>),
-      ),
+          (l$submitTypingTest as Map<String, dynamic>)),
       $__typename: (l$$__typename as String),
     );
   }
@@ -160,19 +174,22 @@ class Mutation_SubmitTypingTest {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$submitTypingTest = submitTypingTest;
-    resultData['submitTypingTest'] = l$submitTypingTest.toJson();
+    _resultData['submitTypingTest'] = l$submitTypingTest.toJson();
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
   int get hashCode {
     final l$submitTypingTest = submitTypingTest;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$submitTypingTest, l$$__typename]);
+    return Object.hashAll([
+      l$submitTypingTest,
+      l$$__typename,
+    ]);
   }
 
   @override
@@ -180,7 +197,7 @@ class Mutation_SubmitTypingTest {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Mutation_SubmitTypingTest ||
+    if (!(other is Mutation_SubmitTypingTest) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -201,7 +218,10 @@ class Mutation_SubmitTypingTest {
 extension UtilityExtension_Mutation_SubmitTypingTest
     on Mutation_SubmitTypingTest {
   CopyWith_Mutation_SubmitTypingTest<Mutation_SubmitTypingTest> get copyWith =>
-      CopyWith_Mutation_SubmitTypingTest(this, (i) => i);
+      CopyWith_Mutation_SubmitTypingTest(
+        this,
+        (i) => i,
+      );
 }
 
 abstract class CopyWith_Mutation_SubmitTypingTest<TRes> {
@@ -218,12 +238,15 @@ abstract class CopyWith_Mutation_SubmitTypingTest<TRes> {
     String? $__typename,
   });
   CopyWith_Mutation_SubmitTypingTest_submitTypingTest<TRes>
-  get submitTypingTest;
+      get submitTypingTest;
 }
 
 class _CopyWithImpl_Mutation_SubmitTypingTest<TRes>
     implements CopyWith_Mutation_SubmitTypingTest<TRes> {
-  _CopyWithImpl_Mutation_SubmitTypingTest(this._instance, this._then);
+  _CopyWithImpl_Mutation_SubmitTypingTest(
+    this._instance,
+    this._then,
+  );
 
   final Mutation_SubmitTypingTest _instance;
 
@@ -231,30 +254,25 @@ class _CopyWithImpl_Mutation_SubmitTypingTest<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? submitTypingTest = _undefined,
     Object? $__typename = _undefined,
-  }) => _then(
-    Mutation_SubmitTypingTest(
-      submitTypingTest:
-          submitTypingTest == _undefined || submitTypingTest == null
-          ? _instance.submitTypingTest
-          : (submitTypingTest as Mutation_SubmitTypingTest_submitTypingTest),
-      $__typename: $__typename == _undefined || $__typename == null
-          ? _instance.$__typename
-          : ($__typename as String),
-    ),
-  );
+  }) =>
+      _then(Mutation_SubmitTypingTest(
+        submitTypingTest: submitTypingTest == _undefined ||
+                submitTypingTest == null
+            ? _instance.submitTypingTest
+            : (submitTypingTest as Mutation_SubmitTypingTest_submitTypingTest),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
 
-  @override
   CopyWith_Mutation_SubmitTypingTest_submitTypingTest<TRes>
-  get submitTypingTest {
+      get submitTypingTest {
     final local$submitTypingTest = _instance.submitTypingTest;
     return CopyWith_Mutation_SubmitTypingTest_submitTypingTest(
-      local$submitTypingTest,
-      (e) => call(submitTypingTest: e),
-    );
+        local$submitTypingTest, (e) => call(submitTypingTest: e));
   }
 }
 
@@ -262,116 +280,109 @@ class _CopyWithStubImpl_Mutation_SubmitTypingTest<TRes>
     implements CopyWith_Mutation_SubmitTypingTest<TRes> {
   _CopyWithStubImpl_Mutation_SubmitTypingTest(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     Mutation_SubmitTypingTest_submitTypingTest? submitTypingTest,
     String? $__typename,
-  }) => _res;
+  }) =>
+      _res;
 
-  @override
   CopyWith_Mutation_SubmitTypingTest_submitTypingTest<TRes>
-  get submitTypingTest =>
-      CopyWith_Mutation_SubmitTypingTest_submitTypingTest.stub(_res);
+      get submitTypingTest =>
+          CopyWith_Mutation_SubmitTypingTest_submitTypingTest.stub(_res);
 }
 
-const documentNodeMutationSubmitTypingTest = DocumentNode(
-  definitions: [
-    OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'SubmitTypingTest'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-          variable: VariableNode(name: NameNode(value: 'referenceText')),
-          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
-          defaultValue: DefaultValueNode(value: null),
-          directives: [],
+const documentNodeMutationSubmitTypingTest = DocumentNode(definitions: [
+  OperationDefinitionNode(
+    type: OperationType.mutation,
+    name: NameNode(value: 'SubmitTypingTest'),
+    variableDefinitions: [
+      VariableDefinitionNode(
+        variable: VariableNode(name: NameNode(value: 'referenceText')),
+        type: NamedTypeNode(
+          name: NameNode(value: 'String'),
+          isNonNull: true,
         ),
-        VariableDefinitionNode(
-          variable: VariableNode(name: NameNode(value: 'userText')),
-          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
-          defaultValue: DefaultValueNode(value: null),
-          directives: [],
+        defaultValue: DefaultValueNode(value: null),
+        directives: [],
+      ),
+      VariableDefinitionNode(
+        variable: VariableNode(name: NameNode(value: 'userText')),
+        type: NamedTypeNode(
+          name: NameNode(value: 'String'),
+          isNonNull: true,
         ),
-        VariableDefinitionNode(
-          variable: VariableNode(name: NameNode(value: 'durationSec')),
-          type: NamedTypeNode(name: NameNode(value: 'Float'), isNonNull: true),
-          defaultValue: DefaultValueNode(value: null),
-          directives: [],
+        defaultValue: DefaultValueNode(value: null),
+        directives: [],
+      ),
+      VariableDefinitionNode(
+        variable: VariableNode(name: NameNode(value: 'durationSec')),
+        type: NamedTypeNode(
+          name: NameNode(value: 'Float'),
+          isNonNull: true,
         ),
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(
-        selections: [
-          FieldNode(
-            name: NameNode(value: 'submitTypingTest'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                name: NameNode(value: 'referenceText'),
-                value: VariableNode(name: NameNode(value: 'referenceText')),
-              ),
-              ArgumentNode(
-                name: NameNode(value: 'userText'),
-                value: VariableNode(name: NameNode(value: 'userText')),
-              ),
-              ArgumentNode(
-                name: NameNode(value: 'durationSec'),
-                value: VariableNode(name: NameNode(value: 'durationSec')),
-              ),
-            ],
+        defaultValue: DefaultValueNode(value: null),
+        directives: [],
+      ),
+    ],
+    directives: [],
+    selectionSet: SelectionSetNode(selections: [
+      FieldNode(
+        name: NameNode(value: 'submitTypingTest'),
+        alias: null,
+        arguments: [
+          ArgumentNode(
+            name: NameNode(value: 'referenceText'),
+            value: VariableNode(name: NameNode(value: 'referenceText')),
+          ),
+          ArgumentNode(
+            name: NameNode(value: 'userText'),
+            value: VariableNode(name: NameNode(value: 'userText')),
+          ),
+          ArgumentNode(
+            name: NameNode(value: 'durationSec'),
+            value: VariableNode(name: NameNode(value: 'durationSec')),
+          ),
+        ],
+        directives: [],
+        selectionSet: SelectionSetNode(selections: [
+          FragmentSpreadNode(
+            name: NameNode(value: 'TypingResultFields'),
             directives: [],
-            selectionSet: SelectionSetNode(
-              selections: [
-                FragmentSpreadNode(
-                  name: NameNode(value: 'TypingResultFields'),
-                  directives: [],
-                ),
-                FieldNode(
-                  name: NameNode(value: 'mistakes'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(
-                    selections: [
-                      FragmentSpreadNode(
-                        name: NameNode(value: 'TypingMistakeFields'),
-                        directives: [],
-                      ),
-                      FieldNode(
-                        name: NameNode(value: '__typename'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null,
-                      ),
-                    ],
-                  ),
-                ),
-                FieldNode(
-                  name: NameNode(value: 'suggestions'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null,
-                ),
-                FieldNode(
-                  name: NameNode(value: 'encouragement'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null,
-                ),
-                FieldNode(
-                  name: NameNode(value: '__typename'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null,
-                ),
-              ],
-            ),
+          ),
+          FieldNode(
+            name: NameNode(value: 'mistakes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                name: NameNode(value: 'TypingMistakeFields'),
+                directives: [],
+              ),
+              FieldNode(
+                name: NameNode(value: '__typename'),
+                alias: null,
+                arguments: [],
+                directives: [],
+                selectionSet: null,
+              ),
+            ]),
+          ),
+          FieldNode(
+            name: NameNode(value: 'suggestions'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+          FieldNode(
+            name: NameNode(value: 'encouragement'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
           ),
           FieldNode(
             name: NameNode(value: '__typename'),
@@ -380,13 +391,20 @@ const documentNodeMutationSubmitTypingTest = DocumentNode(
             directives: [],
             selectionSet: null,
           ),
-        ],
+        ]),
       ),
-    ),
-    fragmentDefinitionTypingResultFields,
-    fragmentDefinitionTypingMistakeFields,
-  ],
-);
+      FieldNode(
+        name: NameNode(value: '__typename'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+    ]),
+  ),
+  fragmentDefinitionTypingResultFields,
+  fragmentDefinitionTypingMistakeFields,
+]);
 
 class Mutation_SubmitTypingTest_submitTypingTest
     implements Fragment_TypingResultFields {
@@ -405,8 +423,7 @@ class Mutation_SubmitTypingTest_submitTypingTest
   });
 
   factory Mutation_SubmitTypingTest_submitTypingTest.fromJson(
-    Map<String, dynamic> json,
-  ) {
+      Map<String, dynamic> json) {
     final l$id = json['id'];
     final l$referenceText = json['referenceText'];
     final l$wpm = json['wpm'];
@@ -428,39 +445,28 @@ class Mutation_SubmitTypingTest_submitTypingTest
       createdAt: (l$createdAt as String),
       $__typename: (l$$__typename as String),
       mistakes: (l$mistakes as List<dynamic>)
-          .map(
-            (e) => Fragment_TypingMistakeFields.fromJson(
-              (e as Map<String, dynamic>),
-            ),
-          )
+          .map((e) => Fragment_TypingMistakeFields.fromJson(
+              (e as Map<String, dynamic>)))
           .toList(),
       suggestions: (l$suggestions as String?),
       encouragement: (l$encouragement as String?),
     );
   }
 
-  @override
   final String id;
 
-  @override
   final String referenceText;
 
-  @override
   final double wpm;
 
-  @override
   final double cpm;
 
-  @override
   final double accuracy;
 
-  @override
   final double score;
 
-  @override
   final String createdAt;
 
-  @override
   final String $__typename;
 
   final List<Fragment_TypingMistakeFields> mistakes;
@@ -469,32 +475,31 @@ class Mutation_SubmitTypingTest_submitTypingTest
 
   final String? encouragement;
 
-  @override
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$id = id;
-    resultData['id'] = l$id;
+    _resultData['id'] = l$id;
     final l$referenceText = referenceText;
-    resultData['referenceText'] = l$referenceText;
+    _resultData['referenceText'] = l$referenceText;
     final l$wpm = wpm;
-    resultData['wpm'] = l$wpm;
+    _resultData['wpm'] = l$wpm;
     final l$cpm = cpm;
-    resultData['cpm'] = l$cpm;
+    _resultData['cpm'] = l$cpm;
     final l$accuracy = accuracy;
-    resultData['accuracy'] = l$accuracy;
+    _resultData['accuracy'] = l$accuracy;
     final l$score = score;
-    resultData['score'] = l$score;
+    _resultData['score'] = l$score;
     final l$createdAt = createdAt;
-    resultData['createdAt'] = l$createdAt;
+    _resultData['createdAt'] = l$createdAt;
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
+    _resultData['__typename'] = l$$__typename;
     final l$mistakes = mistakes;
-    resultData['mistakes'] = l$mistakes.map((e) => e.toJson()).toList();
+    _resultData['mistakes'] = l$mistakes.map((e) => e.toJson()).toList();
     final l$suggestions = suggestions;
-    resultData['suggestions'] = l$suggestions;
+    _resultData['suggestions'] = l$suggestions;
     final l$encouragement = encouragement;
-    resultData['encouragement'] = l$encouragement;
-    return resultData;
+    _resultData['encouragement'] = l$encouragement;
+    return _resultData;
   }
 
   @override
@@ -530,7 +535,7 @@ class Mutation_SubmitTypingTest_submitTypingTest
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Mutation_SubmitTypingTest_submitTypingTest ||
+    if (!(other is Mutation_SubmitTypingTest_submitTypingTest) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -603,10 +608,11 @@ class Mutation_SubmitTypingTest_submitTypingTest
 extension UtilityExtension_Mutation_SubmitTypingTest_submitTypingTest
     on Mutation_SubmitTypingTest_submitTypingTest {
   CopyWith_Mutation_SubmitTypingTest_submitTypingTest<
-    Mutation_SubmitTypingTest_submitTypingTest
-  >
-  get copyWith =>
-      CopyWith_Mutation_SubmitTypingTest_submitTypingTest(this, (i) => i);
+          Mutation_SubmitTypingTest_submitTypingTest>
+      get copyWith => CopyWith_Mutation_SubmitTypingTest_submitTypingTest(
+            this,
+            (i) => i,
+          );
 }
 
 abstract class CopyWith_Mutation_SubmitTypingTest_submitTypingTest<TRes> {
@@ -632,13 +638,11 @@ abstract class CopyWith_Mutation_SubmitTypingTest_submitTypingTest<TRes> {
     String? encouragement,
   });
   TRes mistakes(
-    Iterable<Fragment_TypingMistakeFields> Function(
-      Iterable<
-        CopyWith_Fragment_TypingMistakeFields<Fragment_TypingMistakeFields>
-      >,
-    )
-    fn,
-  );
+      Iterable<Fragment_TypingMistakeFields> Function(
+              Iterable<
+                  CopyWith_Fragment_TypingMistakeFields<
+                      Fragment_TypingMistakeFields>>)
+          _fn);
 }
 
 class _CopyWithImpl_Mutation_SubmitTypingTest_submitTypingTest<TRes>
@@ -654,7 +658,6 @@ class _CopyWithImpl_Mutation_SubmitTypingTest_submitTypingTest<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? id = _undefined,
     Object? referenceText = _undefined,
@@ -667,62 +670,57 @@ class _CopyWithImpl_Mutation_SubmitTypingTest_submitTypingTest<TRes>
     Object? mistakes = _undefined,
     Object? suggestions = _undefined,
     Object? encouragement = _undefined,
-  }) => _then(
-    Mutation_SubmitTypingTest_submitTypingTest(
-      id: id == _undefined || id == null ? _instance.id : (id as String),
-      referenceText: referenceText == _undefined || referenceText == null
-          ? _instance.referenceText
-          : (referenceText as String),
-      wpm: wpm == _undefined || wpm == null ? _instance.wpm : (wpm as double),
-      cpm: cpm == _undefined || cpm == null ? _instance.cpm : (cpm as double),
-      accuracy: accuracy == _undefined || accuracy == null
-          ? _instance.accuracy
-          : (accuracy as double),
-      score: score == _undefined || score == null
-          ? _instance.score
-          : (score as double),
-      createdAt: createdAt == _undefined || createdAt == null
-          ? _instance.createdAt
-          : (createdAt as String),
-      $__typename: $__typename == _undefined || $__typename == null
-          ? _instance.$__typename
-          : ($__typename as String),
-      mistakes: mistakes == _undefined || mistakes == null
-          ? _instance.mistakes
-          : (mistakes as List<Fragment_TypingMistakeFields>),
-      suggestions: suggestions == _undefined
-          ? _instance.suggestions
-          : (suggestions as String?),
-      encouragement: encouragement == _undefined
-          ? _instance.encouragement
-          : (encouragement as String?),
-    ),
-  );
+  }) =>
+      _then(Mutation_SubmitTypingTest_submitTypingTest(
+        id: id == _undefined || id == null ? _instance.id : (id as String),
+        referenceText: referenceText == _undefined || referenceText == null
+            ? _instance.referenceText
+            : (referenceText as String),
+        wpm: wpm == _undefined || wpm == null ? _instance.wpm : (wpm as double),
+        cpm: cpm == _undefined || cpm == null ? _instance.cpm : (cpm as double),
+        accuracy: accuracy == _undefined || accuracy == null
+            ? _instance.accuracy
+            : (accuracy as double),
+        score: score == _undefined || score == null
+            ? _instance.score
+            : (score as double),
+        createdAt: createdAt == _undefined || createdAt == null
+            ? _instance.createdAt
+            : (createdAt as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+        mistakes: mistakes == _undefined || mistakes == null
+            ? _instance.mistakes
+            : (mistakes as List<Fragment_TypingMistakeFields>),
+        suggestions: suggestions == _undefined
+            ? _instance.suggestions
+            : (suggestions as String?),
+        encouragement: encouragement == _undefined
+            ? _instance.encouragement
+            : (encouragement as String?),
+      ));
 
-  @override
   TRes mistakes(
-    Iterable<Fragment_TypingMistakeFields> Function(
-      Iterable<
-        CopyWith_Fragment_TypingMistakeFields<Fragment_TypingMistakeFields>
-      >,
-    )
-    fn,
-  ) => call(
-    mistakes: fn(
-      _instance.mistakes.map(
-        (e) => CopyWith_Fragment_TypingMistakeFields(e, (i) => i),
-      ),
-    ).toList(),
-  );
+          Iterable<Fragment_TypingMistakeFields> Function(
+                  Iterable<
+                      CopyWith_Fragment_TypingMistakeFields<
+                          Fragment_TypingMistakeFields>>)
+              _fn) =>
+      call(
+          mistakes: _fn(_instance.mistakes
+              .map((e) => CopyWith_Fragment_TypingMistakeFields(
+                    e,
+                    (i) => i,
+                  ))).toList());
 }
 
 class _CopyWithStubImpl_Mutation_SubmitTypingTest_submitTypingTest<TRes>
     implements CopyWith_Mutation_SubmitTypingTest_submitTypingTest<TRes> {
   _CopyWithStubImpl_Mutation_SubmitTypingTest_submitTypingTest(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     String? id,
     String? referenceText,
@@ -735,8 +733,8 @@ class _CopyWithStubImpl_Mutation_SubmitTypingTest_submitTypingTest<TRes>
     List<Fragment_TypingMistakeFields>? mistakes,
     String? suggestions,
     String? encouragement,
-  }) => _res;
+  }) =>
+      _res;
 
-  @override
-  mistakes(fn) => _res;
+  mistakes(_fn) => _res;
 }

@@ -12,11 +12,8 @@ class Query_GetSpeakingTests {
     final l$$__typename = json['__typename'];
     return Query_GetSpeakingTests(
       getSpeakingTests: (l$getSpeakingTests as List<dynamic>)
-          .map(
-            (e) => Query_GetSpeakingTests_getSpeakingTests.fromJson(
-              (e as Map<String, dynamic>),
-            ),
-          )
+          .map((e) => Query_GetSpeakingTests_getSpeakingTests.fromJson(
+              (e as Map<String, dynamic>)))
           .toList(),
       $__typename: (l$$__typename as String),
     );
@@ -27,14 +24,13 @@ class Query_GetSpeakingTests {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$getSpeakingTests = getSpeakingTests;
-    resultData['getSpeakingTests'] = l$getSpeakingTests
-        .map((e) => e.toJson())
-        .toList();
+    _resultData['getSpeakingTests'] =
+        l$getSpeakingTests.map((e) => e.toJson()).toList();
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
@@ -52,7 +48,8 @@ class Query_GetSpeakingTests {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Query_GetSpeakingTests || runtimeType != other.runtimeType) {
+    if (!(other is Query_GetSpeakingTests) ||
+        runtimeType != other.runtimeType) {
       return false;
     }
     final l$getSpeakingTests = getSpeakingTests;
@@ -78,7 +75,10 @@ class Query_GetSpeakingTests {
 
 extension UtilityExtension_Query_GetSpeakingTests on Query_GetSpeakingTests {
   CopyWith_Query_GetSpeakingTests<Query_GetSpeakingTests> get copyWith =>
-      CopyWith_Query_GetSpeakingTests(this, (i) => i);
+      CopyWith_Query_GetSpeakingTests(
+        this,
+        (i) => i,
+      );
 }
 
 abstract class CopyWith_Query_GetSpeakingTests<TRes> {
@@ -95,20 +95,19 @@ abstract class CopyWith_Query_GetSpeakingTests<TRes> {
     String? $__typename,
   });
   TRes getSpeakingTests(
-    Iterable<Query_GetSpeakingTests_getSpeakingTests> Function(
-      Iterable<
-        CopyWith_Query_GetSpeakingTests_getSpeakingTests<
-          Query_GetSpeakingTests_getSpeakingTests
-        >
-      >,
-    )
-    fn,
-  );
+      Iterable<Query_GetSpeakingTests_getSpeakingTests> Function(
+              Iterable<
+                  CopyWith_Query_GetSpeakingTests_getSpeakingTests<
+                      Query_GetSpeakingTests_getSpeakingTests>>)
+          _fn);
 }
 
 class _CopyWithImpl_Query_GetSpeakingTests<TRes>
     implements CopyWith_Query_GetSpeakingTests<TRes> {
-  _CopyWithImpl_Query_GetSpeakingTests(this._instance, this._then);
+  _CopyWithImpl_Query_GetSpeakingTests(
+    this._instance,
+    this._then,
+  );
 
   final Query_GetSpeakingTests _instance;
 
@@ -116,124 +115,102 @@ class _CopyWithImpl_Query_GetSpeakingTests<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? getSpeakingTests = _undefined,
     Object? $__typename = _undefined,
-  }) => _then(
-    Query_GetSpeakingTests(
-      getSpeakingTests:
-          getSpeakingTests == _undefined || getSpeakingTests == null
-          ? _instance.getSpeakingTests
-          : (getSpeakingTests as List<Query_GetSpeakingTests_getSpeakingTests>),
-      $__typename: $__typename == _undefined || $__typename == null
-          ? _instance.$__typename
-          : ($__typename as String),
-    ),
-  );
+  }) =>
+      _then(Query_GetSpeakingTests(
+        getSpeakingTests:
+            getSpeakingTests == _undefined || getSpeakingTests == null
+                ? _instance.getSpeakingTests
+                : (getSpeakingTests
+                    as List<Query_GetSpeakingTests_getSpeakingTests>),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
 
-  @override
   TRes getSpeakingTests(
-    Iterable<Query_GetSpeakingTests_getSpeakingTests> Function(
-      Iterable<
-        CopyWith_Query_GetSpeakingTests_getSpeakingTests<
-          Query_GetSpeakingTests_getSpeakingTests
-        >
-      >,
-    )
-    fn,
-  ) => call(
-    getSpeakingTests: fn(
-      _instance.getSpeakingTests.map(
-        (e) => CopyWith_Query_GetSpeakingTests_getSpeakingTests(e, (i) => i),
-      ),
-    ).toList(),
-  );
+          Iterable<Query_GetSpeakingTests_getSpeakingTests> Function(
+                  Iterable<
+                      CopyWith_Query_GetSpeakingTests_getSpeakingTests<
+                          Query_GetSpeakingTests_getSpeakingTests>>)
+              _fn) =>
+      call(
+          getSpeakingTests: _fn(_instance.getSpeakingTests
+              .map((e) => CopyWith_Query_GetSpeakingTests_getSpeakingTests(
+                    e,
+                    (i) => i,
+                  ))).toList());
 }
 
 class _CopyWithStubImpl_Query_GetSpeakingTests<TRes>
     implements CopyWith_Query_GetSpeakingTests<TRes> {
   _CopyWithStubImpl_Query_GetSpeakingTests(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     List<Query_GetSpeakingTests_getSpeakingTests>? getSpeakingTests,
     String? $__typename,
-  }) => _res;
+  }) =>
+      _res;
 
-  @override
-  getSpeakingTests(fn) => _res;
+  getSpeakingTests(_fn) => _res;
 }
 
-const documentNodeQueryGetSpeakingTests = DocumentNode(
-  definitions: [
-    OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'GetSpeakingTests'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(
-        selections: [
+const documentNodeQueryGetSpeakingTests = DocumentNode(definitions: [
+  OperationDefinitionNode(
+    type: OperationType.query,
+    name: NameNode(value: 'GetSpeakingTests'),
+    variableDefinitions: [],
+    directives: [],
+    selectionSet: SelectionSetNode(selections: [
+      FieldNode(
+        name: NameNode(value: 'getSpeakingTests'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: SelectionSetNode(selections: [
           FieldNode(
-            name: NameNode(value: 'getSpeakingTests'),
+            name: NameNode(value: 'id'),
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: SelectionSetNode(
-              selections: [
-                FieldNode(
-                  name: NameNode(value: 'id'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null,
-                ),
-                FieldNode(
-                  name: NameNode(value: 'transcript'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null,
-                ),
-                FieldNode(
-                  name: NameNode(value: 'createdAt'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null,
-                ),
-                FieldNode(
-                  name: NameNode(value: 'scores'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(
-                    selections: [
-                      FragmentSpreadNode(
-                        name: NameNode(value: 'SpeakingScoreFields'),
-                        directives: [],
-                      ),
-                      FieldNode(
-                        name: NameNode(value: '__typename'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null,
-                      ),
-                    ],
-                  ),
-                ),
-                FieldNode(
-                  name: NameNode(value: '__typename'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null,
-                ),
-              ],
-            ),
+            selectionSet: null,
+          ),
+          FieldNode(
+            name: NameNode(value: 'transcript'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+          FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+          FieldNode(
+            name: NameNode(value: 'scores'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                name: NameNode(value: 'SpeakingScoreFields'),
+                directives: [],
+              ),
+              FieldNode(
+                name: NameNode(value: '__typename'),
+                alias: null,
+                arguments: [],
+                directives: [],
+                selectionSet: null,
+              ),
+            ]),
           ),
           FieldNode(
             name: NameNode(value: '__typename'),
@@ -242,12 +219,19 @@ const documentNodeQueryGetSpeakingTests = DocumentNode(
             directives: [],
             selectionSet: null,
           ),
-        ],
+        ]),
       ),
-    ),
-    fragmentDefinitionSpeakingScoreFields,
-  ],
-);
+      FieldNode(
+        name: NameNode(value: '__typename'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+    ]),
+  ),
+  fragmentDefinitionSpeakingScoreFields,
+]);
 
 class Query_GetSpeakingTests_getSpeakingTests {
   Query_GetSpeakingTests_getSpeakingTests({
@@ -259,8 +243,7 @@ class Query_GetSpeakingTests_getSpeakingTests {
   });
 
   factory Query_GetSpeakingTests_getSpeakingTests.fromJson(
-    Map<String, dynamic> json,
-  ) {
+      Map<String, dynamic> json) {
     final l$id = json['id'];
     final l$transcript = json['transcript'];
     final l$createdAt = json['createdAt'];
@@ -271,8 +254,7 @@ class Query_GetSpeakingTests_getSpeakingTests {
       transcript: (l$transcript as String),
       createdAt: (l$createdAt as String),
       scores: Fragment_SpeakingScoreFields.fromJson(
-        (l$scores as Map<String, dynamic>),
-      ),
+          (l$scores as Map<String, dynamic>)),
       $__typename: (l$$__typename as String),
     );
   }
@@ -288,18 +270,18 @@ class Query_GetSpeakingTests_getSpeakingTests {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$id = id;
-    resultData['id'] = l$id;
+    _resultData['id'] = l$id;
     final l$transcript = transcript;
-    resultData['transcript'] = l$transcript;
+    _resultData['transcript'] = l$transcript;
     final l$createdAt = createdAt;
-    resultData['createdAt'] = l$createdAt;
+    _resultData['createdAt'] = l$createdAt;
     final l$scores = scores;
-    resultData['scores'] = l$scores.toJson();
+    _resultData['scores'] = l$scores.toJson();
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
@@ -323,7 +305,7 @@ class Query_GetSpeakingTests_getSpeakingTests {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Query_GetSpeakingTests_getSpeakingTests ||
+    if (!(other is Query_GetSpeakingTests_getSpeakingTests) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -359,10 +341,11 @@ class Query_GetSpeakingTests_getSpeakingTests {
 extension UtilityExtension_Query_GetSpeakingTests_getSpeakingTests
     on Query_GetSpeakingTests_getSpeakingTests {
   CopyWith_Query_GetSpeakingTests_getSpeakingTests<
-    Query_GetSpeakingTests_getSpeakingTests
-  >
-  get copyWith =>
-      CopyWith_Query_GetSpeakingTests_getSpeakingTests(this, (i) => i);
+          Query_GetSpeakingTests_getSpeakingTests>
+      get copyWith => CopyWith_Query_GetSpeakingTests_getSpeakingTests(
+            this,
+            (i) => i,
+          );
 }
 
 abstract class CopyWith_Query_GetSpeakingTests_getSpeakingTests<TRes> {
@@ -397,38 +380,33 @@ class _CopyWithImpl_Query_GetSpeakingTests_getSpeakingTests<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? id = _undefined,
     Object? transcript = _undefined,
     Object? createdAt = _undefined,
     Object? scores = _undefined,
     Object? $__typename = _undefined,
-  }) => _then(
-    Query_GetSpeakingTests_getSpeakingTests(
-      id: id == _undefined || id == null ? _instance.id : (id as String),
-      transcript: transcript == _undefined || transcript == null
-          ? _instance.transcript
-          : (transcript as String),
-      createdAt: createdAt == _undefined || createdAt == null
-          ? _instance.createdAt
-          : (createdAt as String),
-      scores: scores == _undefined || scores == null
-          ? _instance.scores
-          : (scores as Fragment_SpeakingScoreFields),
-      $__typename: $__typename == _undefined || $__typename == null
-          ? _instance.$__typename
-          : ($__typename as String),
-    ),
-  );
+  }) =>
+      _then(Query_GetSpeakingTests_getSpeakingTests(
+        id: id == _undefined || id == null ? _instance.id : (id as String),
+        transcript: transcript == _undefined || transcript == null
+            ? _instance.transcript
+            : (transcript as String),
+        createdAt: createdAt == _undefined || createdAt == null
+            ? _instance.createdAt
+            : (createdAt as String),
+        scores: scores == _undefined || scores == null
+            ? _instance.scores
+            : (scores as Fragment_SpeakingScoreFields),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
 
-  @override
   CopyWith_Fragment_SpeakingScoreFields<TRes> get scores {
     final local$scores = _instance.scores;
     return CopyWith_Fragment_SpeakingScoreFields(
-      local$scores,
-      (e) => call(scores: e),
-    );
+        local$scores, (e) => call(scores: e));
   }
 }
 
@@ -436,18 +414,17 @@ class _CopyWithStubImpl_Query_GetSpeakingTests_getSpeakingTests<TRes>
     implements CopyWith_Query_GetSpeakingTests_getSpeakingTests<TRes> {
   _CopyWithStubImpl_Query_GetSpeakingTests_getSpeakingTests(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     String? id,
     String? transcript,
     String? createdAt,
     Fragment_SpeakingScoreFields? scores,
     String? $__typename,
-  }) => _res;
+  }) =>
+      _res;
 
-  @override
   CopyWith_Fragment_SpeakingScoreFields<TRes> get scores =>
       CopyWith_Fragment_SpeakingScoreFields.stub(_res);
 }
@@ -472,19 +449,22 @@ class Query_GetSpeakingTestText {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$getSpeakingTestText = getSpeakingTestText;
-    resultData['getSpeakingTestText'] = l$getSpeakingTestText;
+    _resultData['getSpeakingTestText'] = l$getSpeakingTestText;
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
   int get hashCode {
     final l$getSpeakingTestText = getSpeakingTestText;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$getSpeakingTestText, l$$__typename]);
+    return Object.hashAll([
+      l$getSpeakingTestText,
+      l$$__typename,
+    ]);
   }
 
   @override
@@ -492,7 +472,7 @@ class Query_GetSpeakingTestText {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Query_GetSpeakingTestText ||
+    if (!(other is Query_GetSpeakingTestText) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -513,7 +493,10 @@ class Query_GetSpeakingTestText {
 extension UtilityExtension_Query_GetSpeakingTestText
     on Query_GetSpeakingTestText {
   CopyWith_Query_GetSpeakingTestText<Query_GetSpeakingTestText> get copyWith =>
-      CopyWith_Query_GetSpeakingTestText(this, (i) => i);
+      CopyWith_Query_GetSpeakingTestText(
+        this,
+        (i) => i,
+      );
 }
 
 abstract class CopyWith_Query_GetSpeakingTestText<TRes> {
@@ -525,12 +508,18 @@ abstract class CopyWith_Query_GetSpeakingTestText<TRes> {
   factory CopyWith_Query_GetSpeakingTestText.stub(TRes res) =
       _CopyWithStubImpl_Query_GetSpeakingTestText;
 
-  TRes call({String? getSpeakingTestText, String? $__typename});
+  TRes call({
+    String? getSpeakingTestText,
+    String? $__typename,
+  });
 }
 
 class _CopyWithImpl_Query_GetSpeakingTestText<TRes>
     implements CopyWith_Query_GetSpeakingTestText<TRes> {
-  _CopyWithImpl_Query_GetSpeakingTestText(this._instance, this._then);
+  _CopyWithImpl_Query_GetSpeakingTestText(
+    this._instance,
+    this._then,
+  );
 
   final Query_GetSpeakingTestText _instance;
 
@@ -538,58 +527,55 @@ class _CopyWithImpl_Query_GetSpeakingTestText<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? getSpeakingTestText = _undefined,
     Object? $__typename = _undefined,
-  }) => _then(
-    Query_GetSpeakingTestText(
-      getSpeakingTestText:
-          getSpeakingTestText == _undefined || getSpeakingTestText == null
-          ? _instance.getSpeakingTestText
-          : (getSpeakingTestText as String),
-      $__typename: $__typename == _undefined || $__typename == null
-          ? _instance.$__typename
-          : ($__typename as String),
-    ),
-  );
+  }) =>
+      _then(Query_GetSpeakingTestText(
+        getSpeakingTestText:
+            getSpeakingTestText == _undefined || getSpeakingTestText == null
+                ? _instance.getSpeakingTestText
+                : (getSpeakingTestText as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
 }
 
 class _CopyWithStubImpl_Query_GetSpeakingTestText<TRes>
     implements CopyWith_Query_GetSpeakingTestText<TRes> {
   _CopyWithStubImpl_Query_GetSpeakingTestText(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
-  call({String? getSpeakingTestText, String? $__typename}) => _res;
+  call({
+    String? getSpeakingTestText,
+    String? $__typename,
+  }) =>
+      _res;
 }
 
-const documentNodeQueryGetSpeakingTestText = DocumentNode(
-  definitions: [
-    OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'GetSpeakingTestText'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(
-        selections: [
-          FieldNode(
-            name: NameNode(value: 'getSpeakingTestText'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-          FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-        ],
+const documentNodeQueryGetSpeakingTestText = DocumentNode(definitions: [
+  OperationDefinitionNode(
+    type: OperationType.query,
+    name: NameNode(value: 'GetSpeakingTestText'),
+    variableDefinitions: [],
+    directives: [],
+    selectionSet: SelectionSetNode(selections: [
+      FieldNode(
+        name: NameNode(value: 'getSpeakingTestText'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
       ),
-    ),
-  ],
-);
+      FieldNode(
+        name: NameNode(value: '__typename'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+    ]),
+  ),
+]);

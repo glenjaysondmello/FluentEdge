@@ -30,16 +30,16 @@ class Fragment_TypingMistakeFields {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$error = error;
-    resultData['error'] = l$error;
+    _resultData['error'] = l$error;
     final l$correction = correction;
-    resultData['correction'] = l$correction;
+    _resultData['correction'] = l$correction;
     final l$type = type;
-    resultData['type'] = l$type;
+    _resultData['type'] = l$type;
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
@@ -48,7 +48,12 @@ class Fragment_TypingMistakeFields {
     final l$correction = correction;
     final l$type = type;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$error, l$correction, l$type, l$$__typename]);
+    return Object.hashAll([
+      l$error,
+      l$correction,
+      l$type,
+      l$$__typename,
+    ]);
   }
 
   @override
@@ -56,7 +61,7 @@ class Fragment_TypingMistakeFields {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Fragment_TypingMistakeFields ||
+    if (!(other is Fragment_TypingMistakeFields) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -87,7 +92,10 @@ class Fragment_TypingMistakeFields {
 extension UtilityExtension_Fragment_TypingMistakeFields
     on Fragment_TypingMistakeFields {
   CopyWith_Fragment_TypingMistakeFields<Fragment_TypingMistakeFields>
-  get copyWith => CopyWith_Fragment_TypingMistakeFields(this, (i) => i);
+      get copyWith => CopyWith_Fragment_TypingMistakeFields(
+            this,
+            (i) => i,
+          );
 }
 
 abstract class CopyWith_Fragment_TypingMistakeFields<TRes> {
@@ -109,7 +117,10 @@ abstract class CopyWith_Fragment_TypingMistakeFields<TRes> {
 
 class _CopyWithImpl_Fragment_TypingMistakeFields<TRes>
     implements CopyWith_Fragment_TypingMistakeFields<TRes> {
-  _CopyWithImpl_Fragment_TypingMistakeFields(this._instance, this._then);
+  _CopyWithImpl_Fragment_TypingMistakeFields(
+    this._instance,
+    this._then,
+  );
 
   final Fragment_TypingMistakeFields _instance;
 
@@ -117,84 +128,82 @@ class _CopyWithImpl_Fragment_TypingMistakeFields<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? error = _undefined,
     Object? correction = _undefined,
     Object? type = _undefined,
     Object? $__typename = _undefined,
-  }) => _then(
-    Fragment_TypingMistakeFields(
-      error: error == _undefined || error == null
-          ? _instance.error
-          : (error as String),
-      correction: correction == _undefined || correction == null
-          ? _instance.correction
-          : (correction as String),
-      type: type == _undefined || type == null
-          ? _instance.type
-          : (type as String),
-      $__typename: $__typename == _undefined || $__typename == null
-          ? _instance.$__typename
-          : ($__typename as String),
-    ),
-  );
+  }) =>
+      _then(Fragment_TypingMistakeFields(
+        error: error == _undefined || error == null
+            ? _instance.error
+            : (error as String),
+        correction: correction == _undefined || correction == null
+            ? _instance.correction
+            : (correction as String),
+        type: type == _undefined || type == null
+            ? _instance.type
+            : (type as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
 }
 
 class _CopyWithStubImpl_Fragment_TypingMistakeFields<TRes>
     implements CopyWith_Fragment_TypingMistakeFields<TRes> {
   _CopyWithStubImpl_Fragment_TypingMistakeFields(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     String? error,
     String? correction,
     String? type,
     String? $__typename,
-  }) => _res;
+  }) =>
+      _res;
 }
 
 const fragmentDefinitionTypingMistakeFields = FragmentDefinitionNode(
   name: NameNode(value: 'TypingMistakeFields'),
   typeCondition: TypeConditionNode(
-    on: NamedTypeNode(name: NameNode(value: 'TypingMistake'), isNonNull: false),
-  ),
+      on: NamedTypeNode(
+    name: NameNode(value: 'TypingMistake'),
+    isNonNull: false,
+  )),
   directives: [],
-  selectionSet: SelectionSetNode(
-    selections: [
-      FieldNode(
-        name: NameNode(value: 'error'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'correction'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'type'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: '__typename'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-    ],
-  ),
+  selectionSet: SelectionSetNode(selections: [
+    FieldNode(
+      name: NameNode(value: 'error'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'correction'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'type'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: '__typename'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+  ]),
 );
-const documentNodeFragmentTypingMistakeFields = DocumentNode(
-  definitions: [fragmentDefinitionTypingMistakeFields],
-);
+const documentNodeFragmentTypingMistakeFields = DocumentNode(definitions: [
+  fragmentDefinitionTypingMistakeFields,
+]);

@@ -40,20 +40,20 @@ class Fragment_SpeakingScoreFields {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$fluency = fluency;
-    resultData['fluency'] = l$fluency;
+    _resultData['fluency'] = l$fluency;
     final l$pronunciation = pronunciation;
-    resultData['pronunciation'] = l$pronunciation;
+    _resultData['pronunciation'] = l$pronunciation;
     final l$grammar = grammar;
-    resultData['grammar'] = l$grammar;
+    _resultData['grammar'] = l$grammar;
     final l$vocabulary = vocabulary;
-    resultData['vocabulary'] = l$vocabulary;
+    _resultData['vocabulary'] = l$vocabulary;
     final l$overall = overall;
-    resultData['overall'] = l$overall;
+    _resultData['overall'] = l$overall;
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
@@ -79,7 +79,7 @@ class Fragment_SpeakingScoreFields {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Fragment_SpeakingScoreFields ||
+    if (!(other is Fragment_SpeakingScoreFields) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -120,7 +120,10 @@ class Fragment_SpeakingScoreFields {
 extension UtilityExtension_Fragment_SpeakingScoreFields
     on Fragment_SpeakingScoreFields {
   CopyWith_Fragment_SpeakingScoreFields<Fragment_SpeakingScoreFields>
-  get copyWith => CopyWith_Fragment_SpeakingScoreFields(this, (i) => i);
+      get copyWith => CopyWith_Fragment_SpeakingScoreFields(
+            this,
+            (i) => i,
+          );
 }
 
 abstract class CopyWith_Fragment_SpeakingScoreFields<TRes> {
@@ -144,7 +147,10 @@ abstract class CopyWith_Fragment_SpeakingScoreFields<TRes> {
 
 class _CopyWithImpl_Fragment_SpeakingScoreFields<TRes>
     implements CopyWith_Fragment_SpeakingScoreFields<TRes> {
-  _CopyWithImpl_Fragment_SpeakingScoreFields(this._instance, this._then);
+  _CopyWithImpl_Fragment_SpeakingScoreFields(
+    this._instance,
+    this._then,
+  );
 
   final Fragment_SpeakingScoreFields _instance;
 
@@ -152,7 +158,6 @@ class _CopyWithImpl_Fragment_SpeakingScoreFields<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? fluency = _undefined,
     Object? pronunciation = _undefined,
@@ -160,37 +165,35 @@ class _CopyWithImpl_Fragment_SpeakingScoreFields<TRes>
     Object? vocabulary = _undefined,
     Object? overall = _undefined,
     Object? $__typename = _undefined,
-  }) => _then(
-    Fragment_SpeakingScoreFields(
-      fluency: fluency == _undefined || fluency == null
-          ? _instance.fluency
-          : (fluency as double),
-      pronunciation: pronunciation == _undefined || pronunciation == null
-          ? _instance.pronunciation
-          : (pronunciation as double),
-      grammar: grammar == _undefined || grammar == null
-          ? _instance.grammar
-          : (grammar as double),
-      vocabulary: vocabulary == _undefined || vocabulary == null
-          ? _instance.vocabulary
-          : (vocabulary as double),
-      overall: overall == _undefined || overall == null
-          ? _instance.overall
-          : (overall as double),
-      $__typename: $__typename == _undefined || $__typename == null
-          ? _instance.$__typename
-          : ($__typename as String),
-    ),
-  );
+  }) =>
+      _then(Fragment_SpeakingScoreFields(
+        fluency: fluency == _undefined || fluency == null
+            ? _instance.fluency
+            : (fluency as double),
+        pronunciation: pronunciation == _undefined || pronunciation == null
+            ? _instance.pronunciation
+            : (pronunciation as double),
+        grammar: grammar == _undefined || grammar == null
+            ? _instance.grammar
+            : (grammar as double),
+        vocabulary: vocabulary == _undefined || vocabulary == null
+            ? _instance.vocabulary
+            : (vocabulary as double),
+        overall: overall == _undefined || overall == null
+            ? _instance.overall
+            : (overall as double),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
 }
 
 class _CopyWithStubImpl_Fragment_SpeakingScoreFields<TRes>
     implements CopyWith_Fragment_SpeakingScoreFields<TRes> {
   _CopyWithStubImpl_Fragment_SpeakingScoreFields(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     double? fluency,
     double? pronunciation,
@@ -198,62 +201,63 @@ class _CopyWithStubImpl_Fragment_SpeakingScoreFields<TRes>
     double? vocabulary,
     double? overall,
     String? $__typename,
-  }) => _res;
+  }) =>
+      _res;
 }
 
 const fragmentDefinitionSpeakingScoreFields = FragmentDefinitionNode(
   name: NameNode(value: 'SpeakingScoreFields'),
   typeCondition: TypeConditionNode(
-    on: NamedTypeNode(name: NameNode(value: 'SpeakingScore'), isNonNull: false),
-  ),
+      on: NamedTypeNode(
+    name: NameNode(value: 'SpeakingScore'),
+    isNonNull: false,
+  )),
   directives: [],
-  selectionSet: SelectionSetNode(
-    selections: [
-      FieldNode(
-        name: NameNode(value: 'fluency'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'pronunciation'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'grammar'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'vocabulary'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'overall'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: '__typename'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-    ],
-  ),
+  selectionSet: SelectionSetNode(selections: [
+    FieldNode(
+      name: NameNode(value: 'fluency'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'pronunciation'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'grammar'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'vocabulary'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'overall'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: '__typename'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+  ]),
 );
-const documentNodeFragmentSpeakingScoreFields = DocumentNode(
-  definitions: [fragmentDefinitionSpeakingScoreFields],
-);
+const documentNodeFragmentSpeakingScoreFields = DocumentNode(definitions: [
+  fragmentDefinitionSpeakingScoreFields,
+]);

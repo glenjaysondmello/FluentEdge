@@ -50,24 +50,24 @@ class Fragment_TypingResultFields {
   final String $__typename;
 
   Map<String, dynamic> toJson() {
-    final resultData = <String, dynamic>{};
+    final _resultData = <String, dynamic>{};
     final l$id = id;
-    resultData['id'] = l$id;
+    _resultData['id'] = l$id;
     final l$referenceText = referenceText;
-    resultData['referenceText'] = l$referenceText;
+    _resultData['referenceText'] = l$referenceText;
     final l$wpm = wpm;
-    resultData['wpm'] = l$wpm;
+    _resultData['wpm'] = l$wpm;
     final l$cpm = cpm;
-    resultData['cpm'] = l$cpm;
+    _resultData['cpm'] = l$cpm;
     final l$accuracy = accuracy;
-    resultData['accuracy'] = l$accuracy;
+    _resultData['accuracy'] = l$accuracy;
     final l$score = score;
-    resultData['score'] = l$score;
+    _resultData['score'] = l$score;
     final l$createdAt = createdAt;
-    resultData['createdAt'] = l$createdAt;
+    _resultData['createdAt'] = l$createdAt;
     final l$$__typename = $__typename;
-    resultData['__typename'] = l$$__typename;
-    return resultData;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
   }
 
   @override
@@ -97,7 +97,7 @@ class Fragment_TypingResultFields {
     if (identical(this, other)) {
       return true;
     }
-    if (other is! Fragment_TypingResultFields ||
+    if (!(other is Fragment_TypingResultFields) ||
         runtimeType != other.runtimeType) {
       return false;
     }
@@ -148,7 +148,10 @@ class Fragment_TypingResultFields {
 extension UtilityExtension_Fragment_TypingResultFields
     on Fragment_TypingResultFields {
   CopyWith_Fragment_TypingResultFields<Fragment_TypingResultFields>
-  get copyWith => CopyWith_Fragment_TypingResultFields(this, (i) => i);
+      get copyWith => CopyWith_Fragment_TypingResultFields(
+            this,
+            (i) => i,
+          );
 }
 
 abstract class CopyWith_Fragment_TypingResultFields<TRes> {
@@ -174,7 +177,10 @@ abstract class CopyWith_Fragment_TypingResultFields<TRes> {
 
 class _CopyWithImpl_Fragment_TypingResultFields<TRes>
     implements CopyWith_Fragment_TypingResultFields<TRes> {
-  _CopyWithImpl_Fragment_TypingResultFields(this._instance, this._then);
+  _CopyWithImpl_Fragment_TypingResultFields(
+    this._instance,
+    this._then,
+  );
 
   final Fragment_TypingResultFields _instance;
 
@@ -182,7 +188,6 @@ class _CopyWithImpl_Fragment_TypingResultFields<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  @override
   TRes call({
     Object? id = _undefined,
     Object? referenceText = _undefined,
@@ -192,37 +197,35 @@ class _CopyWithImpl_Fragment_TypingResultFields<TRes>
     Object? score = _undefined,
     Object? createdAt = _undefined,
     Object? $__typename = _undefined,
-  }) => _then(
-    Fragment_TypingResultFields(
-      id: id == _undefined || id == null ? _instance.id : (id as String),
-      referenceText: referenceText == _undefined || referenceText == null
-          ? _instance.referenceText
-          : (referenceText as String),
-      wpm: wpm == _undefined || wpm == null ? _instance.wpm : (wpm as double),
-      cpm: cpm == _undefined || cpm == null ? _instance.cpm : (cpm as double),
-      accuracy: accuracy == _undefined || accuracy == null
-          ? _instance.accuracy
-          : (accuracy as double),
-      score: score == _undefined || score == null
-          ? _instance.score
-          : (score as double),
-      createdAt: createdAt == _undefined || createdAt == null
-          ? _instance.createdAt
-          : (createdAt as String),
-      $__typename: $__typename == _undefined || $__typename == null
-          ? _instance.$__typename
-          : ($__typename as String),
-    ),
-  );
+  }) =>
+      _then(Fragment_TypingResultFields(
+        id: id == _undefined || id == null ? _instance.id : (id as String),
+        referenceText: referenceText == _undefined || referenceText == null
+            ? _instance.referenceText
+            : (referenceText as String),
+        wpm: wpm == _undefined || wpm == null ? _instance.wpm : (wpm as double),
+        cpm: cpm == _undefined || cpm == null ? _instance.cpm : (cpm as double),
+        accuracy: accuracy == _undefined || accuracy == null
+            ? _instance.accuracy
+            : (accuracy as double),
+        score: score == _undefined || score == null
+            ? _instance.score
+            : (score as double),
+        createdAt: createdAt == _undefined || createdAt == null
+            ? _instance.createdAt
+            : (createdAt as String),
+        $__typename: $__typename == _undefined || $__typename == null
+            ? _instance.$__typename
+            : ($__typename as String),
+      ));
 }
 
 class _CopyWithStubImpl_Fragment_TypingResultFields<TRes>
     implements CopyWith_Fragment_TypingResultFields<TRes> {
   _CopyWithStubImpl_Fragment_TypingResultFields(this._res);
 
-  final TRes _res;
+  TRes _res;
 
-  @override
   call({
     String? id,
     String? referenceText,
@@ -232,76 +235,77 @@ class _CopyWithStubImpl_Fragment_TypingResultFields<TRes>
     double? score,
     String? createdAt,
     String? $__typename,
-  }) => _res;
+  }) =>
+      _res;
 }
 
 const fragmentDefinitionTypingResultFields = FragmentDefinitionNode(
   name: NameNode(value: 'TypingResultFields'),
   typeCondition: TypeConditionNode(
-    on: NamedTypeNode(name: NameNode(value: 'TypingTest'), isNonNull: false),
-  ),
+      on: NamedTypeNode(
+    name: NameNode(value: 'TypingTest'),
+    isNonNull: false,
+  )),
   directives: [],
-  selectionSet: SelectionSetNode(
-    selections: [
-      FieldNode(
-        name: NameNode(value: 'id'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'referenceText'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'wpm'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'cpm'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'accuracy'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'score'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: 'createdAt'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-      FieldNode(
-        name: NameNode(value: '__typename'),
-        alias: null,
-        arguments: [],
-        directives: [],
-        selectionSet: null,
-      ),
-    ],
-  ),
+  selectionSet: SelectionSetNode(selections: [
+    FieldNode(
+      name: NameNode(value: 'id'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'referenceText'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'wpm'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'cpm'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'accuracy'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'score'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: 'createdAt'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+    FieldNode(
+      name: NameNode(value: '__typename'),
+      alias: null,
+      arguments: [],
+      directives: [],
+      selectionSet: null,
+    ),
+  ]),
 );
-const documentNodeFragmentTypingResultFields = DocumentNode(
-  definitions: [fragmentDefinitionTypingResultFields],
-);
+const documentNodeFragmentTypingResultFields = DocumentNode(definitions: [
+  fragmentDefinitionTypingResultFields,
+]);
