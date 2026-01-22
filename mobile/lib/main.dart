@@ -11,6 +11,8 @@ import 'features/home/presentation/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+late final ValueNotifier<GraphQLClient> graphqlClient;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -20,41 +22,40 @@ void main() async {
 
   await initHiveForFlutter();
 
-  runApp(const MyApp());
+  final client = createGraphQLClient();
+  graphqlClient = ValueNotifier<GraphQLClient>(client);
+
+  runApp(MyApp(graphqlClient: graphqlClient));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ValueNotifier<GraphQLClient> graphqlClient;
+
+  const MyApp({super.key, required this.graphqlClient});
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => LeaderboardFirestoreService()),
-      ],
-      child: Consumer<AuthProvider>(
-        builder: (context, auth, _) {
-          final client = getGraphQLClient();
-
-          return GraphQLProvider(
-            client: client,
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: "FluentEdge",
-              theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                useMaterial3: true,
-              ),
-              initialRoute: '/',
-              routes: {
-                '/': (ctx) => const SplashScreen(),
-                '/auth': (ctx) => const AuthScreen(),
-                '/home': (ctx) => const HomeScreen(),
-              },
-            ),
-          );
-        },
+    return GraphQLProvider(
+      client: graphqlClient,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+          ChangeNotifierProvider(create: (_) => LeaderboardFirestoreService()),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "FluentEdge",
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          initialRoute: '/',
+          routes: {
+            '/': (ctx) => const SplashScreen(),
+            '/auth': (ctx) => const AuthScreen(),
+            '/home': (ctx) => const HomeScreen(),
+          },
+        ),
       ),
     );
   }

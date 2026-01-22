@@ -172,6 +172,9 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   Future<void> _stopRecordingAndSubmit() async {
     if (!_isRecording) return;
     await _stopRecording();
+
+    Future.delayed(const Duration(seconds: 1));
+
     await _submitTest();
   }
 
@@ -246,10 +249,17 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
         ),
       );
 
+      Future.delayed(const Duration(seconds: 5));
+
+      debugPrint(
+        '=== GraphQL result.data (runtimeType=${result.data.runtimeType}) ===',
+      );
+      debugPrint(result.data.toString());
+
       if (!mounted) return;
 
       if (result.hasException) {
-        debugPrint('GraphQL exception: ${result.exception}');
+        debugPrint('GraphQL exception full: ${result.exception.toString()}');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Submit failed: ${result.exception}')),
@@ -339,8 +349,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
       ),
     );
   }
-
-  // ----- UI below unchanged from your version, but with small safety checks -----
 
   Widget _buildTestView() {
     return Padding(

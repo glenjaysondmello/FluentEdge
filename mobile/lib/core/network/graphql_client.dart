@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'package:http/io_client.dart';
-import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-ValueNotifier<GraphQLClient> getGraphQLClient() {
+GraphQLClient createGraphQLClient() {
   final HttpClient nativeHttpClient = HttpClient()
     ..connectionTimeout = const Duration(seconds: 60)
     ..idleTimeout = const Duration(seconds: 300);
@@ -32,10 +31,8 @@ ValueNotifier<GraphQLClient> getGraphQLClient() {
 
   final link = authLink.concat(httpLink);
 
-  return ValueNotifier(
-    GraphQLClient(
-      link: link,
-      cache: GraphQLCache(store: HiveStore()),
-    ),
+  return GraphQLClient(
+    link: link,
+    cache: GraphQLCache(store: HiveStore()),
   );
 }
