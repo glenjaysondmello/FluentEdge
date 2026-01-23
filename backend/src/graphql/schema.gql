@@ -47,12 +47,20 @@ type SpeakingTest {
   id: ID!
   uid: String!
   referenceText: String!
-  transcript: String!
-  scores: SpeakingScore!
-  mistakes: [SpeakingMistake!]!
-  suggestions: [String!]!
-  encouragement: String!
+  transcript: String
+  scores: SpeakingScore
+  mistakes: [SpeakingMistake!]
+  suggestions: [String!]
+  encouragement: String
+  status: SpeakingTestStatus!
   createdAt: DateTime!
+}
+
+"""The processing status of the speaking test"""
+enum SpeakingTestStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
 }
 
 type Query {
@@ -60,11 +68,12 @@ type Query {
   getTypingTests: [TypingTest!]!
   getSpeakingTestText: String!
   getSpeakingTests: [SpeakingTest!]!
+  getResultById(resultId: String!): SpeakingTest!
 }
 
 type Mutation {
   submitTypingTest(referenceText: String!, userText: String!, durationSec: Float!): TypingTest!
-  submitSpeakingTest(referenceText: String!, audioFile: Upload!): SpeakingTest!
+  submitSpeakingTest(referenceText: String!, audioFile: Upload!): String!
 }
 
 """The `Upload` scalar type represents a file upload."""

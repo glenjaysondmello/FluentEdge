@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
 
 @ObjectType()
 export class SpeakingScore {
@@ -16,15 +16,28 @@ export class SpeakingMistake {
   @Field() type: string;
 }
 
+export enum SpeakingTestStatus {
+  PROCESSING = 'PROCESSING',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+}
+
+registerEnumType(SpeakingTestStatus, {
+  name: 'SpeakingTestStatus',
+  description: 'The processing status of the speaking test',
+});
+
 @ObjectType()
 export class SpeakingTest {
   @Field(() => ID) id: string;
   @Field() uid: string;
   @Field() referenceText: string;
-  @Field() transcript: string;
-  @Field(() => SpeakingScore) scores: SpeakingScore;
-  @Field(() => [SpeakingMistake]) mistakes: SpeakingMistake[];
-  @Field(() => [String]) suggestions: string[];
-  @Field() encouragement: string;
+  @Field({ nullable: true }) transcript: string;
+  @Field(() => SpeakingScore, { nullable: true }) scores: SpeakingScore;
+  @Field(() => [SpeakingMistake], { nullable: true })
+  mistakes: SpeakingMistake[];
+  @Field(() => [String], { nullable: true }) suggestions: string[];
+  @Field({ nullable: true }) encouragement: string;
+  @Field(() => SpeakingTestStatus) status: SpeakingTestStatus;
   @Field() createdAt: Date;
 }
