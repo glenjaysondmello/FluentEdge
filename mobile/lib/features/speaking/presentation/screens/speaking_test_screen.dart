@@ -6,6 +6,7 @@ import 'package:mobile/features/leaderboard/data/services/leaderboard_firestore_
 // import 'package:flutter_frontend/widgets/custom_snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:mobile/graphql/schema.graphql.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,6 +15,7 @@ import 'package:http/http.dart' show MultipartFile;
 import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/graphql/speaking/speaking.mutations.graphql.dart';
+import 'package:mobile/graphql/speaking/speaking.queries.graphql.dart';
 // import '../../widgets/custom_snackbar.dart';
 
 const themeColors = {
@@ -47,6 +49,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
   bool _submitted = false;
   bool _isSubmitting = false;
+
   Map<String, dynamic>? _result;
 
   @override
@@ -241,7 +244,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
         audioFile: upload,
       );
 
-      final result = await client.mutate(
+      final mutationResultData = await client.mutate(
         MutationOptions(
           document: documentNodeMutationSubmitSpeakingTest,
           variables: mutationVariables.toJson(),
@@ -249,20 +252,18 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
         ),
       );
 
-      Future.delayed(const Duration(seconds: 5));
-
-      debugPrint(
-        '=== GraphQL result.data (runtimeType=${result.data.runtimeType}) ===',
-      );
-      debugPrint(result.data.toString());
-
       if (!mounted) return;
 
-      if (result.hasException) {
-        debugPrint('GraphQL exception full: ${result.exception.toString()}');
+      if (mutationResultData.hasException) {
+        debugPrint(
+          'GraphQL exception full: ${mutationResultData.exception.toString()}',
+        );
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Submit failed: ${result.exception}')),
+            SnackBar(
+              content: Text('Submit failed: ${mutationResultData.exception}'),
+            ),
           );
 
           // CustomSnackbar(
@@ -275,32 +276,17 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
           _isSubmitting = false;
           _submitted = false;
         });
+
         return;
       }
 
-      final parsedData = result.data != null
-          ? Mutation_SubmitSpeakingTest.fromJson(result.data!)
+      final parsedMutationResultData = mutationResultData.data != null
+          ? Mutation_SubmitSpeakingTest.fromJson(mutationResultData.data!)
           : null;
 
-      final data = parsedData?.submitSpeakingTest.toJson() ?? [];
+      final resultId = parsedMutationResultData?.submitSpeakingTest ?? "";
 
-      setState(() {
-        _submitted = true;
-        _result = (data is Map<String, dynamic>) ? data : null;
-      });
-
-      try {
-        final leaderboardService = Provider.of<LeaderboardFirestoreService>(
-          context,
-          listen: false,
-        );
-
-        await leaderboardService.fetchAndUploadStats(client);
-
-        debugPrint('Leaserboard updated after speaking test');
-      } catch (e) {
-        debugPrint("Failed to update the leaderboard: $e");
-      }
+      await _pollForResults(client, resultId);
 
       // cleanup temp file after successful submit
       try {
@@ -322,6 +308,84 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
         setState(() {
           _isSubmitting = false;
         });
+      }
+    }
+  }
+
+  Future<void> _pollForResults(GraphQLClient client, String resultId) async {
+    int attempts = 0;
+    bool isDone = false;
+
+    while (!isDone && attempts < 20) {
+      attempts++;
+
+      await Future.delayed(const Duration(seconds: 3));
+
+      try {
+        final queryVariables = Variables_Query_GetResultById(
+          resultId: resultId,
+        );
+
+        final result = await client.query(
+          QueryOptions(
+            document: documentNodeQueryGetResultById,
+            variables: queryVariables.toJson(),
+            fetchPolicy: FetchPolicy.networkOnly,
+          ),
+        );
+
+        if (!mounted) return;
+
+        if (result.hasException) {
+          debugPrint("Polling network error (ignoring): ${result.exception}");
+          continue;
+        }
+
+        final resultParsed = Query_GetResultById.fromJson(result.data!);
+        final data = resultParsed.getResultById;
+        final status = data.status;
+
+        debugPrint("Poll attempt $attempts: Status is $status");
+
+        if (status == Enum_SpeakingTestStatus.COMPLETED) {
+          isDone = true;
+
+          setState(() {
+            _submitted = true;
+            _result = data.toJson();
+          });
+
+          try {
+            final leaderboardService = Provider.of<LeaderboardFirestoreService>(
+              context,
+              listen: false,
+            );
+
+            await leaderboardService.fetchAndUploadStats(client);
+
+            debugPrint('Leaserboard updated after speaking test');
+          } catch (e) {
+            debugPrint("Failed to update the leaderboard: $e");
+          }
+        } else if (status == Enum_SpeakingTestStatus.FAILED) {
+          isDone = true;
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("AI Processing Failed.")),
+            );
+          }
+        }
+      } catch (e) {
+        debugPrint("Polling error: $e");
+      }
+    }
+
+    if (!isDone && attempts >= 20) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Test timed out. Check history later.")),
+        );
       }
     }
   }
