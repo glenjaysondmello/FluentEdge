@@ -1,3 +1,31 @@
+enum Enum_SpeakingTestStatus { PROCESSING, COMPLETED, FAILED, $unknown }
+
+String toJson_Enum_SpeakingTestStatus(Enum_SpeakingTestStatus e) {
+  switch (e) {
+    case Enum_SpeakingTestStatus.PROCESSING:
+      return r'PROCESSING';
+    case Enum_SpeakingTestStatus.COMPLETED:
+      return r'COMPLETED';
+    case Enum_SpeakingTestStatus.FAILED:
+      return r'FAILED';
+    case Enum_SpeakingTestStatus.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum_SpeakingTestStatus fromJson_Enum_SpeakingTestStatus(String value) {
+  switch (value) {
+    case r'PROCESSING':
+      return Enum_SpeakingTestStatus.PROCESSING;
+    case r'COMPLETED':
+      return Enum_SpeakingTestStatus.COMPLETED;
+    case r'FAILED':
+      return Enum_SpeakingTestStatus.FAILED;
+    default:
+      return Enum_SpeakingTestStatus.$unknown;
+  }
+}
+
 enum Enum___TypeKind {
   SCALAR,
   OBJECT,

@@ -1,5 +1,3 @@
-import '../fragments/speaking/speaking_mistake.fragment.graphql.dart';
-import '../fragments/speaking/speaking_score.fragment.graphql.dart';
 import 'package:gql/ast.dart';
 import 'package:http/http.dart';
 
@@ -144,21 +142,19 @@ class Mutation_SubmitSpeakingTest {
     final l$submitSpeakingTest = json['submitSpeakingTest'];
     final l$$__typename = json['__typename'];
     return Mutation_SubmitSpeakingTest(
-      submitSpeakingTest:
-          Mutation_SubmitSpeakingTest_submitSpeakingTest.fromJson(
-              (l$submitSpeakingTest as Map<String, dynamic>)),
+      submitSpeakingTest: (l$submitSpeakingTest as String),
       $__typename: (l$$__typename as String),
     );
   }
 
-  final Mutation_SubmitSpeakingTest_submitSpeakingTest submitSpeakingTest;
+  final String submitSpeakingTest;
 
   final String $__typename;
 
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$submitSpeakingTest = submitSpeakingTest;
-    _resultData['submitSpeakingTest'] = l$submitSpeakingTest.toJson();
+    _resultData['submitSpeakingTest'] = l$submitSpeakingTest;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -216,11 +212,9 @@ abstract class CopyWith_Mutation_SubmitSpeakingTest<TRes> {
       _CopyWithStubImpl_Mutation_SubmitSpeakingTest;
 
   TRes call({
-    Mutation_SubmitSpeakingTest_submitSpeakingTest? submitSpeakingTest,
+    String? submitSpeakingTest,
     String? $__typename,
   });
-  CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest<TRes>
-      get submitSpeakingTest;
 }
 
 class _CopyWithImpl_Mutation_SubmitSpeakingTest<TRes>
@@ -244,19 +238,11 @@ class _CopyWithImpl_Mutation_SubmitSpeakingTest<TRes>
         submitSpeakingTest:
             submitSpeakingTest == _undefined || submitSpeakingTest == null
                 ? _instance.submitSpeakingTest
-                : (submitSpeakingTest
-                    as Mutation_SubmitSpeakingTest_submitSpeakingTest),
+                : (submitSpeakingTest as String),
         $__typename: $__typename == _undefined || $__typename == null
             ? _instance.$__typename
             : ($__typename as String),
       ));
-
-  CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest<TRes>
-      get submitSpeakingTest {
-    final local$submitSpeakingTest = _instance.submitSpeakingTest;
-    return CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest(
-        local$submitSpeakingTest, (e) => call(submitSpeakingTest: e));
-  }
 }
 
 class _CopyWithStubImpl_Mutation_SubmitSpeakingTest<TRes>
@@ -266,14 +252,10 @@ class _CopyWithStubImpl_Mutation_SubmitSpeakingTest<TRes>
   TRes _res;
 
   call({
-    Mutation_SubmitSpeakingTest_submitSpeakingTest? submitSpeakingTest,
+    String? submitSpeakingTest,
     String? $__typename,
   }) =>
       _res;
-
-  CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest<TRes>
-      get submitSpeakingTest =>
-          CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest.stub(_res);
 }
 
 const documentNodeMutationSubmitSpeakingTest = DocumentNode(definitions: [
@@ -316,81 +298,7 @@ const documentNodeMutationSubmitSpeakingTest = DocumentNode(definitions: [
           ),
         ],
         directives: [],
-        selectionSet: SelectionSetNode(selections: [
-          FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-          FieldNode(
-            name: NameNode(value: 'transcript'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-          FieldNode(
-            name: NameNode(value: 'scores'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                name: NameNode(value: 'SpeakingScoreFields'),
-                directives: [],
-              ),
-              FieldNode(
-                name: NameNode(value: '__typename'),
-                alias: null,
-                arguments: [],
-                directives: [],
-                selectionSet: null,
-              ),
-            ]),
-          ),
-          FieldNode(
-            name: NameNode(value: 'encouragement'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-          FieldNode(
-            name: NameNode(value: 'mistakes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                name: NameNode(value: 'SpeakingMistakeFields'),
-                directives: [],
-              ),
-              FieldNode(
-                name: NameNode(value: '__typename'),
-                alias: null,
-                arguments: [],
-                directives: [],
-                selectionSet: null,
-              ),
-            ]),
-          ),
-          FieldNode(
-            name: NameNode(value: 'suggestions'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-          FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null,
-          ),
-        ]),
+        selectionSet: null,
       ),
       FieldNode(
         name: NameNode(value: '__typename'),
@@ -401,274 +309,4 @@ const documentNodeMutationSubmitSpeakingTest = DocumentNode(definitions: [
       ),
     ]),
   ),
-  fragmentDefinitionSpeakingScoreFields,
-  fragmentDefinitionSpeakingMistakeFields,
 ]);
-
-class Mutation_SubmitSpeakingTest_submitSpeakingTest {
-  Mutation_SubmitSpeakingTest_submitSpeakingTest({
-    required this.id,
-    required this.transcript,
-    required this.scores,
-    this.encouragement,
-    required this.mistakes,
-    this.suggestions,
-    this.$__typename = 'SpeakingTest',
-  });
-
-  factory Mutation_SubmitSpeakingTest_submitSpeakingTest.fromJson(
-      Map<String, dynamic> json) {
-    final l$id = json['id'];
-    final l$transcript = json['transcript'];
-    final l$scores = json['scores'];
-    final l$encouragement = json['encouragement'];
-    final l$mistakes = json['mistakes'];
-    final l$suggestions = json['suggestions'];
-    final l$$__typename = json['__typename'];
-    return Mutation_SubmitSpeakingTest_submitSpeakingTest(
-      id: (l$id as String),
-      transcript: (l$transcript as String),
-      scores: Fragment_SpeakingScoreFields.fromJson(
-          (l$scores as Map<String, dynamic>)),
-      encouragement: (l$encouragement as String?),
-      mistakes: (l$mistakes as List<dynamic>)
-          .map((e) => Fragment_SpeakingMistakeFields.fromJson(
-              (e as Map<String, dynamic>)))
-          .toList(),
-      suggestions: (l$suggestions as String?),
-      $__typename: (l$$__typename as String),
-    );
-  }
-
-  final String id;
-
-  final String transcript;
-
-  final Fragment_SpeakingScoreFields scores;
-
-  final String? encouragement;
-
-  final List<Fragment_SpeakingMistakeFields> mistakes;
-
-  final String? suggestions;
-
-  final String $__typename;
-
-  Map<String, dynamic> toJson() {
-    final _resultData = <String, dynamic>{};
-    final l$id = id;
-    _resultData['id'] = l$id;
-    final l$transcript = transcript;
-    _resultData['transcript'] = l$transcript;
-    final l$scores = scores;
-    _resultData['scores'] = l$scores.toJson();
-    final l$encouragement = encouragement;
-    _resultData['encouragement'] = l$encouragement;
-    final l$mistakes = mistakes;
-    _resultData['mistakes'] = l$mistakes.map((e) => e.toJson()).toList();
-    final l$suggestions = suggestions;
-    _resultData['suggestions'] = l$suggestions;
-    final l$$__typename = $__typename;
-    _resultData['__typename'] = l$$__typename;
-    return _resultData;
-  }
-
-  @override
-  int get hashCode {
-    final l$id = id;
-    final l$transcript = transcript;
-    final l$scores = scores;
-    final l$encouragement = encouragement;
-    final l$mistakes = mistakes;
-    final l$suggestions = suggestions;
-    final l$$__typename = $__typename;
-    return Object.hashAll([
-      l$id,
-      l$transcript,
-      l$scores,
-      l$encouragement,
-      Object.hashAll(l$mistakes.map((v) => v)),
-      l$suggestions,
-      l$$__typename,
-    ]);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (!(other is Mutation_SubmitSpeakingTest_submitSpeakingTest) ||
-        runtimeType != other.runtimeType) {
-      return false;
-    }
-    final l$id = id;
-    final lOther$id = other.id;
-    if (l$id != lOther$id) {
-      return false;
-    }
-    final l$transcript = transcript;
-    final lOther$transcript = other.transcript;
-    if (l$transcript != lOther$transcript) {
-      return false;
-    }
-    final l$scores = scores;
-    final lOther$scores = other.scores;
-    if (l$scores != lOther$scores) {
-      return false;
-    }
-    final l$encouragement = encouragement;
-    final lOther$encouragement = other.encouragement;
-    if (l$encouragement != lOther$encouragement) {
-      return false;
-    }
-    final l$mistakes = mistakes;
-    final lOther$mistakes = other.mistakes;
-    if (l$mistakes.length != lOther$mistakes.length) {
-      return false;
-    }
-    for (int i = 0; i < l$mistakes.length; i++) {
-      final l$mistakes$entry = l$mistakes[i];
-      final lOther$mistakes$entry = lOther$mistakes[i];
-      if (l$mistakes$entry != lOther$mistakes$entry) {
-        return false;
-      }
-    }
-    final l$suggestions = suggestions;
-    final lOther$suggestions = other.suggestions;
-    if (l$suggestions != lOther$suggestions) {
-      return false;
-    }
-    final l$$__typename = $__typename;
-    final lOther$$__typename = other.$__typename;
-    if (l$$__typename != lOther$$__typename) {
-      return false;
-    }
-    return true;
-  }
-}
-
-extension UtilityExtension_Mutation_SubmitSpeakingTest_submitSpeakingTest
-    on Mutation_SubmitSpeakingTest_submitSpeakingTest {
-  CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest<
-          Mutation_SubmitSpeakingTest_submitSpeakingTest>
-      get copyWith => CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest(
-            this,
-            (i) => i,
-          );
-}
-
-abstract class CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest<TRes> {
-  factory CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest(
-    Mutation_SubmitSpeakingTest_submitSpeakingTest instance,
-    TRes Function(Mutation_SubmitSpeakingTest_submitSpeakingTest) then,
-  ) = _CopyWithImpl_Mutation_SubmitSpeakingTest_submitSpeakingTest;
-
-  factory CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest.stub(
-          TRes res) =
-      _CopyWithStubImpl_Mutation_SubmitSpeakingTest_submitSpeakingTest;
-
-  TRes call({
-    String? id,
-    String? transcript,
-    Fragment_SpeakingScoreFields? scores,
-    String? encouragement,
-    List<Fragment_SpeakingMistakeFields>? mistakes,
-    String? suggestions,
-    String? $__typename,
-  });
-  CopyWith_Fragment_SpeakingScoreFields<TRes> get scores;
-  TRes mistakes(
-      Iterable<Fragment_SpeakingMistakeFields> Function(
-              Iterable<
-                  CopyWith_Fragment_SpeakingMistakeFields<
-                      Fragment_SpeakingMistakeFields>>)
-          _fn);
-}
-
-class _CopyWithImpl_Mutation_SubmitSpeakingTest_submitSpeakingTest<TRes>
-    implements CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest<TRes> {
-  _CopyWithImpl_Mutation_SubmitSpeakingTest_submitSpeakingTest(
-    this._instance,
-    this._then,
-  );
-
-  final Mutation_SubmitSpeakingTest_submitSpeakingTest _instance;
-
-  final TRes Function(Mutation_SubmitSpeakingTest_submitSpeakingTest) _then;
-
-  static const _undefined = <dynamic, dynamic>{};
-
-  TRes call({
-    Object? id = _undefined,
-    Object? transcript = _undefined,
-    Object? scores = _undefined,
-    Object? encouragement = _undefined,
-    Object? mistakes = _undefined,
-    Object? suggestions = _undefined,
-    Object? $__typename = _undefined,
-  }) =>
-      _then(Mutation_SubmitSpeakingTest_submitSpeakingTest(
-        id: id == _undefined || id == null ? _instance.id : (id as String),
-        transcript: transcript == _undefined || transcript == null
-            ? _instance.transcript
-            : (transcript as String),
-        scores: scores == _undefined || scores == null
-            ? _instance.scores
-            : (scores as Fragment_SpeakingScoreFields),
-        encouragement: encouragement == _undefined
-            ? _instance.encouragement
-            : (encouragement as String?),
-        mistakes: mistakes == _undefined || mistakes == null
-            ? _instance.mistakes
-            : (mistakes as List<Fragment_SpeakingMistakeFields>),
-        suggestions: suggestions == _undefined
-            ? _instance.suggestions
-            : (suggestions as String?),
-        $__typename: $__typename == _undefined || $__typename == null
-            ? _instance.$__typename
-            : ($__typename as String),
-      ));
-
-  CopyWith_Fragment_SpeakingScoreFields<TRes> get scores {
-    final local$scores = _instance.scores;
-    return CopyWith_Fragment_SpeakingScoreFields(
-        local$scores, (e) => call(scores: e));
-  }
-
-  TRes mistakes(
-          Iterable<Fragment_SpeakingMistakeFields> Function(
-                  Iterable<
-                      CopyWith_Fragment_SpeakingMistakeFields<
-                          Fragment_SpeakingMistakeFields>>)
-              _fn) =>
-      call(
-          mistakes: _fn(_instance.mistakes
-              .map((e) => CopyWith_Fragment_SpeakingMistakeFields(
-                    e,
-                    (i) => i,
-                  ))).toList());
-}
-
-class _CopyWithStubImpl_Mutation_SubmitSpeakingTest_submitSpeakingTest<TRes>
-    implements CopyWith_Mutation_SubmitSpeakingTest_submitSpeakingTest<TRes> {
-  _CopyWithStubImpl_Mutation_SubmitSpeakingTest_submitSpeakingTest(this._res);
-
-  TRes _res;
-
-  call({
-    String? id,
-    String? transcript,
-    Fragment_SpeakingScoreFields? scores,
-    String? encouragement,
-    List<Fragment_SpeakingMistakeFields>? mistakes,
-    String? suggestions,
-    String? $__typename,
-  }) =>
-      _res;
-
-  CopyWith_Fragment_SpeakingScoreFields<TRes> get scores =>
-      CopyWith_Fragment_SpeakingScoreFields.stub(_res);
-
-  mistakes(_fn) => _res;
-}
