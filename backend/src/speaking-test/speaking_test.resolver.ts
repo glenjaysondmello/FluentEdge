@@ -26,7 +26,16 @@ export class SpeakingTestResolver {
     return this.speakingService.getSpeakingTests(userId);
   }
 
-  @Mutation(() => SpeakingTest)
+  @Query(() => SpeakingTest)
+  async getResultById(
+    @Args('resultId') resultId: string,
+    @Context() context: GqlContext,
+  ) {
+    const userId = context.req.user.uid;
+    return this.speakingService.getResultById(userId, resultId);
+  }
+
+  @Mutation(() => String)
   async submitSpeakingTest(
     @Args('referenceText') referenceText: string,
     @Args({ name: 'audioFile', type: () => GraphQLUpload })

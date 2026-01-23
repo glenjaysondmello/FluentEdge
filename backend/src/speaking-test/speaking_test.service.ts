@@ -59,8 +59,47 @@ export class SpeakingTestService {
     });
   }
 
+  async getResultById(uid: string, resultId: string) {
+    return this.prismaService.speakingTest.findFirst({
+      where: { uid, id: resultId },
+    });
+  }
+
   async submitSpeakingTest(
     uid: string,
+    referenceText: string,
+    audioFile: FileUpload,
+  ) {
+    const initialRecord = await this.prismaService.speakingTest.create({
+      data: {
+        uid,
+        referenceText,
+        transcript: '',
+        scores: {},
+        mistakes: [],
+        suggestions: [],
+        encouragement: '',
+        status: 'PROCESSING',
+      },
+    });
+
+    const recordId: string = initialRecord.id;
+
+    this.processAudioInBackground(
+      uid,
+      recordId,
+      referenceText,
+      audioFile,
+    ).catch((err) => {
+      console.error('Background processing failed', err);
+    });
+
+    return recordId;
+  }
+
+  private async processAudioInBackground(
+    uid: string,
+    recordId: string,
     referenceText: string,
     audioFile: FileUpload,
   ) {
@@ -68,7 +107,6 @@ export class SpeakingTestService {
       // const [transcript] = await Promise.all([transcribeAudio(audioFile)]);
 
       const transcript = await transcribeAudio(audioFile, this.client);
-
       const aiResult = await evaluateWithGroq(
         {
           referenceText,
@@ -77,7 +115,8 @@ export class SpeakingTestService {
         this.client,
       );
 
-      return this.prismaService.speakingTest.create({
+      await this.prismaService.speakingTest.update({
+        where: { uid, id: recordId },
         data: {
           uid,
           referenceText,
@@ -86,13 +125,16 @@ export class SpeakingTestService {
           mistakes: aiResult.mistakes,
           suggestions: aiResult.suggestions,
           encouragement: aiResult.encouragement,
+          status: 'COMPLETED',
         },
       });
     } catch (err) {
-      console.error('Error in submitSpeakingTest:', err);
-      throw new Error(
-        'An unexpected error occurred while processing your test.',
-      );
+      await this.prismaService.speakingTest.update({
+        where: { uid, id: recordId },
+        data: {
+          status: 'FAILED',
+        },
+      });
     }
   }
 }
