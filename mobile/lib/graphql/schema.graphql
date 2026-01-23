@@ -35,12 +35,19 @@ type SpeakingMistake {
 
 type SpeakingTest {
   id: ID!
-  transcript: String!
-  scores: SpeakingScore!
+  transcript: String
+  scores: SpeakingScore
   encouragement: String
-  mistakes: [SpeakingMistake!]!
-  suggestions: String
+  mistakes: [SpeakingMistake!]
+  suggestions: [String!]
+  status: SpeakingTestStatus!
   createdAt: String!
+}
+
+enum SpeakingTestStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
 }
 
 type Query {
@@ -49,6 +56,9 @@ type Query {
 
   getSpeakingTests: [SpeakingTest!]!
   getSpeakingTestText: String!
+  getResultById(
+    resultId: String!
+  ): SpeakingTest!
 }
 
 type Mutation {
@@ -61,5 +71,5 @@ type Mutation {
   submitSpeakingTest(
     referenceText: String!
     audioFile: Upload!
-  ): SpeakingTest!
+  ): String!
 }

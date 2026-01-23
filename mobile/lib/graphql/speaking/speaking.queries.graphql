@@ -8,9 +8,28 @@ query GetSpeakingTests {
     scores {
       ...SpeakingScoreFields
     }
+    status
   }
 }
 
 query GetSpeakingTestText {
   getSpeakingTestText
+}
+
+query GetResultById($resultId: String!) {
+  getResultById (
+    resultId: $resultId
+) {
+    id
+    transcript
+    scores {
+      ...SpeakingScoreFields
+    }
+    encouragement
+    mistakes {
+      ...SpeakingMistakeFields
+    }
+    suggestions
+    status
+  }
 }

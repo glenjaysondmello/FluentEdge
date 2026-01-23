@@ -8,16 +8,5 @@ mutation SubmitSpeakingTest(
   submitSpeakingTest(
     referenceText: $referenceText
     audioFile: $audioFile
-  ) {
-    id
-    transcript
-    scores {
-      ...SpeakingScoreFields
-    }
-    encouragement
-    mistakes {
-      ...SpeakingMistakeFields
-    }
-    suggestions
-  }
+  )
 }
