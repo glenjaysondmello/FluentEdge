@@ -12,8 +12,14 @@ datasource db {
   provider = "postgresql"
 }
 
+enum TestStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 model SpeakingTest {
-  id            String   @id @default(cuid())
+  id            String     @id @default(cuid())
   uid           String
   referenceText String
   transcript    String
@@ -21,7 +27,8 @@ model SpeakingTest {
   mistakes      Json
   suggestions   Json
   encouragement String
-  createdAt     DateTime @default(now())
+  status        TestStatus @default(PROCESSING)
+  createdAt     DateTime   @default(now())
 }
 
 model TypingTest {
