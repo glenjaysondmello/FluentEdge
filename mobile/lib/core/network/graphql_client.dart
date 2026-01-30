@@ -11,7 +11,8 @@ GraphQLClient createGraphQLClient() {
   final IOClient ioClient = IOClient(nativeHttpClient);
 
   final httpLink = HttpLink(
-    "https://fluentedge.onrender.com",
+    // "http://192.168.1.7:3000/graphql",
+    "https://fluentedge.onrender.com/graphql",
     defaultHeaders: {'x-apollo-operation-name': 'graphql-operation'},
     httpClient: ioClient,
   );
