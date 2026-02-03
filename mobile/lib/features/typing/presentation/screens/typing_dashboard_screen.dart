@@ -1,291 +1,195 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mobile/graphql/typing/typing.queries.graphql.dart';
-import 'package:mobile/features/typing/presentation/screens/typing_history_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-
-const themeColors = {
-  'backgroundStart': Color(0xFF2A2A72),
-  'backgroundEnd': Color(0xFF009FFD),
-  'card': Color(
-    0x22FFFFFF,
-  ), // Semi-transparent white for a "frosted glass" effect
-  'text': Colors.white,
-  'textFaded': Color(0xAAFFFFFF),
-  'accent': Color(0xFF00D2FF),
-  'wpmLine': Color(0xFF00D2FF),
-  'accuracyLine': Color(0xFF39FF14),
-  'scoreLine': Color(0xFFFFD700),
-};
+import 'package:mobile/features/typing/presentation/screens/typing_history_test.dart';
+import 'package:mobile/graphql/typing/typing.queries.graphql.dart';
+import 'package:mobile/core/theme/app_colors.dart';
+import 'package:mobile/core/widgets/dashboard_chart_card.dart';
+import 'package:mobile/core/widgets/dashboard_stat_card.dart';
+import 'package:mobile/core/widgets/gradient_scaffold.dart';
+import 'package:mobile/core/widgets/state_views.dart';
 
 class DashboardTyping extends StatelessWidget {
   const DashboardTyping({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Typing Dashboard',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: themeColors['text'],
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.history),
-            tooltip: 'Test History',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const HistoryTypingScreen()),
-            ),
-          ),
-        ],
-      ),
-      extendBodyBehindAppBar: true,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              themeColors['backgroundStart']!,
-              themeColors['backgroundEnd']!,
-            ],
+    return GradientScaffold(
+      title: 'Typing Dashboard',
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.history),
+          tooltip: 'Test History',
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const TypingHistoryScreen()),
           ),
         ),
-        child: SafeArea(
-          child: Query(
-            options: QueryOptions(
-              document: documentNodeQueryGetTypingTests,
-              fetchPolicy: FetchPolicy.networkOnly,
-            ),
-            builder: (result, {fetchMore, refetch}) {
-              if (result.isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                );
-              }
-              if (result.hasException) {
-                // Also allow pull-to-refresh on the error screen
-                return RefreshIndicator(
-                  onRefresh: refetch!,
-                  child: ListView(
-                    // ListView makes RefreshIndicator work
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: _buildErrorState(onRetry: refetch),
-                      ),
-                    ],
+      ],
+      body: Query(
+        options: QueryOptions(
+          document: documentNodeQueryGetTypingTests,
+          fetchPolicy: FetchPolicy.networkOnly,
+        ),
+        builder: (result, {fetchMore, refetch}) {
+          if (result.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            );
+          }
+          if (result.hasException) {
+            return RefreshIndicator(
+              onRefresh: refetch!,
+              child: ListView(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: ErrorStateView(onRetry: refetch),
                   ),
-                );
-              }
+                ],
+              ),
+            );
+          }
 
-              final parsedData = result.data != null
-                  ? Query_GetTypingTests.fromJson(result.data!)
-                  : null;
+          final parsedData = result.data != null
+              ? Query_GetTypingTests.fromJson(result.data!)
+              : null;
 
-              final tests =
-                  parsedData?.getTypingTests.map((e) => e.toJson()).toList() ??
-                  [];
+          final tests =
+              parsedData?.getTypingTests.map((e) => e.toJson()).toList() ?? [];
 
-              if (tests.isEmpty) {
-                return _buildEmptyState();
-              }
+          if (tests.isEmpty) {
+            return RefreshIndicator(
+              onRefresh: refetch!,
+              child: ListView(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: const EmptyStateView(
+                      icon: Icons.keyboard,
+                      title: "No Typing Tests Yet",
+                      subtitle: "Take a test to see your dashboard!",
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
 
-              // Data Processing
-              tests.sort(
-                (a, b) => DateTime.parse(
-                  a['createdAt'],
-                ).compareTo(DateTime.parse(b['createdAt'])),
-              );
+          // Data Processing
+          // Sort by creation date for the charts
+          tests.sort(
+            (a, b) => DateTime.parse(
+              a['createdAt'],
+            ).compareTo(DateTime.parse(b['createdAt'])),
+          );
 
-              final avgWpm =
-                  tests.map((t) => t['wpm'] as num).reduce((a, b) => a + b) /
-                  tests.length;
-              final avgAccuracy =
-                  tests
-                      .map((t) => t['accuracy'] as num)
-                      .reduce((a, b) => a + b) /
-                  tests.length;
-              final avgScore =
-                  tests.map((t) => t['score'] as num).reduce((a, b) => a + b) /
-                  tests.length;
+          final avgWpm =
+              tests.map((t) => t['wpm'] as num).reduce((a, b) => a + b) /
+              tests.length;
+          final avgAccuracy =
+              tests.map((t) => t['accuracy'] as num).reduce((a, b) => a + b) /
+              tests.length;
+          final avgScore =
+              tests.map((t) => t['score'] as num).reduce((a, b) => a + b) /
+              tests.length;
 
-              return RefreshIndicator(
-                onRefresh: refetch!,
-                child: ListView(
-                  padding: const EdgeInsets.all(16.0),
+          return RefreshIndicator(
+            onRefresh: refetch!,
+            child: ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                Text(
+                  "Performance Overview",
+                  style: GoogleFonts.poppins(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.text,
+                  ),
+                ).animate().fadeIn(duration: 400.ms).slideX(),
+                const SizedBox(height: 16),
+
+                // Summary Stat Cards
+                GridView.count(
+                  crossAxisCount: 3,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
                   children: [
-                    Text(
-                      "Performance Overview",
-                      style: GoogleFonts.poppins(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: themeColors['text'],
-                      ),
-                    ).animate().fadeIn(duration: 400.ms).slideX(),
-                    const SizedBox(height: 16),
-                    // Summary Stat Cards
-                    GridView.count(
-                      crossAxisCount: 3,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      children: [
-                        _SummaryStatCard(
-                          icon: Icons.speed,
-                          label: "Avg WPM",
-                          value: avgWpm.toStringAsFixed(1),
-                          color: themeColors['wpmLine']!,
-                        ),
-                        _SummaryStatCard(
-                          icon: Icons.ads_click,
-                          label: "Avg Accuracy",
-                          value: "${avgAccuracy.toStringAsFixed(1)}%",
-                          color: themeColors['accuracyLine']!,
-                        ),
-                        _SummaryStatCard(
-                          icon: Icons.star,
-                          label: "Avg Score",
-                          value: avgScore.toStringAsFixed(1),
-                          color: themeColors['scoreLine']!,
-                        ),
-                      ],
-                    ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
-
-                    const SizedBox(height: 24),
-
-                    // Main Chart for WPM
-                    _ChartCard(
-                      title: "WPM Over Time",
-                      child: _buildLineChart(
-                        tests,
-                        (test) => test['wpm'],
-                        themeColors['wpmLine']!,
-                      ),
-                    ).animate().fadeIn(delay: 400.ms, duration: 400.ms),
-                    const SizedBox(height: 16),
-                    // Sparkline charts for other metrics
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _ChartCard(
-                            title: "Accuracy Trend",
-                            isMini: true,
-                            child: _buildLineChart(
-                              tests,
-                              (test) => test['accuracy'],
-                              themeColors['accuracyLine']!,
-                              isSparkline: true,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _ChartCard(
-                            title: "Score Trend",
-                            isMini: true,
-                            child: _buildLineChart(
-                              tests,
-                              (test) => test['score'],
-                              themeColors['scoreLine']!,
-                              isSparkline: true,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ).animate().fadeIn(delay: 600.ms, duration: 400.ms),
+                    DashboardStatCard(
+                      icon: Icons.speed,
+                      label: "Avg WPM",
+                      value: avgWpm.toStringAsFixed(1),
+                      iconColor: AppColors.accent,
+                    ),
+                    DashboardStatCard(
+                      icon: Icons.ads_click,
+                      label: "Avg Accuracy",
+                      value: "${avgAccuracy.toStringAsFixed(1)}%",
+                      iconColor: AppColors.success,
+                    ),
+                    DashboardStatCard(
+                      icon: Icons.star,
+                      label: "Avg Score",
+                      value: avgScore.toStringAsFixed(1),
+                      iconColor: Colors.amber,
+                    ),
                   ],
-                ),
-              );
-            },
-          ),
-        ),
+                ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
+
+                const SizedBox(height: 24),
+
+                // Main Chart for WPM
+                DashboardChartCard(
+                  title: "WPM Over Time",
+                  child: _buildLineChart(
+                    tests,
+                    (test) => test['wpm'],
+                    AppColors.accent,
+                  ),
+                ).animate().fadeIn(delay: 400.ms, duration: 400.ms),
+                const SizedBox(height: 16),
+
+                // Sparkline charts for other metrics
+                Row(
+                  children: [
+                    Expanded(
+                      child: DashboardChartCard(
+                        title: "Accuracy",
+                        isMini: true,
+                        child: _buildLineChart(
+                          tests,
+                          (test) => test['accuracy'],
+                          AppColors.success,
+                          isSparkline: true,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: DashboardChartCard(
+                        title: "Score",
+                        isMini: true,
+                        child: _buildLineChart(
+                          tests,
+                          (test) => test['score'],
+                          Colors.amber,
+                          isSparkline: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ).animate().fadeIn(delay: 600.ms, duration: 400.ms),
+              ],
+            ),
+          );
+        },
       ),
     );
-  }
-
-  // For displaying a user-friendly error message
-  Widget _buildErrorState({required VoidCallback onRetry}) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.cloud_off_rounded,
-            size: 80,
-            color: themeColors['textFaded'],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            "Something Went Wrong",
-            style: GoogleFonts.poppins(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: themeColors['text'],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Please check your network connection and try again.",
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              color: themeColors['textFaded'],
-            ),
-          ),
-          const SizedBox(height: 24),
-          OutlinedButton.icon(
-            icon: const Icon(Icons.refresh),
-            label: const Text("Retry"),
-            onPressed: onRetry,
-            style: OutlinedButton.styleFrom(
-              foregroundColor: themeColors['text'],
-              side: BorderSide(color: themeColors['textFaded']!),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ).animate().fadeIn(duration: 500.ms);
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.keyboard, size: 80, color: themeColors['textFaded']),
-          const SizedBox(height: 16),
-          Text(
-            "No Typing Tests Yet",
-            style: GoogleFonts.poppins(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: themeColors['text'],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Take a test to see your dashboard!",
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              color: themeColors['textFaded'],
-            ),
-          ),
-        ],
-      ),
-    ).animate().fadeIn(duration: 500.ms);
   }
 
   /// Builds a beautifully styled LineChart.
@@ -335,10 +239,7 @@ class DashboardTyping extends StatelessWidget {
                   axisSide: meta.axisSide,
                   child: Text(
                     DateFormat('MMM d').format(date),
-                    style: TextStyle(
-                      color: themeColors['textFaded'],
-                      fontSize: 10,
-                    ),
+                    style: TextStyle(color: AppColors.textFaded, fontSize: 10),
                   ),
                 );
               },
@@ -350,7 +251,7 @@ class DashboardTyping extends StatelessWidget {
               reservedSize: 40,
               getTitlesWidget: (value, meta) => Text(
                 value.toInt().toString(),
-                style: TextStyle(color: themeColors['textFaded'], fontSize: 10),
+                style: TextStyle(color: AppColors.textFaded, fontSize: 10),
               ),
             ),
           ),
@@ -382,115 +283,19 @@ class DashboardTyping extends StatelessWidget {
             getTooltipItems: (touchedSpots) => touchedSpots.map((spot) {
               return LineTooltipItem(
                 '${spot.y.toStringAsFixed(1)}\n',
-                TextStyle(
-                  color: themeColors['text'],
-                  fontWeight: FontWeight.bold,
-                ),
+                TextStyle(color: AppColors.text, fontWeight: FontWeight.bold),
                 children: [
                   TextSpan(
                     text: DateFormat('MMM d, yyyy').format(
                       DateTime.parse(tests[spot.x.toInt()]['createdAt']),
                     ),
-                    style: TextStyle(
-                      color: themeColors['textFaded'],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: AppColors.textFaded, fontSize: 12),
                   ),
                 ],
               );
             }).toList(),
           ),
         ),
-      ),
-    );
-  }
-}
-
-// Helper Widgets for a cleaner build method
-
-class _SummaryStatCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-  const _SummaryStatCard({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: themeColors['card'],
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withAlpha(26)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color, size: 28),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: themeColors['text'],
-            ),
-          ),
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              color: themeColors['textFaded'],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ChartCard extends StatelessWidget {
-  final String title;
-  final Widget child;
-  final bool isMini;
-  const _ChartCard({
-    required this.title,
-    required this.child,
-    this.isMini = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: isMini
-          ? const EdgeInsets.fromLTRB(8, 16, 8, 8)
-          : const EdgeInsets.fromLTRB(16, 24, 16, 12),
-      height: isMini ? 150 : 300,
-      decoration: BoxDecoration(
-        color: themeColors['card'],
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withAlpha(26)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: isMini ? 14 : 18,
-              fontWeight: FontWeight.w600,
-              color: themeColors['text'],
-            ),
-          ),
-          const SizedBox(height: 12),
-          Expanded(child: child),
-        ],
       ),
     );
   }

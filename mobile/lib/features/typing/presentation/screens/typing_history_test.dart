@@ -3,132 +3,80 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/core/theme/app_colors.dart';
+import 'package:mobile/core/widgets/gradient_scaffold.dart';
+import 'package:mobile/core/widgets/state_views.dart';
 import 'package:mobile/graphql/typing/typing.queries.graphql.dart';
 
-const themeColors = {
-  'backgroundStart': Color(0xFF2A2A72),
-  'backgroundEnd': Color(0xFF009FFD),
-  'card': Color(
-    0x22FFFFFF,
-  ), // Semi-transparent white for a "frosted glass" effect
-  'text': Colors.white,
-  'textFaded': Color(0xAAFFFFFF),
-  'accent': Color(0xFF00D2FF),
-  'accentC': Color(0xFF39FF14),
-};
-
-class HistoryTypingScreen extends StatelessWidget {
-  const HistoryTypingScreen({super.key});
+class TypingHistoryScreen extends StatelessWidget {
+  const TypingHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // 1. A transparent AppBar to blend with the gradient
-      appBar: AppBar(
-        title: Text(
-          'Typing History',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+    return GradientScaffold(
+      title: 'Typing History',
+      body: Query(
+        options: QueryOptions(
+          document: documentNodeQueryGetTypingTests,
+          fetchPolicy: FetchPolicy.networkOnly,
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: themeColors['text'],
-      ),
-      // Extend the body behind the AppBar for a seamless look
-      extendBodyBehindAppBar: true,
-      // 2. The consistent gradient background
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              themeColors['backgroundStart']!,
-              themeColors['backgroundEnd']!,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Query(
-            options: QueryOptions(
-              document: documentNodeQueryGetTypingTests,
-              fetchPolicy: FetchPolicy.networkOnly,
+        builder: (result, {fetchMore, refetch}) {
+          // Loading State
+          if (result.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            );
+          }
+
+          // Error State
+          if (result.hasException) {
+            return Center(
+              child: ErrorStateView(
+                onRetry: refetch!,
+                message: "Failed to load history",
+              ),
+            );
+          }
+
+          final parsedData = result.data != null
+              ? Query_GetTypingTests.fromJson(result.data!)
+              : null;
+
+          final tests =
+              parsedData?.getTypingTests.map((e) => e.toJson()).toList() ?? [];
+
+          // Sort by newest first
+          tests.sort(
+            (a, b) => DateTime.parse(
+              b['createdAt'],
+            ).compareTo(DateTime.parse(a['createdAt'])),
+          );
+
+          // Empty State
+          if (tests.isEmpty) {
+            return const EmptyStateView(
+              icon: Icons.history_toggle_off,
+              title: "No History Yet",
+              subtitle: "Complete a test to see your progress!",
+            );
+          }
+
+          // Success List
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
             ),
-            builder: (result, {fetchMore, refetch}) {
-              if (result.isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                );
-              }
-
-              if (result.hasException) {
-                return Center(
-                  child: Text(
-                    "Error: ${result.exception}",
-                    style: TextStyle(color: themeColors['text']),
-                  ),
-                );
-              }
-
-              final parsedData = result.data != null
-                  ? Query_GetTypingTests.fromJson(result.data!)
-                  : null;
-
-              final tests =
-                  parsedData?.getTypingTests.map((e) => e.toJson()).toList() ??
-                  [];
-
-              if (tests.isEmpty) {
-                // 3. An improved, more engaging empty state
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.history_toggle_off,
-                        size: 80,
-                        color: themeColors['textFaded'],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        "No History Yet",
-                        style: GoogleFonts.poppins(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: themeColors['text'],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Complete a test to see your progress!",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: themeColors['textFaded'],
-                        ),
-                      ),
-                    ],
-                  ),
-                ).animate().fadeIn(duration: 500.ms);
-              }
-
-              // 4. An animated list of beautifully redesigned cards
-              return ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
-                itemCount: tests.length,
-                itemBuilder: (context, index) {
-                  final test = tests[index];
-                  return HistoryCard(test: test)
-                      .animate()
-                      .fadeIn(delay: (100 * (index % 10)).ms, duration: 400.ms)
-                      .slideX(begin: -0.2, curve: Curves.easeOut);
-                },
-              );
+            itemCount: tests.length,
+            itemBuilder: (context, index) {
+              final test = tests[index];
+              return HistoryCard(test: test)
+                  .animate()
+                  .fadeIn(delay: (50 * (index % 10)).ms, duration: 400.ms)
+                  .slideX(begin: -0.2, curve: Curves.easeOut);
             },
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -149,7 +97,7 @@ class HistoryCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: themeColors['card'],
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(color: Colors.white.withAlpha(26)),
       ),
@@ -163,9 +111,9 @@ class HistoryCard extends StatelessWidget {
               // Score
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.star_border_purple500_outlined,
-                    color: themeColors['accent'],
+                    color: AppColors.accent,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -174,7 +122,7 @@ class HistoryCard extends StatelessWidget {
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: themeColors['accentC'],
+                      color: AppColors.success,
                     ),
                   ),
                 ],
@@ -184,7 +132,7 @@ class HistoryCard extends StatelessWidget {
                 formattedDate,
                 style: GoogleFonts.poppins(
                   fontSize: 12,
-                  color: themeColors['textFaded'],
+                  color: AppColors.textFaded,
                 ),
               ),
             ],
@@ -195,7 +143,7 @@ class HistoryCard extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.poppins(
-              color: themeColors['text'],
+              color: AppColors.text,
               fontStyle: FontStyle.italic,
             ),
           ),
@@ -243,22 +191,19 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: themeColors['textFaded'], size: 24),
+        Icon(icon, color: AppColors.textFaded, size: 24),
         const SizedBox(height: 4),
         Text(
           value,
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             fontSize: 18,
-            color: themeColors['text'],
+            color: AppColors.text,
           ),
         ),
         Text(
           label,
-          style: GoogleFonts.poppins(
-            fontSize: 12,
-            color: themeColors['textFaded'],
-          ),
+          style: GoogleFonts.poppins(fontSize: 12, color: AppColors.textFaded),
         ),
       ],
     );

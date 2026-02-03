@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-const themeColors = {
-  'backgroundStart': Color(0xFF2A2A72),
-  'backgroundEnd': Color(0xFF009FFD),
-  'text': Colors.white,
-};
+import 'package:mobile/core/theme/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,9 +16,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Your navigation logic is already perfect. It efficiently listens for
-    // the auth state and navigates as soon as the check is complete.
-    // We'll add a small artificial delay just to ensure the animation is visible.
     Future.delayed(const Duration(seconds: 2), () {
       FirebaseAuth.instance.authStateChanges().listen((user) async {
         if (mounted) {
@@ -40,16 +32,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // A beautiful, consistent gradient background
+      // A beautiful, consistent gradient background using AppColors
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              themeColors['backgroundStart']!,
-              themeColors['backgroundEnd']!,
-            ],
+            colors: [AppColors.backgroundStart, AppColors.backgroundEnd],
           ),
         ),
         child: Center(
@@ -57,11 +46,8 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children:
                 [
-                      // app logo with a fade-in and scale animation
-                      Image.asset(
-                            'assets/images/logo.png',
-                            width: 150, // Adjust the size as needed
-                          )
+                      // 1. App logo with a fade-in and scale animation
+                      Image.asset('assets/images/logo.png', width: 150)
                           .animate()
                           .fadeIn(duration: 800.ms)
                           .scale(
@@ -72,13 +58,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
                       const SizedBox(height: 24),
 
-                      // 3. A branded title and tagline that animate in
+                      // 2. Branded title and tagline that animate in
                       Text(
                         'FluentEdge',
                         style: GoogleFonts.poppins(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
-                          color: themeColors['text'],
+                          color: AppColors.text,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -86,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'Hone Your Skills, Track Your Progress',
                         style: GoogleFonts.poppins(
                           fontSize: 16,
-                          color: themeColors['text']!.withAlpha(200),
+                          color: AppColors.text.withAlpha(200),
                         ),
                       ),
                     ]

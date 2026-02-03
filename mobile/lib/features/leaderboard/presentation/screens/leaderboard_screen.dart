@@ -1,16 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/features/leaderboard/data/services/leaderboard_firestore_service.dart';
 import 'package:provider/provider.dart';
-import '../../data/services/leaderboard_firestore_service.dart';
-
-const themeColors = {
-  'backgroundStart': Color(0xFF2A2A72),
-  'backgroundEnd': Color(0xFF009FFD),
-  'card': Color(0x22FFFFFF),
-  'highlightCard': Color(0x44FFFFFF),
-  'text': Colors.white,
-};
+import 'package:mobile/core/theme/app_colors.dart';
+import 'package:mobile/core/widgets/gradient_scaffold.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
@@ -26,97 +20,68 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   void initState() {
     super.initState();
-
     _service = Provider.of<LeaderboardFirestoreService>(context, listen: false);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text(
-          'Global Leaderboard',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            color: themeColors['text'],
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              themeColors['backgroundStart']!,
-              themeColors['backgroundEnd']!,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: StreamBuilder(
-                  stream: _service.getLeaderboardStream(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(color: Colors.white),
-                      );
-                    }
+    return GradientScaffold(
+      title: 'Global Leaderboard',
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder(
+              stream: _service.getLeaderboardStream(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  );
+                }
 
-                    if (snapshot.hasError) {
-                      return const Center(
-                        child: Text(
-                          'Something went wrong.',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text(
+                      'Something went wrong.',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                }
 
-                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          'Leaderboard is Empty.',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'Leaderboard is Empty.',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                }
 
-                    final users = snapshot.data!.docs;
+                final users = snapshot.data!.docs;
 
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        final user =
-                            users[index].data() as Map<String, dynamic>;
-                        final isCurrentUser = user['uid'] == currentUserId;
-                        return _buildLeaderboardTile(
-                          rank: index + 1,
-                          name: user['displayName'] ?? 'Anonymous',
-                          photoURL: user['photoURL'],
-                          speakingScore: (user['avgSpeakingScore'] as num)
-                              .toDouble(),
-                          typingScore: (user['avgTypingScore'] as num)
-                              .toDouble(),
-                          rankingScore: (user['rankingScore'] as num).toInt(),
-                          isCurrentUser: isCurrentUser,
-                        );
-                      },
-                      itemCount: users.length,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    final user = users[index].data() as Map<String, dynamic>;
+                    final isCurrentUser = user['uid'] == currentUserId;
+                    return _buildLeaderboardTile(
+                      rank: index + 1,
+                      name: user['displayName'] ?? 'Anonymous',
+                      photoURL: user['photoURL'],
+                      speakingScore: (user['avgSpeakingScore'] as num)
+                          .toDouble(),
+                      typingScore: (user['avgTypingScore'] as num).toDouble(),
+                      rankingScore: (user['rankingScore'] as num).toInt(),
+                      isCurrentUser: isCurrentUser,
                     );
                   },
-                ),
-              ),
-              _buildCurrentUserCard(),
-            ],
+                  itemCount: users.length,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                );
+              },
+            ),
           ),
-        ),
+          _buildCurrentUserCard(),
+        ],
       ),
     );
   }
@@ -135,14 +100,13 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isCurrentUser
-            ? themeColors['highlightCard']
-            : themeColors['card'],
+            ? AppColors.card.withAlpha(100) // Slightly lighter for current user
+            : AppColors.card,
         borderRadius: BorderRadius.circular(16),
         border: isCurrentUser
             ? Border.all(color: Colors.white.withAlpha(150), width: 2)
             : null,
       ),
-
       child: Row(
         children: [
           _buildRankIndicator(rank: rank),
@@ -156,7 +120,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 : null,
           ),
           const SizedBox(width: 12),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,7 +129,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: AppColors.text,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -174,7 +137,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   'Speaking: ${speakingScore.toStringAsFixed(1)} | Typing: ${typingScore.toStringAsFixed(1)}',
                   style: GoogleFonts.poppins(
                     fontSize: 12,
-                    color: Colors.white70,
+                    color: AppColors.textFaded,
                   ),
                 ),
               ],
@@ -186,7 +149,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: AppColors.text,
             ),
           ),
         ],
@@ -200,13 +163,13 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
     if (rank == 1) {
       icon = Icons.emoji_events;
-      color = const Color(0xFFFFD700);
+      color = const Color(0xFFFFD700); // Gold
     } else if (rank == 2) {
       icon = Icons.emoji_events;
-      color = const Color(0xFFC0C0C0);
+      color = const Color(0xFFC0C0C0); // Silver
     } else if (rank == 3) {
       icon = Icons.emoji_events;
-      color = const Color(0xFFCD7F32);
+      color = const Color(0xFFCD7F32); // Bronze
     }
 
     return SizedBox(
@@ -219,7 +182,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.white54,
+                color: AppColors.textFaded,
               ),
             ),
     );
@@ -254,7 +217,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 "Your Rank",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.bold,
-                  color: themeColors['backgroundStart'],
+                  color: AppColors.backgroundStart,
                   fontSize: 16,
                 ),
               ),
@@ -262,7 +225,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 '#$rank ($score pts)',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.bold,
-                  color: themeColors['backgroundEnd'],
+                  color: AppColors.backgroundEnd,
                   fontSize: 20,
                 ),
               ),
