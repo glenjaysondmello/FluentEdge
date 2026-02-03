@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/features/auth/data/services/firebase_auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
-import '../../../auth/data/services/firebase_auth_service.dart';
 import 'package:mobile/graphql/speaking/speaking.queries.graphql.dart';
 import 'package:mobile/graphql/typing/typing.queries.graphql.dart';
-
-const themeColors = {
-  'backgroundStart': Color(0xFF2A2A72),
-  'backgroundEnd': Color(0xFF009FFD),
-  'card': Color(0x22FFFFFF),
-  'text': Colors.white,
-  'textFaded': Color(0xAAFFFFFF),
-  'accent': Color(0xFF00D2FF),
-  'speakingAccent': Color(0xFF39FF14),
-  'typingAccent': Color(0xFFFFD700),
-};
+import 'package:mobile/core/theme/app_colors.dart';
+import 'package:mobile/core/widgets/gradient_scaffold.dart';
+import 'package:mobile/core/widgets/dashboard_stat_card.dart';
 
 class UserDashboardScreen extends StatefulWidget {
   const UserDashboardScreen({super.key});
@@ -31,25 +23,21 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
   String? _error;
   Map<String, dynamic> _overallStats = {};
   List<Map<String, dynamic>> _recentActivities = [];
-  bool _didFetchData = false; // Flag to prevent multiple fetches
+  bool _didFetchData = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Fetch data here, ensuring it only runs once.
     if (!_didFetchData) {
       _didFetchData = true;
       _fetchDashboardData();
     }
   }
 
-  /// Fetches speaking and typing tests concurrently and processes them.
   Future<void> _fetchDashboardData() async {
-    // We can now safely access the context here.
     final client = GraphQLProvider.of(context).value;
 
     try {
-      // Run both queries in parallel for efficiency
       final results = await Future.wait([
         client.query(
           QueryOptions(
@@ -65,7 +53,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
         ),
       ]);
 
-      // Check if the widget is still in the tree before calling setState.
       if (!mounted) return;
 
       final speakingResult = results[0];
@@ -105,12 +92,10 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
     }
   }
 
-  /// Calculates aggregate statistics from all test results.
   Map<String, dynamic> _calculateOverallStats(
     List<Map<String, dynamic>> speakingTests,
     List<Map<String, dynamic>> typingTests,
   ) {
-    // Calculate average speaking score
     final double avgSpeakingScore = speakingTests.isNotEmpty
         ? speakingTests
                   .map<double>(
@@ -120,7 +105,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
               speakingTests.length
         : 0.0;
 
-    // Calculate average WPM
     final double avgWpm = typingTests.isNotEmpty
         ? typingTests
                   .map<double>((t) => (t['wpm'] as num).toDouble())
@@ -128,7 +112,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
               typingTests.length
         : 0.0;
 
-    // Calculate average accuracy
     final double avgAccuracy = typingTests.isNotEmpty
         ? typingTests
                   .map<double>((t) => (t['accuracy'] as num).toDouble())
@@ -144,25 +127,21 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
     };
   }
 
-  /// Merges, sorts, and truncates test results for a unified activity feed.
   List<Map<String, dynamic>> _getRecentActivities(
     List<Map<String, dynamic>> speakingTests,
     List<Map<String, dynamic>> typingTests,
   ) {
-    // Add a 'type' field to each test to identify it later
     final combined = [
       ...speakingTests.map((t) => {...t, 'type': 'speaking'}),
       ...typingTests.map((t) => {...t, 'type': 'typing'}),
     ];
 
-    // Sort all tests by date, newest first
     combined.sort(
       (a, b) => DateTime.parse(
         b['createdAt'],
       ).compareTo(DateTime.parse(a['createdAt'])),
     );
 
-    // Return the 5 most recent activities
     return combined.take(5).toList();
   }
 
@@ -171,83 +150,64 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.user;
 
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              themeColors['backgroundStart']!,
-              themeColors['backgroundEnd']!,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: _isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                )
-              : _error != null
-              ? Center(
-                  child: Text(
-                    _error!,
-                    style: TextStyle(color: themeColors['text']),
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _fetchDashboardData,
-                  child: ListView(
-                    padding: const EdgeInsets.all(20.0),
-                    children: [
-                      // 1. User Profile Header
-                      _UserProfileHeader(
-                        name: user?.displayName ?? 'Guest',
-                        imageUrl: user?.photoURL,
-                      ).animate().fadeIn(duration: 400.ms),
+    // We can leave the title empty for the Dashboard to save space for the Profile Header
+    return GradientScaffold(
+      title: '',
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator(color: Colors.white))
+          : _error != null
+          ? Center(
+              child: Text(
+                _error!,
+                style: const TextStyle(color: AppColors.text),
+              ),
+            )
+          : RefreshIndicator(
+              onRefresh: _fetchDashboardData,
+              child: ListView(
+                padding: const EdgeInsets.all(20.0),
+                children: [
+                  _UserProfileHeader(
+                    name: user?.displayName ?? 'Guest',
+                    imageUrl: user?.photoURL,
+                  ).animate().fadeIn(duration: 400.ms),
 
-                      const SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
-                      // 2. Overall Performance Section
-                      _SectionTitle(title: 'Overall Performance'),
-                      const SizedBox(height: 10),
-                      _OverallStatsGrid(stats: _overallStats)
+                  _SectionTitle(title: 'Overall Performance'),
+                  const SizedBox(height: 10),
+                  _OverallStatsGrid(stats: _overallStats)
+                      .animate()
+                      .fadeIn(delay: 200.ms, duration: 400.ms)
+                      .slideY(begin: 0.2),
+
+                  const SizedBox(height: 30),
+
+                  _SectionTitle(title: 'Recent Activity'),
+                  const SizedBox(height: 10),
+                  if (_recentActivities.isEmpty)
+                    const Center(
+                      child: Text(
+                        "No activities yet.",
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                    )
+                  else
+                    ..._recentActivities.asMap().entries.map((entry) {
+                      return _RecentActivityCard(test: entry.value)
                           .animate()
-                          .fadeIn(delay: 200.ms, duration: 400.ms)
-                          .slideY(begin: 0.2),
-
-                      const SizedBox(height: 30),
-
-                      // 3. Recent Activity Section
-                      _SectionTitle(title: 'Recent Activity'),
-                      const SizedBox(height: 10),
-                      if (_recentActivities.isEmpty)
-                        const Center(
-                          child: Text(
-                            "No activities yet.",
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        )
-                      else
-                        ..._recentActivities.asMap().entries.map((entry) {
-                          return _RecentActivityCard(test: entry.value)
-                              .animate()
-                              .fadeIn(
-                                delay: (400 + entry.key * 100).ms,
-                                duration: 400.ms,
-                              )
-                              .slideX(begin: -0.2);
-                        }),
-                    ],
-                  ),
-                ),
-        ),
-      ),
+                          .fadeIn(
+                            delay: (400 + entry.key * 100).ms,
+                            duration: 400.ms,
+                          )
+                          .slideX(begin: -0.2);
+                    }),
+                ],
+              ),
+            ),
     );
   }
 }
-
-// #region Helper Widgets for Dashboard UI
 
 class _UserProfileHeader extends StatelessWidget {
   final String name;
@@ -273,14 +233,14 @@ class _UserProfileHeader extends StatelessWidget {
             Text(
               'Dashboard',
               style: GoogleFonts.poppins(
-                color: themeColors['textFaded'],
+                color: AppColors.textFaded,
                 fontSize: 16,
               ),
             ),
             Text(
               name,
               style: GoogleFonts.poppins(
-                color: themeColors['text'],
+                color: AppColors.text,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -301,7 +261,7 @@ class _SectionTitle extends StatelessWidget {
     return Text(
       title,
       style: GoogleFonts.poppins(
-        color: themeColors['text'],
+        color: AppColors.text,
         fontSize: 20,
         fontWeight: FontWeight.w600,
       ),
@@ -321,88 +281,33 @@ class _OverallStatsGrid extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
-      // FIX: Changed from 1.8 to 1.6 to give cards more vertical space.
       childAspectRatio: 1.6,
       children: [
-        _StatCard(
+        DashboardStatCard(
           icon: Icons.mic,
           label: 'Avg. Speaking Score',
           value: (stats['avgSpeakingScore'] as double).toStringAsFixed(1),
-          color: themeColors['speakingAccent']!,
+          iconColor: AppColors.success,
         ),
-        _StatCard(
+        DashboardStatCard(
           icon: Icons.keyboard,
           label: 'Avg. Typing WPM',
           value: (stats['avgWpm'] as double).toStringAsFixed(1),
-          color: themeColors['typingAccent']!,
+          iconColor: Colors.amber,
         ),
-        _StatCard(
+        DashboardStatCard(
           icon: Icons.check_circle,
-          label: 'Avg. Typing Accuracy',
+          label: 'Avg. Accuracy',
           value: "${(stats['avgAccuracy'] as double).toStringAsFixed(1)}%",
-          color: themeColors['accent']!,
+          iconColor: AppColors.accent,
         ),
-        _StatCard(
+        DashboardStatCard(
           icon: Icons.format_list_numbered,
-          label: 'Total Tests Taken',
+          label: 'Total Tests',
           value: stats['totalTests'].toString(),
-          color: Colors.white,
+          iconColor: Colors.white,
         ),
       ],
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final String label, value;
-  final Color color;
-
-  const _StatCard({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // FIX: Reduced padding from 12 to 8 to save space.
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: themeColors['card'],
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withAlpha(26)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: color, size: 24),
-          const Spacer(), // Fills available space flexibly
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  // FIX: Reduced font size from 20 to 18.
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                label,
-                style: GoogleFonts.poppins(
-                  color: themeColors['textFaded'],
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
@@ -420,16 +325,14 @@ class _RecentActivityCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: themeColors['card'],
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
           Icon(
             isSpeaking ? Icons.mic : Icons.keyboard,
-            color: isSpeaking
-                ? themeColors['speakingAccent']
-                : themeColors['typingAccent'],
+            color: isSpeaking ? AppColors.success : Colors.amber,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -446,7 +349,7 @@ class _RecentActivityCard extends StatelessWidget {
                 Text(
                   date,
                   style: GoogleFonts.poppins(
-                    color: themeColors['textFaded'],
+                    color: AppColors.textFaded,
                     fontSize: 12,
                   ),
                 ),
@@ -456,7 +359,6 @@ class _RecentActivityCard extends StatelessWidget {
           Text(
             isSpeaking
                 ? 'Score: ${(test['scores']['overall'] as num).toStringAsFixed(1)}'
-                // FIX: Changed 'score' to 'wpm' to match the label and data
                 : 'WPM: ${(test['wpm'] as num).toStringAsFixed(1)}',
             style: GoogleFonts.poppins(
               color: Colors.white,
@@ -469,5 +371,3 @@ class _RecentActivityCard extends StatelessWidget {
     );
   }
 }
-
-// #endregion

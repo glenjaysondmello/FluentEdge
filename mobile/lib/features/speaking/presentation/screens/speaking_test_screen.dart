@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mobile/core/widgets/custom_snackbar.dart';
 import 'package:mobile/features/leaderboard/data/services/leaderboard_firestore_service.dart';
-// import 'package:flutter_frontend/widgets/custom_snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:mobile/graphql/schema.graphql.dart';
@@ -16,19 +16,9 @@ import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/graphql/speaking/speaking.mutations.graphql.dart';
 import 'package:mobile/graphql/speaking/speaking.queries.graphql.dart';
-// import '../../widgets/custom_snackbar.dart';
-
-const themeColors = {
-  'backgroundStart': Color(0xFF2A2A72),
-  'backgroundEnd': Color(0xFF009FFD),
-  'card': Color(0x22FFFFFF),
-  'text': Colors.white,
-  'textFaded': Color(0xAAFFFFFF),
-  'correct': Color(0xFF39FF14),
-  'incorrect': Color(0xFFFF4081),
-  'accent': Color(0xFF00D2FF),
-  'recording': Colors.redAccent,
-};
+import 'package:mobile/core/theme/app_colors.dart';
+import 'package:mobile/core/widgets/gradient_scaffold.dart';
+import 'package:mobile/core/widgets/result_detail_card.dart';
 
 class SpeakingTestScreen extends StatefulWidget {
   final String referenceText;
@@ -68,7 +58,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   Future<void> _closeRecorderSafely() async {
     try {
       if (_recorder != null) {
-        // check if recorder is open; closeRecorder is safe to call but we null afterward
         await _recorder!.closeRecorder();
       }
     } catch (e) {
@@ -84,21 +73,23 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
       final status = await Permission.microphone.request();
       if (status != PermissionStatus.granted) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Microphone permission not granted.")),
+          customSnackbar(
+            context,
+            "Microphone permission not granted.",
+            isError: true,
           );
         }
-        // leave recorder uninitialized so startRecording will fail gracefully
         return;
       }
       await _recorder!.openRecorder();
     } catch (e) {
       debugPrint('Recorder init error: $e');
-      // If openRecorder fails, close and null it.
       await _closeRecorderSafely();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to initialize recorder.")),
+        customSnackbar(
+          context,
+          "Failed to initialize recorder.",
+          isError: true,
         );
       }
     }
@@ -125,15 +116,11 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   Future<void> _startRecording() async {
     if (_isRecording) return;
     if (_recorder == null) {
-      // Try to init once more
       await _initRecorder();
       if (_recorder == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Recorder not available.')),
-          );
+          customSnackbar(context, 'Recorder not available.', isError: true);
         }
-
         return;
       }
     }
@@ -148,9 +135,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
     } catch (e) {
       debugPrint('Start recording failed: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to start recording.')),
-        );
+        customSnackbar(context, 'Failed to start recording.', isError: true);
       }
     }
   }
@@ -175,9 +160,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   Future<void> _stopRecordingAndSubmit() async {
     if (!_isRecording) return;
     await _stopRecording();
-
     Future.delayed(const Duration(seconds: 1));
-
     await _submitTest();
   }
 
@@ -191,7 +174,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
       _isRecording = false;
       _isSubmitting = false;
     });
-    // delete temporary audio if any
     if (_audioPath != null) {
       try {
         final f = File(_audioPath!);
@@ -208,20 +190,13 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
   Future<void> _submitTest() async {
     if (_submitted || _isSubmitting || _audioPath == null) return;
-    setState(() {
-      _isSubmitting = true;
-    });
+    setState(() => _isSubmitting = true);
 
     final file = File(_audioPath!);
     if (!await file.exists()) {
-      setState(() {
-        _isSubmitting = false;
-      });
-      debugPrint('Audio file not found: $_audioPath');
+      setState(() => _isSubmitting = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Recorded audio not found.')),
-        );
+        customSnackbar(context, 'Recorded audio not found.', isError: true);
       }
       return;
     }
@@ -238,7 +213,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
       if (!mounted) return;
 
       final client = GraphQLProvider.of(context).value;
-
       final mutationVariables = Variables_Mutation_SubmitSpeakingTest(
         referenceText: widget.referenceText,
         audioFile: upload,
@@ -255,28 +229,17 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
       if (!mounted) return;
 
       if (mutationResultData.hasException) {
-        debugPrint(
-          'GraphQL exception full: ${mutationResultData.exception.toString()}',
-        );
-
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Submit failed: ${mutationResultData.exception}'),
-            ),
+          customSnackbar(
+            context,
+            'Submit failed: ${mutationResultData.exception}',
+            isError: true,
           );
-
-          // CustomSnackbar(
-          //   context,
-          //   "Submit failed: ${result.exception}",
-          //   isError: true,
-          // );
         }
         setState(() {
           _isSubmitting = false;
           _submitted = false;
         });
-
         return;
       }
 
@@ -285,10 +248,8 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
           : null;
 
       final resultId = parsedMutationResultData?.submitSpeakingTest ?? "";
-
       await _pollForResults(client, resultId);
 
-      // cleanup temp file after successful submit
       try {
         if (await file.exists()) await file.delete();
       } catch (e) {
@@ -299,15 +260,15 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
     } catch (e) {
       debugPrint('Submit error: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('An error occurred while submitting.')),
+        customSnackbar(
+          context,
+          'An error occurred while submitting.',
+          isError: true,
         );
       }
     } finally {
       if (mounted) {
-        setState(() {
-          _isSubmitting = false;
-        });
+        setState(() => _isSubmitting = false);
       }
     }
   }
@@ -318,7 +279,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
     while (!isDone && attempts < 20) {
       attempts++;
-
       await Future.delayed(const Duration(seconds: 3));
 
       try {
@@ -336,20 +296,13 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
         if (!mounted) return;
 
-        if (result.hasException) {
-          debugPrint("Polling network error (ignoring): ${result.exception}");
-          continue;
-        }
+        if (result.hasException) continue;
 
         final resultParsed = Query_GetResultById.fromJson(result.data!);
         final data = resultParsed.getResultById;
-        final status = data.status;
 
-        debugPrint("Poll attempt $attempts: Status is $status");
-
-        if (status == Enum_SpeakingTestStatus.COMPLETED) {
+        if (data.status == Enum_SpeakingTestStatus.COMPLETED) {
           isDone = true;
-
           setState(() {
             _submitted = true;
             _result = data.toJson();
@@ -360,20 +313,14 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
               context,
               listen: false,
             );
-
             await leaderboardService.fetchAndUploadStats(client);
-
-            debugPrint('Leaserboard updated after speaking test');
           } catch (e) {
             debugPrint("Failed to update the leaderboard: $e");
           }
-        } else if (status == Enum_SpeakingTestStatus.FAILED) {
+        } else if (data.status == Enum_SpeakingTestStatus.FAILED) {
           isDone = true;
-
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("AI Processing Failed.")),
-            );
+            customSnackbar(context, "Processing Failed.", isError: true);
           }
         }
       } catch (e) {
@@ -383,8 +330,10 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
     if (!isDone && attempts >= 20) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Test timed out. Check history later.")),
+        customSnackbar(
+          context,
+          "Test timed out. Check history later.",
+          isError: true,
         );
       }
     }
@@ -392,25 +341,12 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              themeColors['backgroundStart']!,
-              themeColors['backgroundEnd']!,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: _submitted && _result != null
-              ? _buildResultView()
-              : _buildTestView(),
-        ),
-      ),
+    // Use GradientScaffold
+    return GradientScaffold(
+      title: 'Speaking Test',
+      body: _submitted && _result != null
+          ? _buildResultView()
+          : _buildTestView(),
     );
   }
 
@@ -435,6 +371,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
     final overall = (scores['overall'] is num)
         ? (scores['overall'] as num).toDouble()
         : 0.0;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: ListView(
@@ -445,28 +382,28 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
             style: GoogleFonts.poppins(
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: themeColors['text'],
+              color: AppColors.text,
             ),
           ).animate().fadeIn(delay: 100.ms).slideY(),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _StatCard(
+              _LiveStatCard(
                 icon: Icons.record_voice_over,
                 title: "Fluency",
                 value: (scores['fluency'] is num)
                     ? (scores['fluency'] as num).toStringAsFixed(1)
                     : '0.0',
               ).animate().fadeIn(delay: 300.ms).slideX(),
-              _StatCard(
+              _LiveStatCard(
                 icon: Icons.rule,
                 title: "Grammar",
                 value: (scores['grammar'] is num)
                     ? (scores['grammar'] as num).toStringAsFixed(1)
                     : '0.0',
               ).animate().fadeIn(delay: 400.ms).slideX(),
-              _StatCard(
+              _LiveStatCard(
                 icon: Icons.spellcheck,
                 title: "Pronunciation",
                 value: (scores['pronunciation'] is num)
@@ -480,13 +417,18 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
             overall,
           ).animate().fadeIn(delay: 600.ms).scale(),
           const SizedBox(height: 20),
-          _ResultDetailCard(
+
+          // Use Core ResultDetailCard
+          ResultDetailCard(
             title: "Your Transcript",
             icon: Icons.text_fields,
             children: [Text(results['transcript'] ?? '---')],
           ).animate().fadeIn(delay: 700.ms),
+
           const SizedBox(height: 12),
-          _ResultDetailCard(
+
+          // Use Core ResultDetailCard
+          ResultDetailCard(
             title: "Mistakes",
             icon: Icons.warning_amber_rounded,
             children: (results['mistakes'] as List? ?? []).map((m) {
@@ -497,25 +439,29 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
                   children: [
                     TextSpan(
                       text: "$error → ",
-                      style: TextStyle(color: themeColors['incorrect']!),
+                      style: const TextStyle(color: AppColors.error),
                     ),
                     TextSpan(
                       text: correction,
-                      style: TextStyle(color: themeColors['correct']!),
+                      style: const TextStyle(color: AppColors.success),
                     ),
                   ],
                 ),
               );
             }).toList(),
           ).animate().fadeIn(delay: 800.ms),
+
           const SizedBox(height: 12),
-          _ResultDetailCard(
+
+          // Use Core ResultDetailCard
+          ResultDetailCard(
             title: "Suggestions",
             icon: Icons.lightbulb_outline,
             children: (results['suggestions'] as List? ?? [])
                 .map((s) => Text("• $s"))
                 .toList(),
           ).animate().fadeIn(delay: 900.ms),
+
           const SizedBox(height: 24),
           ElevatedButton.icon(
             icon: const Icon(Icons.refresh),
@@ -523,7 +469,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
             onPressed: _resetTest,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              backgroundColor: themeColors['accent']!.withAlpha(204),
+              backgroundColor: AppColors.accent.withAlpha(204),
               foregroundColor: Colors.white,
             ),
           ).animate().fadeIn(delay: 1000.ms),
@@ -543,7 +489,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
         label: const Text("Stop Recording"),
         onPressed: _stopRecording,
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeColors['recording'],
+          backgroundColor: AppColors.recording,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
         ),
@@ -554,9 +500,9 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.refresh,
-              color: themeColors['textFaded'],
+              color: AppColors.textFaded,
               size: 28,
             ),
             onPressed: _resetTest,
@@ -576,7 +522,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
             label: Text(_isSubmitting ? "Submitting..." : "Submit"),
             onPressed: _isSubmitting ? null : _submitTest,
             style: ElevatedButton.styleFrom(
-              backgroundColor: themeColors['accent']!.withAlpha(204),
+              backgroundColor: AppColors.accent.withAlpha(204),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
             ),
@@ -589,7 +535,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
       label: const Text("Start Recording"),
       onPressed: _startRecording,
       style: ElevatedButton.styleFrom(
-        backgroundColor: themeColors['accent']!.withAlpha(204),
+        backgroundColor: AppColors.accent.withAlpha(204),
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
       ),
@@ -600,7 +546,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: themeColors['card'],
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Center(
@@ -610,7 +556,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
             textAlign: TextAlign.center,
             style: GoogleFonts.sourceCodePro(
               fontSize: 20,
-              color: themeColors['textFaded'],
+              color: AppColors.textFaded,
             ),
           ),
         ),
@@ -628,11 +574,11 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
         style: GoogleFonts.poppins(
           fontWeight: FontWeight.bold,
           fontSize: 32,
-          color: themeColors['text'],
+          color: AppColors.text,
         ),
       ),
-      progressColor: themeColors['correct'],
-      backgroundColor: themeColors['card']!,
+      progressColor: AppColors.success,
+      backgroundColor: AppColors.card,
       circularStrokeCap: CircularStrokeCap.round,
       header: Padding(
         padding: const EdgeInsets.only(bottom: 12.0),
@@ -640,7 +586,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
           "Overall Score",
           style: GoogleFonts.poppins(
             fontSize: 20,
-            color: themeColors['text'],
+            color: AppColors.text,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -665,15 +611,12 @@ class _LiveStat extends StatelessWidget {
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
-            color: themeColors['textFaded'],
-            fontSize: 12,
-          ),
+          style: GoogleFonts.poppins(color: AppColors.textFaded, fontSize: 12),
         ),
         Text(
           value,
           style: GoogleFonts.poppins(
-            color: primary ? themeColors['accent'] : themeColors['text'],
+            color: primary ? AppColors.accent : AppColors.text,
             fontSize: primary ? 28 : 22,
             fontWeight: FontWeight.bold,
           ),
@@ -683,11 +626,11 @@ class _LiveStat extends StatelessWidget {
   }
 }
 
-class _StatCard extends StatelessWidget {
+class _LiveStatCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
-  const _StatCard({
+  const _LiveStatCard({
     required this.icon,
     required this.title,
     required this.value,
@@ -697,81 +640,21 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: themeColors['accent'], size: 28),
+        Icon(icon, color: AppColors.accent, size: 28),
         const SizedBox(height: 4),
         Text(
           value,
           style: GoogleFonts.poppins(
-            color: themeColors['text'],
+            color: AppColors.text,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           title,
-          style: GoogleFonts.poppins(
-            color: themeColors['textFaded'],
-            fontSize: 14,
-          ),
+          style: GoogleFonts.poppins(color: AppColors.textFaded, fontSize: 14),
         ),
       ],
-    );
-  }
-}
-
-class _ResultDetailCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final List<Widget> children;
-  const _ResultDetailCard({
-    required this.title,
-    required this.icon,
-    required this.children,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: themeColors['card'],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: themeColors['accent']),
-                const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: themeColors['text'],
-                  ),
-                ),
-              ],
-            ),
-            const Divider(color: Colors.white24, height: 20),
-            if (children.isEmpty)
-              Text("None!", style: TextStyle(color: themeColors['textFaded']))
-            else
-              ...children.map(
-                (child) => Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
-                  child: DefaultTextStyle(
-                    style: GoogleFonts.poppins(
-                      color: themeColors['text'],
-                      fontSize: 15,
-                    ),
-                    child: child,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }

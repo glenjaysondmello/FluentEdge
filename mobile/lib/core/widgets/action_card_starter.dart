@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../features/speaking/presentation/screens/speaking_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/theme/app_colors.dart';
 
 class ActionCardStarter extends StatelessWidget {
   final IconData icon;
@@ -25,13 +25,13 @@ class ActionCardStarter extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: themeColors['card'],
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(20.0),
         border: Border.all(color: Colors.white.withAlpha(30)),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 40, color: themeColors['accent']),
+          Icon(icon, size: 40, color: AppColors.accent),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -42,14 +42,14 @@ class ActionCardStarter extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: themeColors['text'],
+                    color: AppColors.text,
                   ),
                 ),
                 Text(
                   subtitle,
                   style: GoogleFonts.poppins(
                     fontSize: 14,
-                    color: themeColors['textFaded'],
+                    color: AppColors.textFaded,
                   ),
                 ),
               ],
@@ -60,7 +60,7 @@ class ActionCardStarter extends StatelessWidget {
               ? ElevatedButton(
                   onPressed: onPressed,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: themeColors['primaryAction'],
+                    backgroundColor: AppColors.success,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -71,8 +71,8 @@ class ActionCardStarter extends StatelessWidget {
               : OutlinedButton(
                   onPressed: onPressed,
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: themeColors['text'],
-                    side: BorderSide(color: themeColors['textFaded']!),
+                    foregroundColor: AppColors.text,
+                    side: BorderSide(color: AppColors.textFaded),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

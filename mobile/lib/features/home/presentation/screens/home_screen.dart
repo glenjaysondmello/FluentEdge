@@ -1,22 +1,14 @@
 import 'dart:ui'; // Needed for ImageFilter
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../user_dashboard/presentation/screens/user_dashboard_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/features/auth/data/services/firebase_auth_service.dart';
+import 'package:mobile/features/leaderboard/presentation/screens/leaderboard_screen.dart';
+import 'package:mobile/features/speaking/presentation/screens/speaking_screen.dart';
+import 'package:mobile/features/typing/presentation/screens/typing_screen.dart';
+import 'package:mobile/features/user_dashboard/presentation/screens/user_dashboard_screen.dart';
 import 'package:provider/provider.dart';
-import '../../../auth/data/services/firebase_auth_service.dart';
-import '../../../typing/presentation/screens/typing_screen.dart';
-import '../../../speaking/presentation/screens/speaking_screen.dart';
-import '../../../leaderboard/presentation/screens/leaderboard_screen.dart';
-
-const themeColors = {
-  'backgroundStart': Color(0xFF2A2A72),
-  'backgroundEnd': Color(0xFF009FFD),
-  'card': Color(0x22FFFFFF),
-  'text': Colors.white,
-  'textFaded': Color(0xAAFFFFFF),
-  'accent': Color(0xFF00D2FF),
-};
+import 'package:mobile/core/theme/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -30,7 +22,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: themeColors['text']),
+        iconTheme: IconThemeData(color: AppColors.text),
         actions: [
           IconButton(
             onPressed: () async {
@@ -53,10 +45,7 @@ class HomeScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              themeColors['backgroundStart']!,
-              themeColors['backgroundEnd']!,
-            ],
+            colors: [AppColors.backgroundStart, AppColors.backgroundEnd],
           ),
         ),
         child: SafeArea(
@@ -70,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                   'Welcome,',
                   style: GoogleFonts.poppins(
                     fontSize: 28,
-                    color: themeColors['textFaded'],
+                    color: AppColors.textFaded,
                   ),
                 ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.2),
                 Text(
@@ -78,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: themeColors['text'],
+                    color: AppColors.text,
                     height: 1.2,
                   ),
                 ).animate().fadeIn(delay: 300.ms).slideX(begin: -0.2),
@@ -317,13 +306,13 @@ class _HomePageButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20.0),
         decoration: BoxDecoration(
-          color: themeColors['card'],
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(20.0),
           border: Border.all(color: Colors.white.withAlpha(30)),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 40, color: themeColors['accent']),
+            Icon(icon, size: 40, color: AppColors.accent),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -334,14 +323,14 @@ class _HomePageButton extends StatelessWidget {
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: themeColors['text'],
+                      color: AppColors.text,
                     ),
                   ),
                   Text(
                     subtitle,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: themeColors['textFaded'],
+                      color: AppColors.textFaded,
                     ),
                   ),
                 ],

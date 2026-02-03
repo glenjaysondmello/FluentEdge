@@ -7,18 +7,10 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/graphql/typing/typing.mutations.graphql.dart';
-
-// A map to hold our theme colors for easy access
-const themeColors = {
-  'backgroundStart': Color(0xFF2A2A72),
-  'backgroundEnd': Color(0xFF009FFD),
-  'card': Color(0x22FFFFFF),
-  'text': Colors.white,
-  'textFaded': Color(0xAAFFFFFF),
-  'correct': Color(0xFF39FF14), // Neon green
-  'incorrect': Color(0xFFFF4081), // Neon pink
-  'accent': Color(0xFF00D2FF),
-};
+import 'package:mobile/core/theme/app_colors.dart';
+import 'package:mobile/core/widgets/custom_snackbar.dart';
+import 'package:mobile/core/widgets/gradient_scaffold.dart';
+import 'package:mobile/core/widgets/result_detail_card.dart';
 
 class TypingTestScreen extends StatefulWidget {
   final String referenceText;
@@ -177,7 +169,15 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
 
     if (result.hasException) {
       debugPrint(result.exception.toString());
-      // Optionally show an error message
+      customSnackbar(
+        context,
+        "Submission failed: ${result.exception}",
+        isError: true,
+      );
+      // Reset submitted state so they can try again if they want
+      setState(() {
+        _submitted = false;
+      });
     } else {
       setState(() {
         _result = result.data?['submitTypingTest'];
@@ -190,8 +190,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
         );
 
         await leaderboardService.fetchAndUploadStats(client);
-
-        debugPrint('Leaserboard updated after speaking test');
+        debugPrint('Leaderboard updated after typing test');
       } catch (e) {
         debugPrint("Failed to update the leaderboard: $e");
       }
@@ -200,24 +199,12 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              themeColors['backgroundStart']!,
-              themeColors['backgroundEnd']!,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: _submitted && _result != null
-              ? _buildResultView(context)
-              : _buildTestView(context),
-        ),
-      ),
+    // Use GradientScaffold
+    return GradientScaffold(
+      title: 'Typing Test',
+      body: _submitted && _result != null
+          ? _buildResultView(context)
+          : _buildTestView(context),
     );
   }
 
@@ -252,7 +239,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
               const SizedBox(height: 24),
               Expanded(
                 child: GestureDetector(
-                  behavior: HitTestBehavior.translucent, // <-- important
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     // Force open keyboard
                     FocusScope.of(context).requestFocus(_focusNode);
@@ -282,10 +269,11 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
             style: GoogleFonts.poppins(
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: themeColors['text'],
+              color: AppColors.text,
             ),
           ).animate().fadeIn(delay: 100.ms).slideY(),
           const SizedBox(height: 20),
+
           // Main Stats (WPM, CPM, Score)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -307,14 +295,18 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
               ).animate().fadeIn(delay: 500.ms).slideX(),
             ],
           ),
+
           const SizedBox(height: 20),
+
           // Accuracy Gauge
           _buildAccuracyGauge(
             (results['accuracy'] as num).toDouble(),
           ).animate().fadeIn(delay: 600.ms).scale(),
+
           const SizedBox(height: 20),
-          // Mistakes & Suggestions
-          _ResultDetailCard(
+
+          // Use Core ResultDetailCard
+          ResultDetailCard(
             title: "Mistakes",
             icon: Icons.warning_amber_rounded,
             children: (results['mistakes'] as List).map((m) {
@@ -323,33 +315,38 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
                   children: [
                     TextSpan(
                       text: "${m['error']} → ",
-                      style: TextStyle(color: themeColors['incorrect']!),
+                      style: const TextStyle(color: AppColors.error),
                     ),
                     TextSpan(
                       text: m['correction'],
-                      style: TextStyle(color: themeColors['correct']!),
+                      style: const TextStyle(color: AppColors.success),
                     ),
                   ],
                 ),
               );
             }).toList(),
           ).animate().fadeIn(delay: 700.ms),
+
           const SizedBox(height: 12),
-          _ResultDetailCard(
+
+          // Use Core ResultDetailCard
+          ResultDetailCard(
             title: "Suggestions",
             icon: Icons.lightbulb_outline,
             children: (results['suggestions'] as List)
                 .map((s) => Text("• $s"))
                 .toList(),
           ).animate().fadeIn(delay: 800.ms),
+
           const SizedBox(height: 24),
+
           ElevatedButton.icon(
             icon: const Icon(Icons.refresh),
             label: const Text("Try Again"),
             onPressed: _resetTest,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              backgroundColor: themeColors['accent']!.withAlpha(204),
+              backgroundColor: AppColors.accent.withAlpha(204),
               foregroundColor: Colors.white,
             ),
           ).animate().fadeIn(delay: 900.ms),
@@ -376,14 +373,14 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          icon: Icon(Icons.refresh, color: themeColors['textFaded'], size: 28),
+          icon: const Icon(Icons.refresh, color: AppColors.textFaded, size: 28),
           onPressed: _resetTest,
         ),
         const SizedBox(width: 40),
         ElevatedButton(
           onPressed: _isRunning ? _submitTest : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: themeColors['accent']!.withAlpha(204),
+            backgroundColor: AppColors.accent.withAlpha(204),
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
           ),
@@ -399,7 +396,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: themeColors['card'],
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(12),
       ),
       child: SingleChildScrollView(
@@ -408,7 +405,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
           text: TextSpan(
             style: GoogleFonts.sourceCodePro(
               fontSize: 20,
-              color: themeColors['textFaded'],
+              color: AppColors.textFaded,
             ),
             children: _generateTextSpans(typedText),
           ),
@@ -425,16 +422,16 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
 
       if (i < typedText.length) {
         if (typedText[i] == widget.referenceText[i]) {
-          color = themeColors['correct']!;
+          color = AppColors.success;
         } else {
-          color = themeColors['incorrect']!;
+          color = AppColors.error;
           decoration = TextDecoration.underline;
         }
       } else {
-        color = themeColors['textFaded']!;
+        color = AppColors.textFaded;
       }
 
-      // Add cursor
+      // Add cursor indicator style
       if (i == typedText.length) {
         decoration = TextDecoration.underline;
       }
@@ -445,7 +442,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
           style: TextStyle(
             color: color,
             decoration: decoration,
-            decorationColor: themeColors['accent'],
+            decorationColor: AppColors.accent,
           ),
         ),
       );
@@ -464,11 +461,11 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
         style: GoogleFonts.poppins(
           fontWeight: FontWeight.bold,
           fontSize: 32,
-          color: themeColors['text'],
+          color: AppColors.text,
         ),
       ),
-      progressColor: themeColors['correct'],
-      backgroundColor: themeColors['card']!,
+      progressColor: AppColors.success,
+      backgroundColor: AppColors.card,
       circularStrokeCap: CircularStrokeCap.round,
       header: Padding(
         padding: const EdgeInsets.only(bottom: 12.0),
@@ -476,7 +473,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
           "Accuracy",
           style: GoogleFonts.poppins(
             fontSize: 20,
-            color: themeColors['text'],
+            color: AppColors.text,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -506,15 +503,12 @@ class _LiveStat extends StatelessWidget {
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
-            color: themeColors['textFaded'],
-            fontSize: 12,
-          ),
+          style: GoogleFonts.poppins(color: AppColors.textFaded, fontSize: 12),
         ),
         Text(
           value,
           style: GoogleFonts.poppins(
-            color: primary ? themeColors['accent'] : themeColors['text'],
+            color: primary ? AppColors.accent : AppColors.text,
             fontSize: primary ? 28 : 22,
             fontWeight: FontWeight.bold,
           ),
@@ -539,82 +533,21 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: themeColors['accent'], size: 28),
+        Icon(icon, color: AppColors.accent, size: 28),
         const SizedBox(height: 4),
         Text(
           value,
           style: GoogleFonts.poppins(
-            color: themeColors['text'],
+            color: AppColors.text,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           title,
-          style: GoogleFonts.poppins(
-            color: themeColors['textFaded'],
-            fontSize: 14,
-          ),
+          style: GoogleFonts.poppins(color: AppColors.textFaded, fontSize: 14),
         ),
       ],
-    );
-  }
-}
-
-class _ResultDetailCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final List<Widget> children;
-
-  const _ResultDetailCard({
-    required this.title,
-    required this.icon,
-    required this.children,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: themeColors['card'],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: themeColors['accent']),
-                const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: themeColors['text'],
-                  ),
-                ),
-              ],
-            ),
-            const Divider(color: Colors.white24, height: 20),
-            if (children.isEmpty)
-              Text("None!", style: TextStyle(color: themeColors['textFaded']))
-            else
-              ...children.map(
-                (child) => Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
-                  child: DefaultTextStyle(
-                    style: GoogleFonts.poppins(
-                      color: themeColors['text'],
-                      fontSize: 15,
-                    ),
-                    child: child,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }
