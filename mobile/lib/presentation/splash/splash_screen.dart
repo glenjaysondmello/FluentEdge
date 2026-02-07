@@ -44,45 +44,37 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children:
-                [
-                      // 1. App logo with a fade-in and scale animation
-                      Image.asset('assets/images/logo.png', width: 150)
-                          .animate()
-                          .fadeIn(duration: 800.ms)
-                          .scale(
-                            delay: 200.ms,
-                            duration: 600.ms,
-                            curve: Curves.elasticOut,
-                          ),
+            children: [
+              // 1. App logo with a fade-in and scale animation
+              Image.asset('assets/images/logo.png', width: 150)
+                  .animate()
+                  .fadeIn(duration: 800.ms)
+                  .scale(
+                    delay: 200.ms,
+                    duration: 600.ms,
+                    curve: Curves.elasticOut,
+                  ),
 
-                      const SizedBox(height: 24),
+              const SizedBox(height: 8),
 
-                      // 2. Branded title and tagline that animate in
-                      Text(
-                        'FluentEdge',
-                        style: GoogleFonts.poppins(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.text,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Hone Your Skills, Track Your Progress',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: AppColors.text.withAlpha(200),
-                        ),
-                      ),
-                    ]
-                    .animate(interval: 300.ms)
-                    .fadeIn(duration: 600.ms, delay: 400.ms)
-                    .slideY(
-                      begin: 0.5,
-                      duration: 600.ms,
-                      curve: Curves.easeOut,
-                    ),
+              // 2. Branded title and tagline that animate in
+              Text(
+                'FluentEdge',
+                style: GoogleFonts.poppins(
+                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.text,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Hone Your Skills, Track Your Progress',
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: AppColors.text.withAlpha(200),
+                ),
+              ),
+            ],
           ),
         ),
       ),
