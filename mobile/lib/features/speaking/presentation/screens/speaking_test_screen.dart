@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobile/core/widgets/custom_snackbar.dart';
+import 'package:mobile/core/widgets/glass_container.dart';
 import 'package:mobile/features/leaderboard/data/services/leaderboard_firestore_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -432,21 +433,27 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
             title: "Mistakes",
             icon: Icons.warning_amber_rounded,
             children: (results['mistakes'] as List? ?? []).map((m) {
-              final error = m?['error'] ?? '';
-              final correction = m?['correction'] ?? '';
-              return Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "$error → ",
-                      style: const TextStyle(color: AppColors.error),
+              return Row(
+                children: [
+                  const Icon(Icons.cancel, color: AppColors.error, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "${m?['error'] ?? ''} → ",
+                            style: const TextStyle(color: AppColors.error),
+                          ),
+                          TextSpan(
+                            text: m?['correction'] ?? '',
+                            style: const TextStyle(color: AppColors.success),
+                          ),
+                        ],
+                      ),
                     ),
-                    TextSpan(
-                      text: correction,
-                      style: const TextStyle(color: AppColors.success),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               );
             }).toList(),
           ).animate().fadeIn(delay: 800.ms),
@@ -543,12 +550,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   }
 
   Widget _buildReferenceTextView() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return GlassContainer(
       child: Center(
         child: SingleChildScrollView(
           child: Text(
@@ -557,6 +559,7 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
             style: GoogleFonts.sourceCodePro(
               fontSize: 20,
               color: AppColors.textFaded,
+              height: 1.5,
             ),
           ),
         ),
