@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile/core/widgets/custom_snackbar.dart';
 import 'package:mobile/features/auth/data/services/firebase_auth_service.dart';
@@ -76,7 +75,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return GradientScaffold(
-      title: 'FluentEdge',
+      title: '',
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -85,145 +84,147 @@ class _AuthScreenState extends State<AuthScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children:
-                  [
-                        Image.asset('assets/images/logo.png', height: 120),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Hone Your Skills',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            color: AppColors.textFaded,
-                          ),
-                        ),
-                        const SizedBox(height: 40),
+              children: [
+                Image.asset('assets/images/logo.png', height: 120),
+                Text(
+                  'FluentEdge',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.text,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Hone Your Skills',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    color: AppColors.textFaded,
+                  ),
+                ),
+                const SizedBox(height: 40),
 
-                        AnimatedSwitcher(
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) =>
+                      FadeTransition(opacity: animation, child: child),
+                  child: Text(
+                    _isLogin ? "Welcome Back!" : "Create Account",
+                    key: ValueKey(_isLogin),
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.text,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                if (!_isLogin)
+                  _buildTextFormField(
+                    controller: _nameController,
+                    hintText: "Full Name",
+                    prefixIcon: Icons.person_outline,
+                    validator: (v) =>
+                        (v == null || v.isEmpty) ? "Enter your name" : null,
+                  ),
+                if (!_isLogin) const SizedBox(height: 16),
+
+                _buildTextFormField(
+                  controller: _emailController,
+                  hintText: "Email Address",
+                  prefixIcon: Icons.email_outlined,
+                  validator: (v) => (v == null || !v.contains('@'))
+                      ? "Enter a valid email"
+                      : null,
+                ),
+                const SizedBox(height: 16),
+                _buildTextFormField(
+                  controller: _passwordController,
+                  hintText: "Password",
+                  prefixIcon: Icons.lock_outline,
+                  obscureText: true,
+                  validator: (v) => (v == null || v.length < 6)
+                      ? "Password must be 6+ chars"
+                      : null,
+                ),
+                const SizedBox(height: 24),
+
+                ElevatedButton(
+                  onPressed: () => _submit(authProvider),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.black,
+                            strokeWidth: 3,
+                          ),
+                        )
+                      : AnimatedSwitcher(
                           duration: const Duration(milliseconds: 300),
-                          transitionBuilder: (child, animation) =>
-                              FadeTransition(opacity: animation, child: child),
                           child: Text(
-                            _isLogin ? "Welcome Back!" : "Create Account",
+                            _isLogin ? "LOGIN" : "SIGN UP",
                             key: ValueKey(_isLogin),
-                            textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.text,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        if (!_isLogin)
-                          _buildTextFormField(
-                            controller: _nameController,
-                            hintText: "Full Name",
-                            prefixIcon: Icons.person_outline,
-                            validator: (v) => (v == null || v.isEmpty)
-                                ? "Enter your name"
-                                : null,
-                          ),
-                        if (!_isLogin) const SizedBox(height: 16),
-
-                        _buildTextFormField(
-                          controller: _emailController,
-                          hintText: "Email Address",
-                          prefixIcon: Icons.email_outlined,
-                          validator: (v) => (v == null || !v.contains('@'))
-                              ? "Enter a valid email"
-                              : null,
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextFormField(
-                          controller: _passwordController,
-                          hintText: "Password",
-                          prefixIcon: Icons.lock_outline,
-                          obscureText: true,
-                          validator: (v) => (v == null || v.length < 6)
-                              ? "Password must be 6+ chars"
-                              : null,
-                        ),
-                        const SizedBox(height: 24),
-
-                        ElevatedButton(
-                          onPressed: () => _submit(authProvider),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            backgroundColor: AppColors.accent,
-                            foregroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.black,
-                                    strokeWidth: 3,
-                                  ),
-                                )
-                              : AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 300),
-                                  child: Text(
-                                    _isLogin ? "LOGIN" : "SIGN UP",
-                                    key: ValueKey(_isLogin),
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                        ),
-                        TextButton(
-                          onPressed: () => setState(() => _isLogin = !_isLogin),
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 300),
-                            child: Text(
-                              _isLogin
-                                  ? "Don't have an account? Sign Up"
-                                  : "Already have an account? Login",
-                              key: ValueKey(_isLogin),
-                              style: const TextStyle(
-                                color: AppColors.textFaded,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        _buildDivider(),
-                        const SizedBox(height: 20),
-
-                        OutlinedButton.icon(
-                          icon: Image.asset(
-                            'assets/images/google_logo.png',
-                            height: 24.0,
-                          ),
-                          label: Text(
-                            'Sign in with Google',
-                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.text,
-                            ),
-                          ),
-                          onPressed: () => _googleSignIn(authProvider),
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            backgroundColor: AppColors.card,
-                            side: BorderSide(color: Colors.white.withAlpha(50)),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                         ),
-                      ]
-                      .animate(interval: 100.ms)
-                      .fadeIn(duration: 400.ms)
-                      .slideY(begin: 0.5, curve: Curves.easeOut),
+                ),
+                TextButton(
+                  onPressed: () => setState(() => _isLogin = !_isLogin),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: Text(
+                      _isLogin
+                          ? "Don't have an account? Sign Up"
+                          : "Already have an account? Login",
+                      key: ValueKey(_isLogin),
+                      style: const TextStyle(color: AppColors.textFaded),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildDivider(),
+                const SizedBox(height: 20),
+
+                OutlinedButton.icon(
+                  icon: Image.asset(
+                    'assets/images/google_logo.png',
+                    height: 24.0,
+                  ),
+                  label: Text(
+                    'Sign in with Google',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.text,
+                    ),
+                  ),
+                  onPressed: () => _googleSignIn(authProvider),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    backgroundColor: AppColors.card,
+                    side: BorderSide(color: Colors.white.withAlpha(50)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

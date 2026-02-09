@@ -1,7 +1,10 @@
-import 'dart:ui'; // Needed for ImageFilter
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/widgets/glass_container.dart';
+import 'package:mobile/core/widgets/gradient_scaffold.dart';
 import 'package:mobile/features/auth/data/services/firebase_auth_service.dart';
 import 'package:mobile/features/leaderboard/presentation/screens/leaderboard_screen.dart';
 import 'package:mobile/features/speaking/presentation/screens/speaking_screen.dart';
@@ -10,88 +13,158 @@ import 'package:mobile/features/user_dashboard/presentation/screens/user_dashboa
 import 'package:provider/provider.dart';
 import 'package:mobile/core/theme/app_colors.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeTabView extends StatelessWidget {
+  const HomeTabView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.user;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.text),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              // Sign out logic remains the same
-              if (!context.mounted) return;
-              await authProvider.signOut();
-              if (context.mounted) {
-                Navigator.of(context).pushReplacementNamed('/auth');
-              }
-            },
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sign Out',
-          ),
-        ],
-      ),
-      drawer: const AppDrawer(),
-      extendBodyBehindAppBar: true,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.backgroundStart, AppColors.backgroundEnd],
-          ),
+    return GradientScaffold(
+      title: "FluentEdge",
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.logout),
+          tooltip: 'Sign Out',
+          onPressed: () async {
+            await authProvider.signOut();
+            if (context.mounted) {
+              Navigator.of(context).pushReplacementNamed('/auth');
+            }
+          },
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      ],
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(
+          20,
+          20,
+          20,
+          100,
+        ), // Extra bottom padding for Nav Bar
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Welcome Back,',
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                color: AppColors.textFaded,
+              ),
+            ),
+            Text(
+              user?.displayName ?? 'Challenger',
+              style: GoogleFonts.poppins(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: AppColors.text,
+              ),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              "Quick Actions",
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppColors.text,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _QuickActionCard(
+              title: "Typing Practice",
+              subtitle: "Test speed & accuracy",
+              icon: Icons.keyboard_alt_outlined,
+              color: Colors.amber,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const TypingScreen()),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _QuickActionCard(
+              title: "Speaking Practice",
+              subtitle: "Test fluency & pronunciation",
+              icon: Icons.mic_none_outlined,
+              color: AppColors.success,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SpeakingScreen()),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const HomeTabView(),
+    const LeaderboardScreen(),
+    const UserDashboardScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBody: true,
+      body: IndexedStack(index: _currentIndex, children: _screens),
+      bottomNavigationBar: _buildCustomGlassNavBar(),
+    );
+  }
+
+  Widget _buildCustomGlassNavBar() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            height: 75,
+            decoration: BoxDecoration(
+              color: AppColors.backgroundStart.withAlpha(120),
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.white.withAlpha(30)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(50),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const SizedBox(height: 20),
-                Text(
-                  'Welcome,',
-                  style: GoogleFonts.poppins(
-                    fontSize: 28,
-                    color: AppColors.textFaded,
-                  ),
-                ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.2),
-                Text(
-                  user?.displayName ?? 'Guest',
-                  style: GoogleFonts.poppins(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.text,
-                    height: 1.2,
-                  ),
-                ).animate().fadeIn(delay: 300.ms).slideX(begin: -0.2),
-                const Spacer(),
-                _HomePageButton(
-                  icon: Icons.keyboard_alt_outlined,
-                  title: 'Typing Practice',
-                  subtitle: 'Test your speed and accuracy.',
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const TypingScreen()),
-                  ),
-                ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.3),
-                const SizedBox(height: 20),
-                _HomePageButton(
-                  icon: Icons.mic_none_outlined,
-                  title: 'Speaking Practice',
-                  subtitle: 'Test your fluency and pronunciation.',
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SpeakingScreen()),
-                  ),
-                ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.3),
-                const Spacer(flex: 2),
+                _NavBarItem(
+                  icon: Icons.home_rounded,
+                  label: "Home",
+                  isSelected: _currentIndex == 0,
+                  onTap: () => _onTabTapped(0),
+                ),
+                _NavBarItem(
+                  icon: Icons.emoji_events_rounded,
+                  label: "Rank",
+                  isSelected: _currentIndex == 1,
+                  onTap: () => _onTabTapped(1),
+                ),
+                _NavBarItem(
+                  icon: Icons.dashboard_rounded,
+                  label: "Stats",
+                  isSelected: _currentIndex == 2,
+                  onTap: () => _onTabTapped(2),
+                ),
               ],
             ),
           ),
@@ -99,246 +172,128 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final user = authProvider.user;
-
-    return ClipRRect(
-      // Use ClipRRect to contain the blur effect
-      borderRadius: const BorderRadius.only(
-        topRight: Radius.circular(35),
-        bottomRight: Radius.circular(35),
-      ),
-      child: BackdropFilter(
-        // This creates the frosted glass effect
-        filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-        child: Drawer(
-          elevation: 0,
-          backgroundColor: Colors.white.withAlpha(38),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // 1. A beautiful, custom-built header
-              _DrawerHeader(
-                name: user?.displayName ?? 'Guest',
-                email: user?.email ?? '',
-                imageUrl: user?.photoURL,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-
-                    _buildDrawerItem(
-                      icon: Icons.dashboard_rounded,
-                      title: 'Dashboard',
-                      onTap: () {
-                        Navigator.pop(context); // Close the drawer
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const UserDashboardScreen(),
-                          ),
-                        );
-                      },
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    _buildDrawerItem(
-                      icon: Icons.leaderboard,
-                      title: 'Leaderboaard',
-                      onTap: () {
-                        Navigator.pop(context); // Close the drawer
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const LeaderboardScreen(),
-                          ),
-                        );
-                      },
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // 2. Nicely styled navigation items
-                    _buildDrawerItem(
-                      icon: Icons.keyboard_alt_outlined,
-                      title: 'Typing',
-                      onTap: () {
-                        Navigator.pop(context); // Close the drawer
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const TypingScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.mic_none_outlined,
-                      title: 'Speaking',
-                      onTap: () {
-                        Navigator.pop(context); // Close the drawer
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const SpeakingScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(), // Pushes the sign out button to the bottom
-              const Divider(color: Colors.white30, indent: 20, endIndent: 20),
-              // 3. A clearly separated sign-out action
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: _buildDrawerItem(
-                  icon: Icons.logout,
-                  title: 'Sign Out',
-                  onTap: () async {
-                    if (!context.mounted) return;
-                    await authProvider.signOut();
-                    if (context.mounted) {
-                      Navigator.of(
-                        context,
-                      ).pushNamedAndRemoveUntil('/auth', (route) => false);
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(height: 20), // Bottom padding
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDrawerItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.white, size: 26),
-      title: Text(
-        title,
-        style: GoogleFonts.poppins(color: Colors.white, fontSize: 17),
-      ),
-      onTap: onTap,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      horizontalTitleGap: 10,
-    );
+  void _onTabTapped(int index) {
+    HapticFeedback.lightImpact();
+    setState(() => _currentIndex = index);
   }
 }
 
-class _DrawerHeader extends StatelessWidget {
-  final String name;
-  final String email;
-  final String? imageUrl;
-
-  const _DrawerHeader({required this.name, required this.email, this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
-      decoration: BoxDecoration(color: Colors.white.withAlpha(25)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 35,
-            backgroundColor: Colors.white24,
-            backgroundImage: imageUrl != null ? NetworkImage(imageUrl!) : null,
-            child: imageUrl == null
-                ? const Icon(Icons.person, size: 40, color: Colors.white)
-                : null,
-          ),
-          const SizedBox(height: 15),
-          Text(
-            name,
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            email,
-            style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _HomePageButton extends StatelessWidget {
+class _NavBarItem extends StatelessWidget {
   final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onPressed;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
 
-  const _HomePageButton({
+  const _NavBarItem({
     required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onPressed,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(20.0),
-      child: Container(
-        padding: const EdgeInsets.all(20.0),
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.fastOutSlowIn,
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? 20 : 12,
+          vertical: 12,
+        ),
         decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(20.0),
-          border: Border.all(color: Colors.white.withAlpha(30)),
+          color: isSelected
+              ? AppColors.accent.withAlpha(40) // Glowing active background
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 40, color: AppColors.accent),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.text,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: AppColors.textFaded,
-                    ),
-                  ),
-                ],
-              ),
+            Icon(
+              icon,
+              color: isSelected ? AppColors.accent : AppColors.textFaded,
+              size: 26,
             ),
-            const Icon(Icons.arrow_forward_ios, color: Colors.white),
+            if (isSelected) ...[
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.accent,
+                  fontSize: 14,
+                ),
+              ),
+            ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _QuickActionCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _QuickActionCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassContainer(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withAlpha(30),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 28),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.text,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: AppColors.textFaded,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+            color: AppColors.textFaded,
+          ),
+        ],
       ),
     );
   }

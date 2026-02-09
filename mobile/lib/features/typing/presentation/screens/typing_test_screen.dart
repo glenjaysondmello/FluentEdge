@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mobile/core/widgets/glass_container.dart';
 import 'package:mobile/features/leaderboard/data/services/leaderboard_firestore_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -31,10 +33,9 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
   bool _submitted = false;
   Map<String, dynamic>? _result;
   DateTime? _startTime;
-
-  // Live stats
   int _wpm = 0;
   double _accuracy = 100.0;
+  int _prevTextLength = 0;
 
   @override
   void initState() {
@@ -59,6 +60,20 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
     if (!_isRunning && _controller.text.isNotEmpty) {
       _startTimer();
     }
+
+    final currentText = _controller.text;
+
+    if (currentText.length > _prevTextLength) {
+      final index = currentText.length - 1;
+
+      if (index < widget.referenceText.length) {
+        if (currentText[index] != widget.referenceText[index]) {
+          HapticFeedback.mediumImpact();
+        }
+      }
+    }
+    _prevTextLength = currentText.length;
+
     _updateLiveStats();
   }
 
@@ -393,12 +408,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
   /// The text area showing real-time feedback.
   Widget _buildReferenceTextView() {
     final typedText = _controller.text;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return GlassContainer(
       child: SingleChildScrollView(
         controller: _scrollController,
         child: RichText(
@@ -419,6 +429,8 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
     for (int i = 0; i < widget.referenceText.length; i++) {
       Color color;
       TextDecoration? decoration;
+      TextDecorationStyle? decorationStyle;
+      Color? decorationColor;
 
       if (i < typedText.length) {
         if (typedText[i] == widget.referenceText[i]) {
@@ -426,6 +438,8 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
         } else {
           color = AppColors.error;
           decoration = TextDecoration.underline;
+          decorationStyle = TextDecorationStyle.wavy;
+          decorationColor = AppColors.error;
         }
       } else {
         color = AppColors.textFaded;
@@ -434,6 +448,7 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
       // Add cursor indicator style
       if (i == typedText.length) {
         decoration = TextDecoration.underline;
+        decorationColor = AppColors.accent;
       }
 
       spans.add(
@@ -442,7 +457,8 @@ class _TypingTestScreenState extends State<TypingTestScreen> {
           style: TextStyle(
             color: color,
             decoration: decoration,
-            decorationColor: AppColors.accent,
+            decorationStyle: decorationStyle,
+            decorationColor: decorationColor,
           ),
         ),
       );
