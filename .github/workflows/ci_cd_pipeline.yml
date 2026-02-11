@@ -1,0 +1,84 @@
+name: FluentEdge CI/CD
+
+on:
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
+
+jobs:
+    backend-validation:
+        name: Backend CI
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./backend
+        
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 18
+                cache: 'npm'
+                cache-dependency-path: backend/package-lock.json
+
+            - name: Install Dependencies
+              run: npm ci
+            
+            - name: Validate Prisma Schema
+              run: npx prisma validate
+              env:
+                DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            
+            - name: Lint and Test
+              run: |
+                npm run lint
+                npm run test
+
+            - name: Build Check
+              run: npm run build
+
+    mobile-validation:
+        name: Mobile CI
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./mobile
+        
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+            
+            - name: Setup Java
+              uses: actions/setup-java@v4
+              with:
+                distribution: 'zulu'
+                java-version: '17'
+
+            - name: Setup Flutter
+              uses: subosito/flutter-action@v2
+              with:
+                channel: 'stable'
+                cache: true
+            
+            - name: Install Dependencies
+              run: flutter pub get
+            
+            - name: Analyze & Test
+              run: |
+                flutter analyze
+                flutter test
+            
+            - name: Build Release APK
+              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+              run: flutter build apk --release
+
+            - name: Upload APK Artifact
+              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+              uses: actions/upload-artifact@v4
+              with:
+                name: fluent-edge-release-apk
+                path: mobile/build/app/outputs/flutter-apk/app-release.apk
