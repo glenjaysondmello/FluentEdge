@@ -32,7 +32,6 @@ class SpeakingTestScreen extends StatefulWidget {
 class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
   int _seconds = 60;
   Timer? _timer;
-  bool _isRunning = false;
 
   FlutterSoundRecorder? _recorder;
   bool _isRecording = false;
@@ -98,7 +97,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
 
   void _startTimer() {
     setState(() {
-      _isRunning = true;
       _seconds = 60;
     });
 
@@ -152,7 +150,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
       if (mounted) {
         setState(() {
           _isRecording = false;
-          _isRunning = false;
         });
       }
     }
@@ -169,7 +166,6 @@ class _SpeakingTestScreenState extends State<SpeakingTestScreen> {
     _timer?.cancel();
     setState(() {
       _seconds = 60;
-      _isRunning = false;
       _submitted = false;
       _result = null;
       _isRecording = false;
