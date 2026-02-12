@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { evaluateWithGroq } from 'src/speaking-test/evaluation/ai-evaluatar-speaking';
+import { evaluateWithGroq } from './evaluation/ai-evaluatar-speaking';
 import { transcribeAudio } from './evaluation/whisper';
 import { FileUpload } from 'graphql-upload/processRequest.mjs';
 import { ConfigService } from '@nestjs/config';

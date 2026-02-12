@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { evaluateTypingTest } from 'src/typing-test/evaluation/typing-metrics';
+import { evaluateTypingTest } from './evaluation/typing-metrics';
 import { ConfigService } from '@nestjs/config';
 import Groq from 'groq-sdk';
 import { TypingTest, Prisma } from '@prisma/client';
