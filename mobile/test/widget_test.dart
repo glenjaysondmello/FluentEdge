@@ -13,16 +13,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  // 1. Mock the native channel for Firebase before running tests
+  // 1. Setup the fake "walkie-talkie" for Firebase
   setupFirebaseMock();
 
   testWidgets('App smoke test - verifies app launches', (
     WidgetTester tester,
   ) async {
-    // 2. Mock the actual Firebase App initialization
+    // 2. Initialize the mock Firebase
     await Firebase.initializeApp();
 
-    // 3. Create a mock/in-memory client for testing
     final HttpLink httpLink = HttpLink('https://test.com/graphql');
     final GraphQLClient mockClient = GraphQLClient(
       link: httpLink,
@@ -32,22 +31,25 @@ void main() {
     final ValueNotifier<GraphQLClient> clientNotifier =
         ValueNotifier<GraphQLClient>(mockClient);
 
-    // 4. Pump the widget
+    // 3. Build the widget tree
     await tester.pumpWidget(MyApp(graphqlClient: clientNotifier));
+
+    // 4. Fast-forward past the SplashScreen timer (usually 2-3 seconds)
+    await tester.pumpAndSettle(const Duration(seconds: 3));
 
     // 5. Verification
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }
 
-// Helper function to mock native platform calls
 void setupFirebaseMock() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // This tells Flutter to pretend the native Firebase code is responding
   const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_core',
   );
+
+  // We use the modern 'setMockMethodCallHandler' on the binary messenger
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         if (methodCall.method == 'Firebase#initializeApp') {
