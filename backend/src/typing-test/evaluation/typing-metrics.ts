@@ -1,3 +1,5 @@
+import { TypingMistake } from '../models/typing-test.model';
+
 export const evaluateTypingTest = (
   referenceText: string,
   userText: string,
@@ -20,13 +22,10 @@ export const evaluateTypingTest = (
   const user = userText.trim();
 
   let correctChars = 0;
-  let incorrectChars = 0;
 
   for (let i = 0; i < user.length; i++) {
     if (i < ref.length && user[i] === ref[i]) {
       correctChars++;
-    } else {
-      incorrectChars++;
     }
   }
 
@@ -34,18 +33,17 @@ export const evaluateTypingTest = (
   const cpm = correctChars / durationMin;
   const accuracy = user.length > 0 ? (correctChars / user.length) * 100 : 100;
 
-  const mistakes: any[] = [];
+  const mistakes: TypingMistake[] = [];
   const refWords = ref.split(/\s+/);
   const userWords = user.split(/\s+/);
   const maxWords = Math.max(refWords.length, userWords.length);
-  let correctWords = 0;
 
   for (let i = 0; i < maxWords; i++) {
     const refWord = refWords[i];
     const userWord = userWords[i];
 
     if (userWord !== undefined && userWord === refWord) {
-      correctWords++;
+      continue;
     } else if (userWord === undefined) {
       mistakes.push({
         error: '(missing)',

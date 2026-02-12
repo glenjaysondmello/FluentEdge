@@ -3,6 +3,6 @@ import { SpeakingTestService } from './speaking_test.service';
 import { SpeakingTestResolver } from './speaking_test.resolver';
 
 @Module({
-  providers: [SpeakingTestService, SpeakingTestResolver]
+  providers: [SpeakingTestService, SpeakingTestResolver],
 })
 export class SpeakingTestModule {}

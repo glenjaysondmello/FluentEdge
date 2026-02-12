@@ -68,7 +68,9 @@ jobs:
               run: flutter pub get
 
             - name: Create dummy firebase_options
-              run: echo "class DefaultFirebaseOptions { static var currentPlatform; }" > lib/firebase_options.dart
+              run: |
+                echo "// ignore_for_file: type=lint" > lib/firebase_options.dart
+                echo "class DefaultFirebaseOptions { static dynamic get currentPlatform => null; }" >> lib/firebase_options.dart
             
             - name: Analyze & Test
               run: |
