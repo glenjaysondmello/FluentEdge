@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { evaluateTypingTest } from 'src/typing-test/evaluation/typing-metrics';
+import { evaluateTypingTest } from './evaluation/typing-metrics';
 import { ConfigService } from '@nestjs/config';
 import Groq from 'groq-sdk';
+import { TypingTest, Prisma } from '@prisma/client';
 
 @Injectable()
 export class TypingTestService {
@@ -55,10 +56,10 @@ export class TypingTestService {
     referenceText: string,
     userText: string,
     durationSec: number,
-  ) {
+  ): Promise<TypingTest> {
     const result = evaluateTypingTest(referenceText, userText, durationSec);
 
-    return this.prismaService.typingTest.create({
+    return await this.prismaService.typingTest.create({
       data: {
         uid,
         referenceText,
@@ -67,7 +68,7 @@ export class TypingTestService {
         wpm: result.wpm,
         cpm: result.cpm,
         accuracy: result.accuracy,
-        mistakes: result.mistakes,
+        mistakes: result.mistakes as unknown as Prisma.InputJsonValue,
         score: result.score,
         suggestions: result.suggestions,
         encouragement: result.encouragement,
@@ -75,8 +76,8 @@ export class TypingTestService {
     });
   }
 
-  async getTypingTests(uid: string) {
-    return this.prismaService.typingTest.findMany({
+  async getTypingTests(uid: string): Promise<TypingTest[]> {
+    return await this.prismaService.typingTest.findMany({
       where: { uid },
       orderBy: { createdAt: 'desc' },
     });

@@ -67,9 +67,10 @@ export const evaluateWithGroq = async (
   let parsed: AiEvaluationResult;
 
   try {
-    parsed = JSON.parse(content);
-  } catch (error) {
+    parsed = JSON.parse(content) as AiEvaluationResult;
+  } catch (err: unknown) {
     console.error('Invalid JSON from client:', content);
+    console.error('Error: ', err);
     throw new Error('client returned invalid JSON format.');
   }
 

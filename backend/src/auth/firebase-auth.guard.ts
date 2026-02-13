@@ -1,12 +1,20 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import admin from './firebase.service';
+import * as admin from 'firebase-admin';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { Request } from 'express';
+import { DecodedIdToken } from 'firebase-admin/auth';
+
+interface AuthenticatedRequest extends Request {
+  user?: DecodedIdToken;
+}
 
 @Injectable()
 export class FirebaseAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const gqlContext = GqlExecutionContext.create(context);
-    const request = gqlContext.getContext().req;
+
+    const ctx = gqlContext.getContext<{ req: AuthenticatedRequest }>();
+    const request = ctx.req;
 
     const authHeader = request.headers.authorization;
     if (!authHeader) {
@@ -19,10 +27,16 @@ export class FirebaseAuthGuard implements CanActivate {
     }
 
     try {
+      if (admin.apps.length === 0) {
+        console.warn('Firebase Admin not initialized. Blocking auth.');
+        return false;
+      }
+
       const decodedToken = await admin.auth().verifyIdToken(token);
       request.user = decodedToken;
       return true;
-    } catch (error) {
+    } catch (err) {
+      console.error('Error: ', err);
       return false;
     }
   }

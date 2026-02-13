@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { evaluateWithGroq } from 'src/speaking-test/evaluation/ai-evaluatar-speaking';
+import { evaluateWithGroq } from './evaluation/ai-evaluatar-speaking';
 import { transcribeAudio } from './evaluation/whisper';
 import { FileUpload } from 'graphql-upload/processRequest.mjs';
 import { ConfigService } from '@nestjs/config';
@@ -53,14 +53,14 @@ export class SpeakingTestService {
   }
 
   async getSpeakingTests(uid: string) {
-    return this.prismaService.speakingTest.findMany({
+    return await this.prismaService.speakingTest.findMany({
       where: { uid },
       orderBy: { createdAt: 'desc' },
     });
   }
 
   async getResultById(uid: string, resultId: string) {
-    return this.prismaService.speakingTest.findFirst({
+    return await this.prismaService.speakingTest.findFirst({
       where: { uid, id: resultId },
     });
   }
@@ -128,13 +128,15 @@ export class SpeakingTestService {
           status: 'COMPLETED',
         },
       });
-    } catch (err) {
+    } catch (err: unknown) {
       await this.prismaService.speakingTest.update({
         where: { uid, id: recordId },
         data: {
           status: 'FAILED',
         },
       });
+
+      console.error(err);
     }
   }
 }

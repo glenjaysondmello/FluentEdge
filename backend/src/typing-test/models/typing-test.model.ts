@@ -2,24 +2,24 @@ import { ObjectType, Field, ID } from '@nestjs/graphql';
 
 @ObjectType()
 export class TypingMistake {
-  @Field() error: string;
-  @Field() correction: string;
-  @Field() type: string;
+  @Field() error!: string;
+  @Field() correction!: string;
+  @Field() type!: string;
 }
 
 @ObjectType()
 export class TypingTest {
-  @Field(() => ID) id: string;
-  @Field() uid: string;
-  @Field() referenceText: string;
-  @Field() userText: string;
-  @Field() durationSec: number;
-  @Field() wpm: number;
-  @Field() cpm: number;
-  @Field() accuracy: number;
-  @Field(() => [TypingMistake]) mistakes: TypingMistake[];
-  @Field() score: number;
-  @Field(() => [String]) suggestions: string[];
-  @Field() encouragement: string;
-  @Field() createdAt: Date;
+  @Field(() => ID) id!: string;
+  @Field() uid!: string;
+  @Field() referenceText!: string;
+  @Field() userText!: string;
+  @Field() durationSec!: number;
+  @Field() wpm!: number;
+  @Field() cpm!: number;
+  @Field() accuracy!: number;
+  @Field(() => [TypingMistake]) mistakes!: TypingMistake[];
+  @Field() score!: number;
+  @Field(() => [String]) suggestions!: string[];
+  @Field() encouragement!: string;
+  @Field() createdAt!: Date;
 }
