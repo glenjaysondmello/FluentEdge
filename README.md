@@ -84,12 +84,9 @@ npm install
 
 ```env
 PORT=3000
-DATABASE_URL=postgresql://user:password@localhost:5432/fluentedge
-FIREBASE_PROJECT_ID=your-firebase-project-id
-FIREBASE_CLIENT_EMAIL=your-firebase-client-email
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+DATABASE_URL=your-neon-db-prisma-url
 GROQ_API_KEY=your-groq-api-key
-WHISPER_ENDPOINT_URL=https://api.whisper.example/v1/...
+FIREBASE_CREDENTIALS="your-serviceAccountKey.json"
 ```
 
 > 📌 Place `serviceAccountKey.json` (Firebase Admin credentials) in the backend root for server-side Firebase Admin SDK usage.
